@@ -5,13 +5,45 @@
 
 <div class="container">
     <div class="row">
-        <h1>Referral details for @Model.RefDet.PatientName</h1>
+        <h1>Referral details for @Model.RefDet.PatientName - @Model.RefDet.CGUNo</h1>
     </div>
     <div class="row">
         <dt class="col-md-2">Type:</dt><dd class="col-md-10">@Model.RefDet.ReferralType</dd>
         <dt class="col-md-2">Consultant:</dt><dd class="col-md-10">@Model.RefDet.ReferralConsultant</dd>
         <dt class="col-md-2">GC:</dt><dd class="col-md-10">@Model.RefDet.ReferralGC</dd>
         <dt class="col-md-2">Clock Start Date:</dt><dd class="col-md-10">@Model.RefDet.ClockStart.Value.ToString("dd/MM/yyyy")</dd>
+
+        @if (@DateTime.Now > @Model.FiftyTwoWeekDate)
+        {
+            <dt class="col-md-12">
+                <h2 style="color:red">Warning: this referral is now over a year old!</h2>
+            </dt>
+        }
+        else if (@DateTime.Now > @Model.EighteenWeekDate)
+        {
+            <dt class="col-md-12">
+                <h2 style="color:orange">Alert: this referral is now beyond the 18 week breach date.</h2>
+            </dt>
+        }
+        else
+        {
+            <dt class="col-md-12">
+                @if ((@Model.EighteenWeekDate - @DateTime.Now).Days < 1)
+                {
+                    <h2>This referral will breach in less than a day.</h2>
+                }
+                else
+                {
+                    <h2>This referral will breach in @((@Model.EighteenWeekDate - @DateTime.Now).Days) days.</h2>
+                }
+            </dt>
+        }
+        <br /><br />
+        @if(@Model.RefDet.TCIDate < DateTime.Now)
+        {
+            <h3>The patient was due to attend on @Model.RefDet.TCIDate.Value.ToString("dd/MM/yyyy").</h3>
+        }
+        <br /><br />
     </div>
 
     <h2>All activity:</h2>
@@ -55,9 +87,10 @@
                             {
                                 <td>@r.COUNSELED</td>
                             }
-                        }                        
+                        }
                     </tr>
                     @*would have been nice to nest appointments and diary entries together, alas we can not!*@                    
+                
                 }
             </tbody>
         </table>
@@ -66,6 +99,7 @@
     <h2>Diary:</h2>
     
     <div class="row">
+        
         <table class="table">
             <thead>
                 <tr>
@@ -77,18 +111,25 @@
                     <th>Doc Code</th>
                 </tr>
             </thead>
-            <tbody>
+            <tbody>                
                 @foreach (var d in Model.DiaryList)
                 {
                     <tr>
                         <td>@d.RefID</td>
-                        <td>@d.DiaryDate.Value.ToString("dd/MM/yyyy")</td>
+                        @if (d.DiaryDate.HasValue)
+                        {
+                            <td>@d.DiaryDate.Value.ToString("dd/MM/yyyy")</td>
+                        }
+                        else
+                        {
+                            <td></td>
+                        }
                         <td>@d.DiaryWith</td>
                         <td>@d.DiaryAction</td>
                         <td>@d.DiaryText</td>
                         <td>@d.DocCode</td>
                     </tr>
-                }
+                }                
             </tbody>
         </table>
     </div>

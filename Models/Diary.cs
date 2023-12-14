@@ -14,6 +14,6 @@ namespace PatientTrackingList.Models
         public string? DiaryAction { get; set; }
         public string? DiaryText { get; set; }
         public string? DocCode { get; set; }
-        public int RefID { get; set; }
+        public int? RefID { get; set; }
     }
 }

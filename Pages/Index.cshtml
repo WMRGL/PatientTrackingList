@@ -3,6 +3,7 @@
 @{
     ViewData["Title"] = "Home page";
 }
+
 <div class="container-fluid">
     <h1 style="text-align:center">PTL-X - The New Patient Tracking List</h1>
     <br />
@@ -13,7 +14,7 @@
         <dt class="col-md-2">From last year:</dt><dd class="col-md-1">@Model.PTL.Where(i => i.ReferralDate > Model.PreviousYear && i.ReferralDate < Model.CurrentYear).Count()</dd>
         <dt class="col-md-1">Older:</dt><dd class="col-md-1">@Model.PTL.Where(i => i.ReferralDate < Model.PreviousYear ).Count()</dd>
         <dt class="col-md-2">Currently Over 18 Weeks:</dt><dd class="col-md-2">@Model.PTL.Where(i => i.ClockStart < Model.EighteenWeekDate).Count()</dd>
-        <dd class="col-md-8">(18 week clock date: @Model.EighteenWeekDate.ToString("dd/MM/yyyy"))</dd>
+        <dd class="col-md-8">(18 week clock start date: @Model.EighteenWeekDate.ToString("dd/MM/yyyy"))</dd>
         <dt class="col-md-2">Appointment due:</dt><dd class="col-md-2">@Model.PTL.Where(i => i.TCIDate != null).Count()</dd>
         <dt class="col-md-2">Unappointed:</dt><dd class="col-md-2">@Model.PTL.Where(i => i.TCIDate == null).Count()</dd>            
     </div>       
@@ -65,7 +66,7 @@
                     <th>@Html.ActionLink("GC", "Index", new { sortOrder = "ref_GC" })</th>
                     <th>@Html.ActionLink("Urgency", "Index", new { sortOrder = "ref_class" })</th>
                     <th>@Html.ActionLink("TCI Date", "Index", new { sortOrder = "tci_date" })</th>
-                    <th>Clock Ticking Days</th>
+                    <th>Clock Ticking (Days)</th>
                 </tr>
             </thead>
             <tbody>
