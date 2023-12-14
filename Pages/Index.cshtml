@@ -1,0 +1,229 @@
+﻿@page
+@model IndexModel
+@{
+    ViewData["Title"] = "Home page";
+}
+<div class="container-fluid">
+    <h1 style="text-align:center">PTL-X - The New Patient Tracking List</h1>
+    <br />
+    <br />
+    <div class="row">
+        <dt class="col-md-2">Total Active Referrals:</dt><dd class="col-md-2">@Model.PTL.Count()</dd>
+        <dt class="col-md-2">From this year:</dt><dd class="col-md-1">@Model.PTL.Where(i => i.ReferralDate > Model.CurrentYear).Count()</dd>
+        <dt class="col-md-2">From last year:</dt><dd class="col-md-1">@Model.PTL.Where(i => i.ReferralDate > Model.PreviousYear && i.ReferralDate < Model.CurrentYear).Count()</dd>
+        <dt class="col-md-1">Older:</dt><dd class="col-md-1">@Model.PTL.Where(i => i.ReferralDate < Model.PreviousYear ).Count()</dd>
+        <dt class="col-md-2">Currently Over 18 Weeks:</dt><dd class="col-md-2">@Model.PTL.Where(i => i.ClockStart < Model.EighteenWeekDate).Count()</dd>
+        <dd class="col-md-8">(18 week clock date: @Model.EighteenWeekDate.ToString("dd/MM/yyyy"))</dd>
+        <dt class="col-md-2">Appointment due:</dt><dd class="col-md-2">@Model.PTL.Where(i => i.TCIDate != null).Count()</dd>
+        <dt class="col-md-2">Unappointed:</dt><dd class="col-md-2">@Model.PTL.Where(i => i.TCIDate == null).Count()</dd>            
+    </div>       
+    <br />
+    <form id="frmMenu" method="Post">
+        <div class="row">
+            <h3>Search form:</h3>
+            <div class="col-md-1">
+                <label>Name:</label>
+            </div>
+            <div class="col-md-2">
+                <input name="sNameSearch" />
+            </div>
+            <div class="col-md-1">
+                <label>CGU_No:</label>
+            </div>
+            <div class="col-md-2">
+                <input name="sCGUSearch" />
+            </div>
+            <div class="col-md-1">
+                <label>Show  Only Urgent:</label>
+            </div>
+            <div class="col-md-2">
+                <input id="chk" type="checkbox" value="false" onclick="SetCheckBox()" />
+            </div>
+            <div class="col-md-1">
+                <input type="submit" class="btn btn-secondary"  />                
+            </div>
+        </div>
+        <div class="row">
+            <input name="isUrgent" id="txtIsUrgent" hidden="true" />
+        </div>
+    </form>
+    <br />
+    <div class="row">
+        <table class="table">
+            <thead>
+                <tr>            
+                    <th>CGU Number</th>
+                    <th>Name</th>
+                    @*<th onclick="DoSort('org_code')">Org Code</th>*@
+                    <th>@Html.ActionLink("Org Code", "Index", new { sortOrder = "org_code" })</th>
+                    <th>@Html.ActionLink("Org Name", "Index", new { sortOrder = "org_name" })</th>
+                    <th>@Html.ActionLink("Ref Date", "Index", new { sortOrder = "ref_date" })</th>
+                    <th>@Html.ActionLink("Clock Start", "Index", new { sortOrder = "cs_date" })</th>
+                    <th>@Html.ActionLink("Referral By", "Index", new { sortOrder = "ref_by" })</th>
+                    <th>@Html.ActionLink("Reason", "Index", new { sortOrder = "ref_reason" })</th>
+                    <th>@Html.ActionLink("Consultant", "Index", new { sortOrder = "ref_consultant" })</th>
+                    <th>@Html.ActionLink("GC", "Index", new { sortOrder = "ref_GC" })</th>
+                    <th>@Html.ActionLink("Urgency", "Index", new { sortOrder = "ref_class" })</th>
+                    <th>@Html.ActionLink("TCI Date", "Index", new { sortOrder = "tci_date" })</th>
+                    <th>Clock Ticking Days</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach(var p in Model.pageOfPTL)
+                {
+                    @if (@p.ClockStart < Model.FiftyTwoWeekDate)
+                    {
+                        <tr style ="color:red">
+                            <td><a type="button" class="btn btn-secondary" asp-area="" asp-page="/ReferralDetails" asp-route-sPPI=@p.PPI>@p.CGUNo</a></td>
+                            <td>@p.PatientName</td>                           
+                            <td>@p.OrgCode</td>
+                            <td>@p.OrgName</td>                            
+                            <td>@p.ReferralDate.Value.ToString("dd/MM/yyyy")</td>                            
+                            @if (@p.ClockStart.HasValue)
+                            {
+                                <td>@p.ClockStart.Value.ToString("dd/MM/yyyy")</td>
+                            }
+                            else
+                            {
+                                <td>N/A</td>
+                            }                           
+                            <td>@p.ReferralBy</td>
+                            <td>@p.ReferralReason</td>
+                            <td>@p.ReferralConsultant</td>
+                            <td>@p.ReferralGC</td>
+                            <td>@p.Class</td>
+                            @if (@p.TCIDate.HasValue)
+                            {
+                                <td>@p.TCIDate.Value.ToString("dd/MM/yyyy")</td>
+                            }
+                            else
+                            {
+                                <td>N/A</td>
+                            }
+                            @if (p.ClockStart.HasValue && p.ClockStop == null)
+                            {
+                                <td>@((DateTime.Now - @p.ClockStart).Value.ToString("dd"))</td>
+                            }
+                        </tr>
+                    }
+                    else if (@p.ClockStart < Model.EighteenWeekDate)
+                    {                        
+                        <tr style="color:orange">
+                            <td><a type="button" class="btn btn-secondary" asp-area="" asp-page="/ReferralDetails" asp-route-sPPI=@p.PPI>@p.CGUNo</a></td>
+                            <td>@p.PatientName</td>
+                            <td>@p.OrgCode</td>
+                            <td>@p.OrgName</td>
+                            <td>@p.ReferralDate.Value.ToString("dd/MM/yyyy")</td>
+                            @if (@p.ClockStart.HasValue)
+                            {
+                                <td>@p.ClockStart.Value.ToString("dd/MM/yyyy")</td>
+                            }
+                            else
+                            {
+                                <td>N/A</td>
+                            }
+                            <td>@p.ReferralBy</td>
+                            <td>@p.ReferralReason</td>
+                            <td>@p.ReferralConsultant</td>
+                            <td>@p.ReferralGC</td>
+                            <td>@p.Class</td>
+                            @if (@p.TCIDate.HasValue)
+                            {
+                                <td>@p.TCIDate.Value.ToString("dd/MM/yyyy")</td>
+                            }
+                            else
+                            {
+                                <td>N/A</td> 
+                            }
+                            @if (p.ClockStart.HasValue && p.ClockStop == null)
+                            {
+                                <td>@((DateTime.Now - @p.ClockStart).Value.ToString("dd"))</td>
+                            }
+                        </tr>
+                    }
+                    else
+                    {
+                        <tr>
+                            <td><a type="button" class="btn btn-secondary" asp-area="" asp-page="/ReferralDetails" asp-route-sPPI=@p.PPI>@p.CGUNo</a></td>
+                            <td>@p.PatientName</td>
+                            <td>@p.OrgCode</td>
+                            <td>@p.OrgName</td>
+                            <td>@p.ReferralDate.Value.ToString("dd/MM/yyyy")</td>                            
+                            @if (@p.ClockStart.HasValue)
+                            {
+                                <td>@p.ClockStart.Value.ToString("dd/MM/yyyy")</td>
+                            }
+                            else
+                            {
+                                <td>N/A</td>
+                            }
+                            <td>@p.ReferralBy</td>
+                            <td>@p.ReferralReason</td>
+                            <td>@p.ReferralConsultant</td>
+                            <td>@p.ReferralGC</td>
+                            <td>@p.Class</td>
+                            @if (@p.TCIDate.HasValue)
+                            {
+                                <td>@p.TCIDate.Value.ToString("dd/MM/yyyy")</td>
+                            }
+                            else
+                            {
+                                <td>N/A</td>
+                            }
+                            @if (p.ClockStart.HasValue && p.ClockStop == null)
+                            {
+                                <td>@((DateTime.Now - @p.ClockStart).Value.ToString("dd"))</td>
+                            }
+                        </tr>
+                    }  
+                }
+            </tbody>
+        </table>
+    </div>
+    @if(Model.pageNumbers.Count() > 1)
+    {
+        <div class="row">
+            <ul class="d-flex flex-row list-unstyled">
+                <li><a asp-page="\Index" asp-route-pNo=1>First</a>&nbsp;&nbsp;&nbsp;</li>
+                @if(Model.currentPageNo != 1)
+                {
+                    <li><a asp-page="\Index" asp-route-pNo=@Model.previousPage>Back</a> &nbsp;&nbsp;&nbsp;</li>
+                }
+                @foreach (var i in Model.pageNumbers)
+                {
+                    @if (i >= Model.currentPageNo - 20 && i <= Model.currentPageNo + 20)
+                    {
+                        @if (i == Model.currentPageNo)
+                        {
+                            <li>@i &nbsp;&nbsp;&nbsp;</li>
+                        }
+                        else
+                        {
+                            <li><a asp-page="\Index" asp-route-pNo=@i>@i</a> &nbsp;&nbsp;&nbsp;</li>
+                        }
+                    }
+                }
+                @if (Model.currentPageNo != Model.pageNumbers.Count())
+                {
+                    <li><a asp-page="\Index" asp-route-pNo=@Model.nextPage>Next</a>&nbsp;&nbsp;&nbsp;</li>
+                }
+                <li><a asp-page="\Index" asp-route-pNo=@Model.pageNumbers.Count()>Last</a></li>
+            </ul>
+        </div>
+    }
+</div>
+
+
+
+
+
+<script>
+        
+
+    function SetCheckBox()
+    {
+        //because it cannot simply pass the state of the checkbox to the C#, for some reason!!!        
+        document.getElementById("txtIsUrgent").value = document.getElementById("chk").checked;    
+                
+    }
+</script>

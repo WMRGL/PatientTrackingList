@@ -1,0 +1,105 @@
+﻿@page
+@model PatientTrackingList.Pages.ReferralDetailsModel
+@{
+}
+
+<div class="container">
+    <div class="row">
+        <h1>Referral details for @Model.RefDet.PatientName</h1>
+    </div>
+    <div class="row">
+        <dt class="col-md-2">Type:</dt><dd class="col-md-10">@Model.RefDet.ReferralType</dd>
+        <dt class="col-md-2">Consultant:</dt><dd class="col-md-10">@Model.RefDet.ReferralConsultant</dd>
+        <dt class="col-md-2">GC:</dt><dd class="col-md-10">@Model.RefDet.ReferralGC</dd>
+        <dt class="col-md-2">Clock Start Date:</dt><dd class="col-md-10">@Model.RefDet.ClockStart.Value.ToString("dd/MM/yyyy")</dd>
+    </div>
+
+    <h2>All activity:</h2>
+    <div class="row">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>RefID</th>
+                    <th>Type</th>
+                    <th>Date</th>
+                    <th>Consultant</th>
+                    <th>GC</th>
+                    <th>Pathway</th>
+                    <th>Referral/Appointment Date</th>
+                    <th>Status</th>                    
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var r in Model.ActivityList)
+                {
+                    <tr>
+                        <td>@r.RefID</td>
+                        <td>@r.TYPE</td>
+                        <td>@r.DATE_SCHEDULED.Value.ToString("dd/MM/yyyy")</td>
+                        <td>@r.PATIENT_TYPE</td>
+                        <td>@r.GC</td>
+                        <td>@r.PATHWAY</td>
+                        @if(@r.BOOKED_DATE == null )
+                        {
+                            <td>@r.REFERRAL_DATE.Value.ToString("dd/MM/yyyy")</td>
+                            <td>@r.COMPLETE</td>
+                        }
+                        else
+                        {
+                            <td>@r.BOOKED_DATE.Value.ToString("dd/MM/yyyy")</td>                        
+                            @if (r.COUNSELED == null)
+                            {
+                                <td>Pending</td>
+                            }
+                            else
+                            {
+                                <td>@r.COUNSELED</td>
+                            }
+                        }                        
+                    </tr>
+                    @*would have been nice to nest appointments and diary entries together, alas we can not!*@                    
+                }
+            </tbody>
+        </table>
+    </div>
+
+    <h2>Diary:</h2>
+    
+    <div class="row">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>RefID</th>
+                    <th>Date</th>
+                    <th>Staff Code</th>
+                    <th>Action Code</th>
+                    <th>Details</th>
+                    <th>Doc Code</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var d in Model.DiaryList)
+                {
+                    <tr>
+                        <td>@d.RefID</td>
+                        <td>@d.DiaryDate.Value.ToString("dd/MM/yyyy")</td>
+                        <td>@d.DiaryWith</td>
+                        <td>@d.DiaryAction</td>
+                        <td>@d.DiaryText</td>
+                        <td>@d.DocCode</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+
+
+    <div class="row">
+        <div class="col-md-2">
+            <a type="button" class="btn btn-secondary" asp-area="" asp-page="\Index">Return</a>
+        </div>
+    </div>
+
+</div>
+
+
