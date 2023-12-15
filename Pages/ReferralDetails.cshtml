@@ -12,6 +12,8 @@
         <dt class="col-md-2">Consultant:</dt><dd class="col-md-10">@Model.RefDet.ReferralConsultant</dd>
         <dt class="col-md-2">GC:</dt><dd class="col-md-10">@Model.RefDet.ReferralGC</dd>
         <dt class="col-md-2">Clock Start Date:</dt><dd class="col-md-10">@Model.RefDet.ClockStart.Value.ToString("dd/MM/yyyy")</dd>
+        <dt class="col-md-2">Referred by:</dt><dd class="col-md-10">@Model.RefDet.ReferralBy</dd>
+        <dt class="col-md-2">Organisation:</dt><dd class="col-md-10">@Model.RefDet.OrgCode - @Model.RefDet.OrgName</dd>
 
         @if (@DateTime.Now > @Model.FiftyTwoWeekDate)
         {
@@ -41,7 +43,15 @@
         <br /><br />
         @if(@Model.RefDet.TCIDate < DateTime.Now)
         {
-            <h3>The patient was due to attend on @Model.RefDet.TCIDate.Value.ToString("dd/MM/yyyy").</h3>
+            <h3>The patient was due to attend on @Model.RefDet.TCIDate.Value.ToString("dd/MM/yyyy") - awaiting outcome.</h3>
+        }
+        else if (Model.RefDet.TCIDate > DateTime.Now)
+        {
+            <h3>The patient is due to attend on @Model.RefDet.TCIDate.Value.ToString("dd/MM/yyyy").</h3>
+        }
+        else
+        {
+            <h3>The patient does not have an appointment booked, or the clock has not been stopped.</h3>
         }
         <br /><br />
     </div>
@@ -82,6 +92,11 @@
                             @if (r.COUNSELED == null)
                             {
                                 <td>Pending</td>
+                            }
+                            else if(r.TYPE == "Tel. Admin")
+                            {
+                                @*<td>@r.REASON_FOR_REFERRAL</td>   *@
+                                <td>Phone call to/from patient</td>
                             }
                             else
                             {

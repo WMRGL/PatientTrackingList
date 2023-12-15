@@ -23,8 +23,8 @@ namespace PatientTrackingList.Pages
             RefDet = _context.PTL.FirstOrDefault(r => r.PPI == sPPI);
 
             ActivityList = from r in _context.Activity
-                        where r.MPI == RefDet.MPI 
-                   select r;
+                        where r.WMFACSID == RefDet.WMFACSID 
+                        select r;
 
             DiaryList = from d in _context.Diary
                         where d.WMFACSID == RefDet.WMFACSID

@@ -18,7 +18,7 @@
         <dt class="col-md-2">Appointment due:</dt><dd class="col-md-2">@Model.PTL.Where(i => i.TCIDate != null).Count()</dd>
         <dt class="col-md-2">Unappointed:</dt><dd class="col-md-2">@Model.PTL.Where(i => i.TCIDate == null).Count()</dd>            
     </div>       
-    <br />
+    <br />   
     <form id="frmMenu" method="Post">
         <div class="row">
             <h3>Search form:</h3>
@@ -49,24 +49,133 @@
         </div>
     </form>
     <br />
-    <div class="row">
+    <div class="row">      
         <table class="table">
             <thead>
                 <tr>            
-                    <th>CGU Number</th>
-                    <th>Name</th>
-                    @*<th onclick="DoSort('org_code')">Org Code</th>*@
-                    <th>@Html.ActionLink("Org Code", "Index", new { sortOrder = "org_code" })</th>
-                    <th>@Html.ActionLink("Org Name", "Index", new { sortOrder = "org_name" })</th>
-                    <th>@Html.ActionLink("Ref Date", "Index", new { sortOrder = "ref_date" })</th>
-                    <th>@Html.ActionLink("Clock Start", "Index", new { sortOrder = "cs_date" })</th>
-                    <th>@Html.ActionLink("Referral By", "Index", new { sortOrder = "ref_by" })</th>
-                    <th>@Html.ActionLink("Reason", "Index", new { sortOrder = "ref_reason" })</th>
-                    <th>@Html.ActionLink("Consultant", "Index", new { sortOrder = "ref_consultant" })</th>
-                    <th>@Html.ActionLink("GC", "Index", new { sortOrder = "ref_GC" })</th>
-                    <th>@Html.ActionLink("Urgency", "Index", new { sortOrder = "ref_class" })</th>
-                    <th>@Html.ActionLink("TCI Date", "Index", new { sortOrder = "tci_date" })</th>
-                    <th>Clock Ticking (Days)</th>
+                    <th class="align-top">CGU Number</th>
+                    <th class="align-top">Name</th>
+                    @*<th>@Html.ActionLink("Org Code", "Index", new { sortOrder = "org_code" })</th>
+                    <th>@Html.ActionLink("Org Name", "Index", new { sortOrder = "org_name" })</th>*@
+                    <th class="align-top">@*@Html.ActionLink("Ref Date", "Index", new { sortOrder = "ref_date" })*@
+                        <div class="row">
+                            <div class="col-7">
+                                Ref Date
+                            </div>
+                            <div class="col-5">
+                                <div class="row">
+                                    <a asp-page="\Index" asp-route-sortOrder="ref_date" asp-route-isDesc=false>
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-chevron-compact-up" viewBox="0 0 16 16">
+                                        <path fill-rule="evenodd" d="M7.776 5.553a.5.5 0 0 1 .448 0l6 3a.5.5 0 1 1-.448.894L8 6.56 2.224 9.447a.5.5 0 1 1-.448-.894l6-3z" />
+                                    </svg>
+                                    </a>
+                                </div>
+                                <div class="row">
+                                    <a asp-page="\Index" asp-route-sortOrder="ref_date" asp-route-isDesc=true>
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-chevron-compact-down" viewBox="0 0 16 16">
+                                        <path fill-rule="evenodd" d="M1.553 6.776a.5.5 0 0 1 .67-.223L8 9.44l5.776-2.888a.5.5 0 1 1 .448.894l-6 3a.5.5 0 0 1-.448 0l-6-3a.5.5 0 0 1-.223-.67z" />
+                                    </svg>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </th>
+                    <th>@*@Html.ActionLink("Clock Start", "Index", new { sortOrder = "cs_date" })</th>*@
+                        <div class="row">
+                            <div class="col-8">
+                                Clock Start
+                            </div>
+                            <div class="col-4">
+                                <ul class="list-unstyled list-group">
+                                    <li><a asp-page="\Index" asp-route-sortOrder="cs_date" asp-route-isDesc=false>
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-chevron-compact-up" viewBox="0 0 16 16">
+                                            <path fill-rule="evenodd" d="M7.776 5.553a.5.5 0 0 1 .448 0l6 3a.5.5 0 1 1-.448.894L8 6.56 2.224 9.447a.5.5 0 1 1-.448-.894l6-3z" />
+                                        </svg>
+                                        </a>
+                                    </li>
+                                
+                                    <li><a asp-page="\Index" asp-route-sortOrder="cs_date" asp-route-isDesc=true>
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-chevron-compact-down" viewBox="0 0 16 16">
+                                            <path fill-rule="evenodd" d="M1.553 6.776a.5.5 0 0 1 .67-.223L8 9.44l5.776-2.888a.5.5 0 1 1 .448.894l-6 3a.5.5 0 0 1-.448 0l-6-3a.5.5 0 0 1-.223-.67z" />
+                                        </svg>
+                                        </a>
+                                    </li>                               
+                                </ul>
+                            </div>
+                        </div>
+                    @*<th>@Html.ActionLink("Referral By", "Index", new { sortOrder = "ref_by" })</th>*@
+                    <th class="align-top">@*@Html.ActionLink("Reason", "Index", new { sortOrder = "ref_reason" })*@
+                        <div class="row">
+                            <div class="col-7">
+                                Reason
+                            </div>
+                            <div class="col-5">
+                                <div class="row">
+                                    <a asp-page="\Index" asp-route-sortOrder="ref_reason" asp-route-isDesc=false>
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-chevron-compact-up" viewBox="0 0 16 16">
+                                            <path fill-rule="evenodd" d="M7.776 5.553a.5.5 0 0 1 .448 0l6 3a.5.5 0 1 1-.448.894L8 6.56 2.224 9.447a.5.5 0 1 1-.448-.894l6-3z" />
+                                        </svg>
+                                    </a>
+                                </div>
+                                <div class="row">
+                                    <a asp-page="\Index" asp-route-sortOrder="ref_reason" asp-route-isDesc=true>
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-chevron-compact-down" viewBox="0 0 16 16">
+                                            <path fill-rule="evenodd" d="M1.553 6.776a.5.5 0 0 1 .67-.223L8 9.44l5.776-2.888a.5.5 0 1 1 .448.894l-6 3a.5.5 0 0 1-.448 0l-6-3a.5.5 0 0 1-.223-.67z" />
+                                        </svg>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </th>
+                    @*<th>@Html.ActionLink("Consultant", "Index", new { sortOrder = "ref_consultant" })</th>
+                    <th>@Html.ActionLink("GC", "Index", new { sortOrder = "ref_GC" })</th>*@
+                    <th class="align-top">@*@Html.ActionLink("Urgency", "Index", new { sortOrder = "ref_class" })*@
+                        <div class="row">
+                            <div class="col-7">
+                                Urgency
+                            </div>
+                            <div class="col-5">
+                                <div class="row">
+                                    <a asp-page="\Index" asp-route-sortOrder="ref_class" asp-route-isDesc=false>
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-chevron-compact-up" viewBox="0 0 16 16">
+                                            <path fill-rule="evenodd" d="M7.776 5.553a.5.5 0 0 1 .448 0l6 3a.5.5 0 1 1-.448.894L8 6.56 2.224 9.447a.5.5 0 1 1-.448-.894l6-3z" />
+                                        </svg>
+                                    </a>
+                                </div>
+                                <div class="row">
+                                    <a asp-page="\Index" asp-route-sortOrder="ref_class" asp-route-isDesc=true>
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-chevron-compact-down" viewBox="0 0 16 16">
+                                            <path fill-rule="evenodd" d="M1.553 6.776a.5.5 0 0 1 .67-.223L8 9.44l5.776-2.888a.5.5 0 1 1 .448.894l-6 3a.5.5 0 0 1-.448 0l-6-3a.5.5 0 0 1-.223-.67z" />
+                                        </svg>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </th>
+                    <th class="align-top">@*@Html.ActionLink("TCI Date", "Index", new { sortOrder = "tci_date" })*@
+                        <div class="row">
+                            <div class="col-7">
+                                TCI Date
+                            </div>
+                            <div class="col-5">
+                                <div class="row">
+                                    <a asp-page="\Index" asp-route-sortOrder="tci_date" asp-route-isDesc=false>
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-chevron-compact-up" viewBox="0 0 16 16">
+                                            <path fill-rule="evenodd" d="M7.776 5.553a.5.5 0 0 1 .448 0l6 3a.5.5 0 1 1-.448.894L8 6.56 2.224 9.447a.5.5 0 1 1-.448-.894l6-3z" />
+                                        </svg>
+                                    </a>
+                                </div>
+                                <div class="row">
+                                    <a asp-page="\Index" asp-route-sortOrder="tci_date" asp-route-isDesc=true>
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-chevron-compact-down" viewBox="0 0 16 16">
+                                            <path fill-rule="evenodd" d="M1.553 6.776a.5.5 0 0 1 .67-.223L8 9.44l5.776-2.888a.5.5 0 1 1 .448.894l-6 3a.5.5 0 0 1-.448 0l-6-3a.5.5 0 0 1-.223-.67z" />
+                                        </svg>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </th>
+                    <th class="align-top">Clock Ticking (Days)</th>
                 </tr>
             </thead>
             <tbody>
@@ -77,9 +186,16 @@
                         <tr style ="color:red">
                             <td><a type="button" class="btn btn-secondary" asp-area="" asp-page="/ReferralDetails" asp-route-sPPI=@p.PPI>@p.CGUNo</a></td>
                             <td>@p.PatientName</td>                           
-                            <td>@p.OrgCode</td>
-                            <td>@p.OrgName</td>                            
-                            <td>@p.ReferralDate.Value.ToString("dd/MM/yyyy")</td>                            
+                            @*<td>@p.OrgCode</td>
+                            <td>@p.OrgName</td>*@
+                            @if (p.ReferralDate.HasValue)
+                            {
+                                <td>@p.ReferralDate.Value.ToString("dd/MM/yyyy")</td>
+                            }
+                            else
+                            {
+                                <td>N/A</td>
+                            }
                             @if (@p.ClockStart.HasValue)
                             {
                                 <td>@p.ClockStart.Value.ToString("dd/MM/yyyy")</td>
@@ -87,11 +203,11 @@
                             else
                             {
                                 <td>N/A</td>
-                            }                           
-                            <td>@p.ReferralBy</td>
+                            }
+                            @*<td>@p.ReferralBy</td>*@
                             <td>@p.ReferralReason</td>
-                            <td>@p.ReferralConsultant</td>
-                            <td>@p.ReferralGC</td>
+                            @*<td>@p.ReferralConsultant</td>
+                            <td>@p.ReferralGC</td>*@
                             <td>@p.Class</td>
                             @if (@p.TCIDate.HasValue)
                             {
@@ -112,9 +228,16 @@
                         <tr style="color:orange">
                             <td><a type="button" class="btn btn-secondary" asp-area="" asp-page="/ReferralDetails" asp-route-sPPI=@p.PPI>@p.CGUNo</a></td>
                             <td>@p.PatientName</td>
-                            <td>@p.OrgCode</td>
-                            <td>@p.OrgName</td>
-                            <td>@p.ReferralDate.Value.ToString("dd/MM/yyyy")</td>
+                            @*<td>@p.OrgCode</td>
+                            <td>@p.OrgName</td>*@
+                            @if (p.ReferralDate.HasValue)
+                            {
+                                <td>@p.ReferralDate.Value.ToString("dd/MM/yyyy")</td>
+                            }
+                            else
+                            {
+                                <td>N/A</td>
+                            }
                             @if (@p.ClockStart.HasValue)
                             {
                                 <td>@p.ClockStart.Value.ToString("dd/MM/yyyy")</td>
@@ -123,10 +246,10 @@
                             {
                                 <td>N/A</td>
                             }
-                            <td>@p.ReferralBy</td>
+                            @*<td>@p.ReferralBy</td>*@
                             <td>@p.ReferralReason</td>
-                            <td>@p.ReferralConsultant</td>
-                            <td>@p.ReferralGC</td>
+                            @*<td>@p.ReferralConsultant</td>
+                            <td>@p.ReferralGC</td>*@
                             <td>@p.Class</td>
                             @if (@p.TCIDate.HasValue)
                             {
@@ -134,7 +257,7 @@
                             }
                             else
                             {
-                                <td>N/A</td> 
+                                <td>N/A</td>
                             }
                             @if (p.ClockStart.HasValue && p.ClockStop == null)
                             {
@@ -147,9 +270,16 @@
                         <tr>
                             <td><a type="button" class="btn btn-secondary" asp-area="" asp-page="/ReferralDetails" asp-route-sPPI=@p.PPI>@p.CGUNo</a></td>
                             <td>@p.PatientName</td>
-                            <td>@p.OrgCode</td>
-                            <td>@p.OrgName</td>
-                            <td>@p.ReferralDate.Value.ToString("dd/MM/yyyy")</td>                            
+                            @*<td>@p.OrgCode</td>
+                            <td>@p.OrgName</td>*@
+                            @if (p.ReferralDate.HasValue)
+                            {
+                                <td>@p.ReferralDate.Value.ToString("dd/MM/yyyy")</td>
+                            }
+                            else
+                            {
+                                <td>N/A</td>
+                            }
                             @if (@p.ClockStart.HasValue)
                             {
                                 <td>@p.ClockStart.Value.ToString("dd/MM/yyyy")</td>
@@ -158,10 +288,10 @@
                             {
                                 <td>N/A</td>
                             }
-                            <td>@p.ReferralBy</td>
+                            @*<td>@p.ReferralBy</td>*@
                             <td>@p.ReferralReason</td>
-                            <td>@p.ReferralConsultant</td>
-                            <td>@p.ReferralGC</td>
+                            @*<td>@p.ReferralConsultant</td>
+                            <td>@p.ReferralGC</td>*@
                             <td>@p.Class</td>
                             @if (@p.TCIDate.HasValue)
                             {
@@ -213,9 +343,6 @@
         </div>
     }
 </div>
-
-
-
 
 
 <script>

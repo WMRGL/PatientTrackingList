@@ -3,7 +3,8 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace PatientTrackingList.Models
 {
-    [Table("Clinical_XP_PatientDiary", Schema = "dbo")]
+    //[Table("Clinical_XP_PatientDiary", Schema = "dbo")]
+    [Table("PatientDiary", Schema = "dbo")]
     public class Diary
     {
         [Key]

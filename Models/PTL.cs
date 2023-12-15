@@ -2,8 +2,9 @@
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace PatientTrackingList.Models
-{    
-    [Table("18rtt_ptl", Schema = "dbo")]
+{
+    //[Table("18rtt_ptl", Schema = "dbo")]
+    [Table("PTL", Schema = "dbo")]
     public class PTL
     {
         [Key]
