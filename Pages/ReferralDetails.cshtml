@@ -4,6 +4,23 @@
 }
 
 <div class="container">
+
+    @if (Model.Message != null)
+    {
+        @if (!Model.isSuccess)
+        {
+            <div class="alert alert-danger" style="text-align:center">
+                @Model.Message
+            </div>
+        }
+        else
+        {
+            <div class="alert alert-success" style="text-align:center">
+                @Model.Message
+            </div>
+        }
+    }
+
     <div class="row">
         <h1>Referral details for @Model.RefDet.PatientName - @Model.RefDet.CGUNo</h1>
     </div>
@@ -47,13 +64,30 @@
         }
         else if (Model.RefDet.TCIDate > DateTime.Now)
         {
-            <h3>The patient is due to attend on @Model.RefDet.TCIDate.Value.ToString("dd/MM/yyyy").</h3>
+            <h3>The patient is due to attend on @Model.RefDet.TCIDate.Value.ToString("dd/MM/yyyy"). The clock will be @Model.RefDet.ClockDaysAtTCI days old.</h3>
         }
         else
         {
             <h3>The patient does not have an appointment booked (or the clock has not been stopped following an appointment).</h3>
         }
         <br /><br />
+    </div>
+    <div class="row mb-5 g-5">
+        <form method="post">
+            <div class="row">
+                <div class="col-md-2">
+                    <label>Comments:</label>
+                </div>
+                <div class="col-md-10">
+                    <input asp-for=@Model.RefDet.Comments name="sComments" />
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-2">
+                    <input type="submit" class="btn btn-secondary" value="Save" />
+                </div>
+            </div>
+        </form>
     </div>
 
     @if (Model.ActivityList.Count() > 0)
@@ -200,7 +234,7 @@
         </div>
     }
 
-    <div class="row">
+    <div class="row mb-5 g-5">
         <div class="col-md-2">
             <a type="button" class="btn btn-secondary" asp-area="" asp-page="\Index">Return</a>
         </div>

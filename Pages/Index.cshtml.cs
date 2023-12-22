@@ -22,6 +22,7 @@ namespace PatientTrackingList.Pages
         public DateTime PreviousYear;
         public DateTime EighteenWeekDate;
         public DateTime FiftyTwoWeekDate;
+        public DateTime LastUpdatedDate;
         public bool isSortDesc; //not currently used as I can't make this work
         public int currentPageNo;
         public int nextPage;
@@ -42,7 +43,8 @@ namespace PatientTrackingList.Pages
             CurrentYear = DateTime.Parse(DateTime.Now.Year + "-01-01");
             PreviousYear = DateTime.Parse((DateTime.Now.Year - 1) + "-01-01");
             EighteenWeekDate = DateTime.Now.AddDays(-18 * 7);
-            FiftyTwoWeekDate = DateTime.Now.AddDays(-365);           
+            FiftyTwoWeekDate = DateTime.Now.AddDays(-365);
+            LastUpdatedDate = PTL.First().LastUpdatedDate;
 
             switch (sortOrder)
             {

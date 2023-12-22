@@ -17,7 +17,11 @@
         <dd class="col-md-8">(18 week clock start date: @Model.EighteenWeekDate.ToString("dd/MM/yyyy"))</dd>
         <dt class="col-md-2">Appointment due:</dt><dd class="col-md-2">@Model.PTL.Where(i => i.TCIDate != null).Count()</dd>
         <dt class="col-md-2">Unappointed:</dt><dd class="col-md-2">@Model.PTL.Where(i => i.TCIDate == null).Count()</dd>            
-    </div>       
+    </div>
+    <br />
+    <div class="row">
+        <dt class="col-md-2">Last updated:</dt><dd class="col-md-2">@Model.LastUpdatedDate.ToString("dd/MM/yyyy")</dd>
+    </div>
     <br />   
     <form id="frmMenu" method="Post">
         <div class="row">
@@ -50,7 +54,7 @@
     </form>
     <br />
     <div class="row">      
-        <table class="table">
+        <table class="table table-bordered">
             <thead>
                 <tr>            
                     <th class="align-top">CGU Number</th>
@@ -80,7 +84,8 @@
                             </div>
                         </div>
                     </th>
-                    <th>@*@Html.ActionLink("Clock Start", "Index", new { sortOrder = "cs_date" })</th>*@
+                    <th class="align-top">
+                        @*@Html.ActionLink("Clock Start", "Index", new { sortOrder = "cs_date" })</th>*@
                         <div class="row">
                             <div class="col-8">
                                 Clock Start
@@ -200,6 +205,7 @@
                             </div>
                         </div>
                     </th>
+                    <th class="align-top">Comments</th>
                 </tr>
             </thead>
             <tbody>
@@ -253,6 +259,7 @@
                             {
                                 <td>N/A</td>
                             }
+                            <td>@p.Comments</td>
                         </tr>
                     }
                     else if (@p.ClockStart < Model.EighteenWeekDate)
@@ -303,6 +310,7 @@
                             {
                                 <td>N/A</td>
                             }
+                            <td>@p.Comments</td>
                         </tr>
                     }
                     else
@@ -353,6 +361,7 @@
                             {
                                 <td>N/A</td>
                             }
+                            <td>@p.Comments</td>
                         </tr>
                     }  
                 }

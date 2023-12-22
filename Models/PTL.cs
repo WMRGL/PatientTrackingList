@@ -34,5 +34,7 @@ namespace PatientTrackingList.Models
         public string? REF_PHYS { get; set; }
         public string? GPPc {  get; set; }
         public int? ClockDaysAtTCI { get; set; }
+        public DateTime LastUpdatedDate { get; set; }
+        public string? Comments {  get; set; }
     }
 }
