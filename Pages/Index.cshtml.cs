@@ -140,6 +140,16 @@ namespace PatientTrackingList.Pages
                         PTL = PTL.OrderBy(p => p.TCIDate);
                     }
                     break;
+                case "clock_tci":
+                    if (isSortDesc)
+                    {
+                        PTL = PTL.OrderByDescending(p => p.ClockDaysAtTCI);
+                    }
+                    else
+                    {
+                        PTL = PTL.OrderBy(p => p.ClockDaysAtTCI);
+                    }
+                    break;
                 default:
                     if (isSortDesc)
                     {

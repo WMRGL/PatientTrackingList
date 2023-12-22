@@ -33,5 +33,6 @@ namespace PatientTrackingList.Models
         public string? ApptType { get; set; }
         public string? REF_PHYS { get; set; }
         public string? GPPc {  get; set; }
+        public int? ClockDaysAtTCI { get; set; }
     }
 }

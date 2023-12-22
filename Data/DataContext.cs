@@ -9,6 +9,7 @@ namespace PatientTrackingList.Data
         public DbSet<PTL> PTL {  get; set; }
         public DbSet<Activity> Activity { get; set; }
         public DbSet<Diary> Diary { get; set; }
+        public DbSet<Letters> Letters { get; set; }
 
         public bool isDesc { get; set; }
     }
