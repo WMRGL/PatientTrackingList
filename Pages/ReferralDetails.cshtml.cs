@@ -15,16 +15,17 @@ namespace PatientTrackingList.Pages
             _context = context;
             _config = config;
         }
+
         public PTL RefDet { get; set; }
         public IEnumerable<Activity> ActivityList { get; set; }        
         public IEnumerable<Diary> DiaryList { get; set; }
         public IEnumerable<Letters> LetterList { get; set; }
 
-
         public DateTime EighteenWeekDate;
         public DateTime FiftyTwoWeekDate;
         public string Message;
         public bool isSuccess;
+
         public void OnGet(string sPPI)
         {
             RefDet = _context.PTL.FirstOrDefault(r => r.PPI == sPPI);
@@ -51,14 +52,13 @@ namespace PatientTrackingList.Pages
             FiftyTwoWeekDate = RefDet.ClockStart.GetValueOrDefault().AddDays(365);
         }
 
-        public void OnPost(string sPPI, string sComments)
+        public void OnPost(string sPPI, string sComments, bool? isChecked=false)
         {
             try
             {
                 RefDet = _context.PTL.FirstOrDefault(r => r.PPI == sPPI);
 
                 var Referral = _context.Activity.FirstOrDefault(r => r.RefID == RefDet.RefID);
-
 
                 ActivityList = from r in _context.Activity
                                where r.REFERRAL_CLINICNO == Referral.CLINICNO
@@ -75,18 +75,23 @@ namespace PatientTrackingList.Pages
                 EighteenWeekDate = RefDet.ClockStart.GetValueOrDefault().AddDays(18 * 7);
                 FiftyTwoWeekDate = RefDet.ClockStart.GetValueOrDefault().AddDays(365);
 
+                int iChecked = 0; //because SQL needs it to be a binary value
+                if(isChecked.GetValueOrDefault())
+                {
+                    iChecked = 1;
+                }
+                
                 SqlConnection con = new SqlConnection(_config.GetConnectionString("ConString"));
                 SqlCommand cmd = new SqlCommand();
-                               
-
+                
                 if (sComments != null)
                 {
                     sComments = sComments.Replace("'", "''");
-                    cmd = new SqlCommand("update PTL set comments='" + sComments + "' where PPI='" + RefDet.PPI + "'", con);
+                    cmd = new SqlCommand("update PTL set comments='" + sComments + "', isChecked=" + iChecked + " where PPI='" + RefDet.PPI + "'", con);
                 }
                 else
                 {
-                    cmd = new SqlCommand("update PTL set comments = null where PPI='" + RefDet.PPI + "'", con);
+                    cmd = new SqlCommand("update PTL set comments = null, isChecked=" + iChecked + " where PPI='" + RefDet.PPI + "'", con);
                 }
                 
                 con.Open();                

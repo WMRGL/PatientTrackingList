@@ -41,15 +41,23 @@
             <div class="col-md-1">
                 <label>Show  Only Urgent:</label>
             </div>
-            <div class="col-md-2">
-                <input id="chk" type="checkbox" value="false" onclick="SetCheckBox()" />
+            <div class="col-md-1">
+                <input id="chkUrgent" type="checkbox" value="false" onclick="SetUrgentCheckBox()" />
             </div>
+            <div class="col-md-1">
+                <label>Show  Only Unchecked:</label>
+            </div>
+            <div class="col-md-1">
+                <input id="chkChecked" type="checkbox" value="false" onclick="SetCheckedCheckBox()" />
+            </div>
+
             <div class="col-md-1">
                 <input type="submit" class="btn btn-secondary"  />                
             </div>
         </div>
         <div class="row">
             <input name="isUrgent" id="txtIsUrgent" hidden="true" />
+            <input name="isChecked" id="txtIsChecked" hidden="true" />
         </div>
     </form>
     <br />
@@ -180,7 +188,31 @@
                             </div>
                         </div>
                     </th>
-                    <th class="align-top">Clock Ticking (Days)</th>
+                    <th class="align-top">@*Clock Ticking (Days)*@
+                        <div class="row">
+                            <div class="col-7">
+                                Clock Ticking (Days)
+                            </div>
+                            <div class="col-5">
+                                <div class="row">
+                                    <a asp-page="\Index" asp-route-sortOrder="clock_day" asp-route-isDesc=false>
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-chevron-compact-up" viewBox="0 0 16 16">
+                                            <path fill-rule="evenodd" d="M7.776 5.553a.5.5 0 0 1 .448 0l6 3a.5.5 0 1 1-.448.894L8 6.56 2.224 9.447a.5.5 0 1 1-.448-.894l6-3z" />
+                                        </svg>
+                                    </a>
+                                </div>
+                                <div class="row">
+                                    <a asp-page="\Index" asp-route-sortOrder="clock_day" asp-route-isDesc=true>
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-chevron-compact-down" viewBox="0 0 16 16">
+                                            <path fill-rule="evenodd" d="M1.553 6.776a.5.5 0 0 1 .67-.223L8 9.44l5.776-2.888a.5.5 0 1 1 .448.894l-6 3a.5.5 0 0 1-.448 0l-6-3a.5.5 0 0 1-.223-.67z" />
+                                        </svg>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+
+
+                    </th>
                     <th class="align-top">
                             @*@Html.ActionLink("Ref Date", "Index", new { sortOrder = "ref_date" })*@
                         <div class="row">
@@ -206,6 +238,7 @@
                         </div>
                     </th>
                     <th class="align-top">Comments</th>
+                    <th class="align-top">Checked</th>
                 </tr>
             </thead>
             <tbody>
@@ -260,6 +293,14 @@
                                 <td>N/A</td>
                             }
                             <td>@p.Comments</td>
+                            @if (p.isChecked)
+                            {
+                                <td>Yes</td>
+                            }
+                            else
+                            {
+                                <td>No</td>
+                            }
                         </tr>
                     }
                     else if (@p.ClockStart < Model.EighteenWeekDate)
@@ -311,6 +352,14 @@
                                 <td>N/A</td>
                             }
                             <td>@p.Comments</td>
+                            @if (p.isChecked)
+                            {
+                                <td>Yes</td>
+                            }
+                            else
+                            {
+                                <td>No</td>
+                            }
                         </tr>
                     }
                     else
@@ -341,7 +390,7 @@
                             @*<td>@p.ReferralConsultant</td>
                             <td>@p.ReferralGC</td>*@
                             <td>@p.Class</td>
-                            @if (@p.TCIDate.HasValue)
+                            @if (p.TCIDate.HasValue)
                             {
                                 <td>@p.TCIDate.Value.ToString("dd/MM/yyyy")</td>
                             }
@@ -362,6 +411,14 @@
                                 <td>N/A</td>
                             }
                             <td>@p.Comments</td>
+                            @if (p.isChecked)
+                            {
+                                <td>Yes</td>
+                            }
+                            else
+                            {
+                                <td>No</td>
+                            }
                         </tr>
                     }  
                 }
@@ -405,10 +462,16 @@
 <script>
         
 
-    function SetCheckBox()
+    function SetUrgentCheckBox()
     {
         //because it cannot simply pass the state of the checkbox to the C#, for some reason!!!        
-        document.getElementById("txtIsUrgent").value = document.getElementById("chk").checked;    
-                
+        document.getElementById("txtIsUrgent").value = document.getElementById("chkUrgent").checked;
     }
+
+    function SetCheckedCheckBox() 
+    {
+        //because it cannot simply pass the state of the checkbox to the C#, for some reason!!!
+        document.getElementById("txtIsChecked").value = document.getElementById("chkChecked").checked;
+    }
+
 </script>

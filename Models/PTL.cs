@@ -36,5 +36,6 @@ namespace PatientTrackingList.Models
         public int? ClockDaysAtTCI { get; set; }
         public DateTime LastUpdatedDate { get; set; }
         public string? Comments {  get; set; }
+        public bool isChecked { get; set; }
     }
 }

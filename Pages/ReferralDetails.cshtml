@@ -84,6 +84,17 @@
             </div>
             <div class="row">
                 <div class="col-md-2">
+                    <label>Mark as checked:</label>
+                </div>
+                <div class="col-md-2">
+                    <input id="chkChecked" asp-for=@Model.RefDet.isChecked type="checkbox" value="false" onclick="SetCheckedCheckBox()" />
+                </div>
+                <div class="col-md-2">
+                    <input id="txtIsChecked" hidden="true" name="isChecked"  />
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-2">
                     <input type="submit" class="btn btn-secondary" value="Save" />
                 </div>
             </div>
@@ -242,4 +253,11 @@
 
 </div>
 
+<script>
 
+    function SetCheckedCheckBox()
+    {
+        document.getElementById("txtIsChecked").value = document.getElementById("chkChecked").checked;
+    }
+
+</script>

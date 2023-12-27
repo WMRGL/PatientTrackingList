@@ -29,7 +29,7 @@ namespace PatientTrackingList.Pages
         public int previousPage;
         
 
-        public void OnGet(int? pNo, string? sortOrder = "", bool? isDesc=false, string? sNameSearch = null, string? sCGUSearch = null, bool? isUrgent=false)
+        public void OnGet(int? pNo, string? sortOrder = "", bool? isDesc=false, string? sNameSearch = null, string? sCGUSearch = null, bool? isUrgent=false, bool? isChecked=false)
         {
             int pageSize = 20;
 
@@ -56,29 +56,8 @@ namespace PatientTrackingList.Pages
                     else
                     {
                         PTL = PTL.OrderBy(p => p.ReferralDate);
-                    }
-                    
-                    break;
-                case "org_code":
-                    if (isSortDesc)
-                    {
-                        PTL = PTL.OrderByDescending(p => p.OrgCode);
-                    }
-                    else
-                    {
-                        PTL = PTL.OrderBy(p => p.OrgCode);
-                    }
-                    break;
-                case "org_name":
-                    if (isSortDesc)
-                    {
-                        PTL = PTL.OrderByDescending(p => p.OrgName);
-                    }
-                    else
-                    {
-                        PTL = PTL.OrderBy(p => p.OrgName);
-                    }
-                    break;
+                    }                    
+                break;                
                 case "cs_date":
                     if (isSortDesc)
                     {
@@ -88,10 +67,7 @@ namespace PatientTrackingList.Pages
                     {
                         PTL = PTL.OrderBy(p => p.ClockStart);
                     }
-                    break;
-                case "ref_by":
-                    PTL = PTL.OrderBy(p => p.ReferralBy);
-                    break;
+                break;                
                 case "ref_reason":
                     if (isSortDesc)
                     {
@@ -101,27 +77,7 @@ namespace PatientTrackingList.Pages
                     {
                         PTL = PTL.OrderBy(p => p.ReferralReason);
                     }
-                    break;
-                case "ref_consultant":
-                    if (isSortDesc)
-                    {
-                        PTL = PTL.OrderByDescending(p => p.ReferralConsultant);
-                    }
-                    else
-                    {
-                        PTL = PTL.OrderBy(p => p.ReferralConsultant);
-                    }
-                    break;
-                case "ref_GC":
-                    if (isSortDesc)
-                    {
-                        PTL = PTL.OrderByDescending(p => p.ReferralGC);
-                    }
-                    else
-                    {
-                        PTL = PTL.OrderBy(p => p.ReferralGC);
-                    }
-                    break;
+                break;                
                 case "ref_class":
                     if (isSortDesc)
                     {
@@ -131,7 +87,17 @@ namespace PatientTrackingList.Pages
                     {
                         PTL = PTL.OrderBy(p => p.Class);
                     }
-                    break;
+                break;
+                case "clock_day":
+                    if (isSortDesc)
+                    {
+                        PTL = PTL.OrderByDescending(p => DateTime.Now - p.ClockStart);
+                    }
+                    else
+                    {
+                        PTL = PTL.OrderBy(p => DateTime.Now - p.ClockStart);
+                    }
+                break;
                 case "tci_date":
                     if (isSortDesc)
                     {
@@ -141,7 +107,7 @@ namespace PatientTrackingList.Pages
                     {
                         PTL = PTL.OrderBy(p => p.TCIDate);
                     }
-                    break;
+                break;
                 case "clock_tci":
                     if (isSortDesc)
                     {
@@ -151,7 +117,7 @@ namespace PatientTrackingList.Pages
                     {
                         PTL = PTL.OrderBy(p => p.ClockDaysAtTCI);
                     }
-                    break;
+                break;
                 default:
                     if (isSortDesc)
                     {
@@ -161,11 +127,10 @@ namespace PatientTrackingList.Pages
                     {
                         PTL = PTL.OrderBy(p => p.ClockStart);
                     }
-                    break;
+                break;
             }
 
             pageOfPTL = PTL.ToList();
-                       
 
             if (sNameSearch != null)
             {
@@ -180,6 +145,11 @@ namespace PatientTrackingList.Pages
             if(isUrgent.GetValueOrDefault())
             {
                 pageOfPTL = pageOfPTL.Where(p => p.Class == "Urgent").ToList();
+            }
+
+            if (isChecked.GetValueOrDefault())
+            {
+                pageOfPTL = pageOfPTL.Where(p => !p.isChecked).ToList();
             }
 
             int pp = pageOfPTL.Count() / pageSize;
@@ -207,7 +177,7 @@ namespace PatientTrackingList.Pages
         }
 
 
-        public void OnPost(int? pNo, string? sortOrder = "", bool? isDesc=false, string? sNameSearch=null, string? sCGUSearch=null, bool? isUrgent=false)
+        public void OnPost(int? pNo, string? sortOrder = "", bool? isDesc=false, string? sNameSearch=null, string? sCGUSearch=null, bool? isUrgent=false, bool? isChecked=false)
         {
             int pageSize = 20;
 
@@ -220,7 +190,7 @@ namespace PatientTrackingList.Pages
                     .Take(pageSize)
                     .ToList();
             
-            Response.Redirect("Index?pNo=" + pNo + "&sortOrder=" + sortOrder + "&isDesc=" + isDesc + "&sNameSearch=" + sNameSearch + "&sCGUSearch=" + sCGUSearch + "&isUrgent=" + isUrgent);
+            Response.Redirect("Index?pNo=" + pNo + "&sortOrder=" + sortOrder + "&isDesc=" + isDesc + "&sNameSearch=" + sNameSearch + "&sCGUSearch=" + sCGUSearch + "&isUrgent=" + isUrgent + "&isChecked=" + isChecked);
         }
     }
 }
