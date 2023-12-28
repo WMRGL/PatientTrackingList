@@ -8,6 +8,7 @@
     <h1 style="text-align:center">PTL-X - The New Patient Tracking List</h1>
     <br />
     <br />
+
     <div class="row">
         <dt class="col-md-2">Total Active Referrals:</dt><dd class="col-md-2">@Model.PTL.Count()</dd>
         <dt class="col-md-2">From this year:</dt><dd class="col-md-1">@Model.PTL.Where(i => i.ReferralDate > Model.CurrentYear).Count()</dd>
@@ -19,10 +20,12 @@
         <dt class="col-md-2">Unappointed:</dt><dd class="col-md-2">@Model.PTL.Where(i => i.TCIDate == null).Count()</dd>            
     </div>
     <br />
+
     <div class="row">
         <dt class="col-md-2">Last updated:</dt><dd class="col-md-2">@Model.LastUpdatedDate.ToString("dd/MM/yyyy")</dd>
     </div>
-    <br />   
+    <br />
+
     <form id="frmMenu" method="Post">
         <div class="row">
             <h3>Search form:</h3>
@@ -50,8 +53,19 @@
             <div class="col-md-1">
                 <input id="chkChecked" type="checkbox" value="false" onclick="SetCheckedCheckBox()" />
             </div>
-
             <div class="col-md-1">
+                <label>Referral Pathway:</label>
+            </div>
+            <div class="col-md-1">
+                <select name="sPathwayFilter">
+                    <option value="">Both</option>
+                    <option value="Cancer">Cancer</option>
+                    <option value="General">General</option>
+                </select>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-2">
                 <input type="submit" class="btn btn-secondary"  />                
             </div>
         </div>
@@ -61,6 +75,7 @@
         </div>
     </form>
     <br />
+
     <div class="row">      
         <table class="table table-bordered">
             <thead>
@@ -425,6 +440,7 @@
             </tbody>
         </table>
     </div>
+
     @if(Model.pageNumbers.Count() > 1)
     {
         <div class="row">
@@ -458,9 +474,7 @@
     }
 </div>
 
-
 <script>
-        
 
     function SetUrgentCheckBox()
     {

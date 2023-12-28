@@ -29,7 +29,7 @@ namespace PatientTrackingList.Pages
         public int previousPage;
         
 
-        public void OnGet(int? pNo, string? sortOrder = "", bool? isDesc=false, string? sNameSearch = null, string? sCGUSearch = null, bool? isUrgent=false, bool? isChecked=false)
+        public void OnGet(int? pNo, string? sortOrder = "", bool? isDesc=false, string? sNameSearch = null, string? sCGUSearch = null, bool? isUrgent=false, bool? isChecked=false, string? sPathwayFilter=null)
         {
             int pageSize = 20;
 
@@ -152,6 +152,11 @@ namespace PatientTrackingList.Pages
                 pageOfPTL = pageOfPTL.Where(p => !p.isChecked).ToList();
             }
 
+            if (sPathwayFilter != null && sPathwayFilter != "")
+            {
+                pageOfPTL = pageOfPTL.Where(p => p.ReferralReason == sPathwayFilter).ToList();
+            }
+
             int pp = pageOfPTL.Count() / pageSize;
 
             for (int i = 1; i <= pp; i++)
@@ -176,8 +181,7 @@ namespace PatientTrackingList.Pages
             previousPage = currentPageNo - 1;
         }
 
-
-        public void OnPost(int? pNo, string? sortOrder = "", bool? isDesc=false, string? sNameSearch=null, string? sCGUSearch=null, bool? isUrgent=false, bool? isChecked=false)
+        public void OnPost(int? pNo, string? sortOrder = "", bool? isDesc=false, string? sNameSearch=null, string? sCGUSearch=null, bool? isUrgent=false, bool? isChecked=false, string? sPathwayFilter=null)
         {
             int pageSize = 20;
 
@@ -190,7 +194,7 @@ namespace PatientTrackingList.Pages
                     .Take(pageSize)
                     .ToList();
             
-            Response.Redirect("Index?pNo=" + pNo + "&sortOrder=" + sortOrder + "&isDesc=" + isDesc + "&sNameSearch=" + sNameSearch + "&sCGUSearch=" + sCGUSearch + "&isUrgent=" + isUrgent + "&isChecked=" + isChecked);
+            Response.Redirect("Index?pNo=" + pNo + "&sortOrder=" + sortOrder + "&isDesc=" + isDesc + "&sNameSearch=" + sNameSearch + "&sCGUSearch=" + sCGUSearch + "&isUrgent=" + isUrgent + "&isChecked=" + isChecked + "&sPathwayFilter=" + sPathwayFilter);
         }
     }
 }
