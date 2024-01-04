@@ -1,7 +1,7 @@
 ﻿@page
 @model IndexModel
 @{
-    ViewData["Title"] = "Home page";
+    ViewData["Title"] = "Patient Tracking List";
 }
 
 <div class="container-fluid">
@@ -10,14 +10,14 @@
     <br />
 
     <div class="row">
-        <dt class="col-md-2">Total Active Referrals:</dt><dd class="col-md-2">@Model.PTL.Count()</dd>
-        <dt class="col-md-2">From this year:</dt><dd class="col-md-1">@Model.PTL.Where(i => i.ReferralDate > Model.CurrentYear).Count()</dd>
-        <dt class="col-md-2">From last year:</dt><dd class="col-md-1">@Model.PTL.Where(i => i.ReferralDate > Model.PreviousYear && i.ReferralDate < Model.CurrentYear).Count()</dd>
-        <dt class="col-md-1">Older:</dt><dd class="col-md-1">@Model.PTL.Where(i => i.ReferralDate < Model.PreviousYear ).Count()</dd>
-        <dt class="col-md-2">Currently Over 18 Weeks:</dt><dd class="col-md-2">@Model.PTL.Where(i => i.ClockStart < Model.EighteenWeekDate).Count()</dd>
+        <dt class="col-md-2">Total Active Referrals:</dt><dd class="col-md-2">@Model.listTotal</dd>
+        <dt class="col-md-2">From this year:</dt><dd class="col-md-1">@Model.currentYearTotal</dd>
+        <dt class="col-md-2">From last year:</dt><dd class="col-md-1">@Model.prevYearTotal</dd>
+        <dt class="col-md-1">Older:</dt><dd class="col-md-1">@Model.olderTotal</dd>
+        <dt class="col-md-2">Currently Over 18 Weeks:</dt><dd class="col-md-2">@Model.breachingTotal</dd>
         <dd class="col-md-8">(18 week clock start date: @Model.EighteenWeekDate.ToString("dd/MM/yyyy"))</dd>
-        <dt class="col-md-2">Appointment due:</dt><dd class="col-md-2">@Model.PTL.Where(i => i.TCIDate != null).Count()</dd>
-        <dt class="col-md-2">Unappointed:</dt><dd class="col-md-2">@Model.PTL.Where(i => i.TCIDate == null).Count()</dd>            
+        <dt class="col-md-2">Appointment due:</dt><dd class="col-md-2">@Model.apptDueTotal</dd>
+        <dt class="col-md-2">Unappointed:</dt><dd class="col-md-2">@Model.unapptTotal</dd>            
     </div>
     <br />
 
@@ -81,10 +81,8 @@
             <thead>
                 <tr>            
                     <th class="align-top">CGU Number</th>
-                    <th class="align-top">Name</th>
-                    @*<th>@Html.ActionLink("Org Code", "Index", new { sortOrder = "org_code" })</th>
-                    <th>@Html.ActionLink("Org Name", "Index", new { sortOrder = "org_name" })</th>*@
-                    <th class="align-top">@*@Html.ActionLink("Ref Date", "Index", new { sortOrder = "ref_date" })*@
+                    <th class="align-top">Name</th>                    
+                    <th class="align-top">
                         <div class="row">
                             <div class="col-7">
                                 Ref Date
@@ -108,7 +106,6 @@
                         </div>
                     </th>
                     <th class="align-top">
-                        @*@Html.ActionLink("Clock Start", "Index", new { sortOrder = "cs_date" })</th>*@
                         <div class="row">
                             <div class="col-8">
                                 Clock Start
@@ -131,8 +128,7 @@
                                 </ul>
                             </div>
                         </div>
-                    @*<th>@Html.ActionLink("Referral By", "Index", new { sortOrder = "ref_by" })</th>*@
-                    <th class="align-top">@*@Html.ActionLink("Reason", "Index", new { sortOrder = "ref_reason" })*@
+                    <th class="align-top">
                         <div class="row">
                             <div class="col-7">
                                 Reason
@@ -154,10 +150,8 @@
                                 </div>
                             </div>
                         </div>
-                    </th>
-                    @*<th>@Html.ActionLink("Consultant", "Index", new { sortOrder = "ref_consultant" })</th>
-                    <th>@Html.ActionLink("GC", "Index", new { sortOrder = "ref_GC" })</th>*@
-                    <th class="align-top">@*@Html.ActionLink("Urgency", "Index", new { sortOrder = "ref_class" })*@
+                    </th>                    
+                    <th class="align-top">
                         <div class="row">
                             <div class="col-7">
                                 Urgency
@@ -180,7 +174,7 @@
                             </div>
                         </div>
                     </th>
-                    <th class="align-top">@*@Html.ActionLink("TCI Date", "Index", new { sortOrder = "tci_date" })*@
+                    <th class="align-top">
                         <div class="row">
                             <div class="col-7">
                                 TCI Date
@@ -203,7 +197,7 @@
                             </div>
                         </div>
                     </th>
-                    <th class="align-top">@*Clock Ticking (Days)*@
+                    <th class="align-top">
                         <div class="row">
                             <div class="col-7">
                                 Clock Ticking (Days)
@@ -229,7 +223,6 @@
 
                     </th>
                     <th class="align-top">
-                            @*@Html.ActionLink("Ref Date", "Index", new { sortOrder = "ref_date" })*@
                         <div class="row">
                             <div class="col-7">
                                 Clock Days at TCI Date
@@ -263,9 +256,7 @@
                     {
                         <tr style ="color:red">
                             <td><a type="button" class="btn btn-secondary" asp-area="" asp-page="/ReferralDetails" asp-route-sPPI=@p.PPI>@p.CGUNo</a></td>
-                            <td>@p.PatientName</td>                           
-                            @*<td>@p.OrgCode</td>
-                            <td>@p.OrgName</td>*@
+                            <td>@p.PatientName</td>                                                       
                             @if (p.ReferralDate.HasValue)
                             {
                                 <td>@p.ReferralDate.Value.ToString("dd/MM/yyyy")</td>
@@ -282,10 +273,7 @@
                             {
                                 <td>N/A</td>
                             }
-                            @*<td>@p.ReferralBy</td>*@
-                            <td>@p.ReferralReason</td>
-                            @*<td>@p.ReferralConsultant</td>
-                            <td>@p.ReferralGC</td>*@
+                            <td>@p.ReferralReason</td>                           
                             <td>@p.Class</td>
                             @if (@p.TCIDate.HasValue)
                             {
@@ -322,9 +310,7 @@
                     {                        
                         <tr style="color:orange">
                             <td><a type="button" class="btn btn-secondary" asp-area="" asp-page="/ReferralDetails" asp-route-sPPI=@p.PPI>@p.CGUNo</a></td>
-                            <td>@p.PatientName</td>
-                            @*<td>@p.OrgCode</td>
-                            <td>@p.OrgName</td>*@
+                            <td>@p.PatientName</td>                           
                             @if (p.ReferralDate.HasValue)
                             {
                                 <td>@p.ReferralDate.Value.ToString("dd/MM/yyyy")</td>
@@ -341,10 +327,7 @@
                             {
                                 <td>N/A</td>
                             }
-                            @*<td>@p.ReferralBy</td>*@
                             <td>@p.ReferralReason</td>
-                            @*<td>@p.ReferralConsultant</td>
-                            <td>@p.ReferralGC</td>*@
                             <td>@p.Class</td>
                             @if (@p.TCIDate.HasValue)
                             {
@@ -381,9 +364,7 @@
                     {
                         <tr>
                             <td><a type="button" class="btn btn-secondary" asp-area="" asp-page="/ReferralDetails" asp-route-sPPI=@p.PPI>@p.CGUNo</a></td>
-                            <td>@p.PatientName</td>
-                            @*<td>@p.OrgCode</td>
-                            <td>@p.OrgName</td>*@
+                            <td>@p.PatientName</td>                            
                             @if (p.ReferralDate.HasValue)
                             {
                                 <td>@p.ReferralDate.Value.ToString("dd/MM/yyyy")</td>
@@ -400,10 +381,7 @@
                             {
                                 <td>N/A</td>
                             }
-                            @*<td>@p.ReferralBy</td>*@
-                            <td>@p.ReferralReason</td>
-                            @*<td>@p.ReferralConsultant</td>
-                            <td>@p.ReferralGC</td>*@
+                            <td>@p.ReferralReason</td>                            
                             <td>@p.Class</td>
                             @if (p.TCIDate.HasValue)
                             {

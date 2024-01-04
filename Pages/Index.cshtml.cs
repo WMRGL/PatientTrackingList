@@ -23,11 +23,19 @@ namespace PatientTrackingList.Pages
         public DateTime EighteenWeekDate;
         public DateTime FiftyTwoWeekDate;
         public DateTime LastUpdatedDate;
-        public bool isSortDesc; //not currently used as I can't make this work
+        public bool isSortDesc;
+        
         public int currentPageNo;
         public int nextPage;
         public int previousPage;
         
+        public int listTotal;
+        public int currentYearTotal;
+        public int prevYearTotal;
+        public int olderTotal;
+        public int breachingTotal;
+        public int apptDueTotal;
+        public int unapptTotal;
 
         public void OnGet(int? pNo, string? sortOrder = "", bool? isDesc=false, string? sNameSearch = null, string? sCGUSearch = null, bool? isUrgent=false, bool? isChecked=false, string? sPathwayFilter=null)
         {
@@ -37,7 +45,7 @@ namespace PatientTrackingList.Pages
                   where p.ClockStart != null && p.ClockStop == null
                   orderby p.ClockStart
                   select p;
-
+            
             isSortDesc = isDesc.GetValueOrDefault();
 
             CurrentYear = DateTime.Parse(DateTime.Now.Year + "-01-01");
@@ -46,6 +54,16 @@ namespace PatientTrackingList.Pages
             FiftyTwoWeekDate = DateTime.Now.AddDays(-365);
             LastUpdatedDate = PTL.First().LastUpdatedDate;
 
+            //variables for totals on main page
+            listTotal = PTL.Count();
+            currentYearTotal = PTL.Where(i => i.ReferralDate > CurrentYear).Count();
+            prevYearTotal = PTL.Where(i => i.ReferralDate > PreviousYear && i.ReferralDate < CurrentYear).Count();
+            olderTotal = PTL.Where(i => i.ReferralDate < PreviousYear).Count();
+            breachingTotal = PTL.Where(i => i.ClockStart < EighteenWeekDate).Count();
+            apptDueTotal = PTL.Where(i => i.TCIDate != null).Count();
+            unapptTotal = PTL.Where(i => i.TCIDate == null).Count();
+
+            //for sorting (ascending and descending on each column)
             switch (sortOrder)
             {
                 case "ref_date":
@@ -132,6 +150,7 @@ namespace PatientTrackingList.Pages
 
             pageOfPTL = PTL.ToList();
 
+            //for filtering/searching
             if (sNameSearch != null)
             {
                 pageOfPTL = pageOfPTL.Where(p => p.PatientName.ToUpper().Contains(sNameSearch.ToUpper())).ToList();
@@ -157,6 +176,7 @@ namespace PatientTrackingList.Pages
                 pageOfPTL = pageOfPTL.Where(p => p.ReferralReason == sPathwayFilter).ToList();
             }
 
+            //pagination
             int pp = pageOfPTL.Count() / pageSize;
 
             for (int i = 1; i <= pp; i++)
@@ -176,7 +196,7 @@ namespace PatientTrackingList.Pages
             {
                 currentPageNo = pNo.GetValueOrDefault();
             }
-            //I can't do this calculation in the HTML so I have to do it here
+            
             nextPage = currentPageNo + 1;
             previousPage = currentPageNo - 1;
         }

@@ -10,6 +10,8 @@ namespace PatientTrackingList.Data
         public DbSet<Activity> Activity { get; set; }
         public DbSet<Diary> Diary { get; set; }
         public DbSet<Letters> Letters { get; set; }
+        public DbSet<WaitingList> WaitingList { get; set; }
+        public DbSet<Patients> Patients { get; set; }
 
         public bool isDesc { get; set; }
     }

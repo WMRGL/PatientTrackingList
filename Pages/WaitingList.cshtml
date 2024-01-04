@@ -1,0 +1,109 @@
+﻿@page
+@model PatientTrackingList.Pages.WaitingListModel
+@{
+    ViewData["Title"] = "Waiting List";
+}
+
+
+<div class="container">
+
+    <h2>Clinicians Waiting List - Total: @Model.listTotal</h2>
+    <br /><br />
+
+    <form id="frmWLSearch" method="post">
+        <div class="row">        
+            <div class="col-md-1">
+                <label>Clinicians:</label>
+            </div>
+            <div class="col-md-1">
+                <select name="sClinician">
+                    <option value="" selected></option>
+                    @foreach(var c in Model.Clinicians)
+                    {
+                        <option value=@c>@c</option>
+                    }
+                </select>
+            </div>
+            <div class="col-md-10"></div>
+        </div>
+        <br />
+        <div class="row">
+            <div class="col-md-1">
+                <label>Clinics:</label>
+            </div>
+            <div class="col-md-1">
+                <select name="sClinic">
+                    <option value="" selected></option>
+                    @foreach (var c in Model.Clinics)
+                    {
+                        <option value=@c>@c</option>
+                    }
+                </select>
+            </div>
+            <div class="col-md-8"></div>
+            <div class="col-md-2">
+                <input type="submit" class="btn btn-secondary" />
+            </div>
+        </div>
+    </form>
+    <br /><br />
+
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th class="align-top">CGU Number</th>
+                <th>Clinician Code</th>
+                <th>Clinic Code</th>
+                <th>Date Added</th>
+                <th>Instructions</th>
+                <th>Comments</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var wl in Model.WL)
+            {
+                <tr>
+                    <td>@wl.CGU_No</td>
+                    <td>@wl.ClinicianID</td>
+                    <td>@wl.ClinicID</td>
+                    <td>@wl.AddedDate.Value.ToString("dd/MM/yyyy")</td>
+                    <td>@wl.Instructions</td>
+                    <td>@wl.Comment</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+    @if(Model.pageNumbers.Count() > 1)
+    {
+        <div class="row">
+            <ul class="d-flex flex-row list-unstyled">
+                <li><a asp-page="\WaitingList" asp-route-pNo=1>First</a>&nbsp;&nbsp;&nbsp;</li>
+                @if(Model.currentPageNo != 1)
+                {
+                    <li><a asp-page="\WaitingList" asp-route-pNo=@Model.previousPage>Back</a> &nbsp;&nbsp;&nbsp;</li>
+                }
+                @foreach (var i in Model.pageNumbers)
+                {
+                    @if (i >= Model.currentPageNo - 20 && i <= Model.currentPageNo + 20)
+                    {
+                        @if (i == Model.currentPageNo)
+                        {
+                            <li>@i &nbsp;&nbsp;&nbsp;</li>
+                        }
+                        else
+                        {
+                            <li><a asp-page="\WaitingList" asp-route-pNo=@i>@i</a> &nbsp;&nbsp;&nbsp;</li>
+                        }
+                    }
+                }
+                @if (Model.currentPageNo != Model.pageNumbers.Count())
+                {
+                    <li><a asp-page="\WaitingList" asp-route-pNo=@Model.nextPage>Next</a>&nbsp;&nbsp;&nbsp;</li>
+                }
+                <li><a asp-page="\WaitingList" asp-route-pNo=@Model.pageNumbers.Count()>Last</a></li>
+            </ul>
+        </div>
+    }
+
+</div>
