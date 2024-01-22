@@ -37,6 +37,10 @@ namespace PatientTrackingList.Pages
         public int apptDueTotal;
         public int unapptTotal;
 
+        public string pathwaySelected;
+        public bool isCheckedSelected;
+        public bool isUrgentSelected;
+
         public void OnGet(int? pNo, string? sortOrder = "", bool? isDesc=false, string? sNameSearch = null, string? sCGUSearch = null, bool? isUrgent=false, bool? isChecked=false, string? sPathwayFilter=null)
         {
             int pageSize = 20;
@@ -47,6 +51,8 @@ namespace PatientTrackingList.Pages
                   select p;
             
             isSortDesc = isDesc.GetValueOrDefault();
+            //isUrgent = isUrgentSelected;
+            //isChecked = isCheckedSelected;
 
             CurrentYear = DateTime.Parse(DateTime.Now.Year + "-01-01");
             PreviousYear = DateTime.Parse((DateTime.Now.Year - 1) + "-01-01");
@@ -164,16 +170,19 @@ namespace PatientTrackingList.Pages
             if(isUrgent.GetValueOrDefault())
             {
                 pageOfPTL = pageOfPTL.Where(p => p.Class == "Urgent").ToList();
+                isUrgentSelected = isUrgent.GetValueOrDefault();
             }
 
             if (isChecked.GetValueOrDefault())
             {
                 pageOfPTL = pageOfPTL.Where(p => !p.isChecked).ToList();
+                isCheckedSelected = isChecked.GetValueOrDefault();
             }
 
             if (sPathwayFilter != null && sPathwayFilter != "")
             {
                 pageOfPTL = pageOfPTL.Where(p => p.ReferralReason == sPathwayFilter).ToList();
+                pathwaySelected = sPathwayFilter;
             }
 
             //pagination

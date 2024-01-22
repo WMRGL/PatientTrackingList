@@ -45,19 +45,19 @@
                 <label>Show  Only Urgent:</label>
             </div>
             <div class="col-md-1">
-                <input id="chkUrgent" type="checkbox" value="false" onclick="SetUrgentCheckBox()" />
+                <input id="chkUrgent" type="checkbox" value="false" onclick="SetUrgentCheckBox()" asp-for=@Model.isUrgentSelected/>
             </div>
             <div class="col-md-1">
                 <label>Show  Only Unchecked:</label>
             </div>
             <div class="col-md-1">
-                <input id="chkChecked" type="checkbox" value="false" onclick="SetCheckedCheckBox()" />
+                <input id="chkChecked" type="checkbox" value="false" onclick="SetCheckedCheckBox()" asp-for=@Model.isCheckedSelected />
             </div>
             <div class="col-md-1">
                 <label>Referral Pathway:</label>
             </div>
             <div class="col-md-1">
-                <select name="sPathwayFilter">
+                <select name="sPathwayFilter" asp-for=@Model.pathwaySelected>
                     <option value="">Both</option>
                     <option value="Cancer">Cancer</option>
                     <option value="General">General</option>
@@ -454,6 +454,10 @@
 
 <script>
 
+    window.onload = SetCheckBoxes;
+
+
+
     function SetUrgentCheckBox()
     {
         //because it cannot simply pass the state of the checkbox to the C#, for some reason!!!        
@@ -461,9 +465,14 @@
     }
 
     function SetCheckedCheckBox() 
-    {
-        //because it cannot simply pass the state of the checkbox to the C#, for some reason!!!
+    {        
         document.getElementById("txtIsChecked").value = document.getElementById("chkChecked").checked;
+    }
+
+    function SetCheckBoxes()
+    {        
+        SetUrgentCheckBox();
+        SetCheckedCheckBox();
     }
 
 </script>

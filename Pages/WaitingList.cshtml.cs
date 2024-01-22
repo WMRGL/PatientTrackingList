@@ -17,6 +17,8 @@ namespace PatientTrackingList.Pages
         public int nextPage;
         public int previousPage;
         public int listTotal;
+        public string clincianSelected;
+        public string clinicSelected;
 
         public WaitingListModel(DataContext context)
         {
@@ -45,11 +47,13 @@ namespace PatientTrackingList.Pages
             if (sClinician != null)
             {
                 WaitingList = WaitingList.Where(w => w.ClinicianID == sClinician);
+                clincianSelected = sClinician;
             }
 
             if (sClinic != null)
             {
                 WaitingList = WaitingList.Where(w => w.ClinicID == sClinic);
+                clinicSelected = sClinic;
             }
 
             List < WaitingList > pageOfWL = new List<WaitingList>();

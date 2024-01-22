@@ -16,7 +16,7 @@
                 <label>Clinicians:</label>
             </div>
             <div class="col-md-1">
-                <select name="sClinician">
+                <select name="sClinician" asp-for=@Model.clincianSelected>
                     <option value="" selected></option>
                     @foreach(var c in Model.Clinicians)
                     {
@@ -32,7 +32,7 @@
                 <label>Clinics:</label>
             </div>
             <div class="col-md-1">
-                <select name="sClinic">
+                <select name="sClinic" asp-for="@Model.clinicSelected">
                     <option value="" selected></option>
                     @foreach (var c in Model.Clinics)
                     {
