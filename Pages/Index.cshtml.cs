@@ -58,7 +58,7 @@ namespace PatientTrackingList.Pages
             PreviousYear = DateTime.Parse((DateTime.Now.Year - 1) + "-01-01");
             EighteenWeekDate = DateTime.Now.AddDays(-18 * 7);
             FiftyTwoWeekDate = DateTime.Now.AddDays(-365);
-            LastUpdatedDate = PTL.First().LastUpdatedDate;
+            LastUpdatedDate = PTL.OrderByDescending(p => p.LastUpdatedDate).First().LastUpdatedDate;
 
             //variables for totals on main page
             listTotal = PTL.Count();
