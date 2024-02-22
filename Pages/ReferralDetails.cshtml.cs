@@ -1,7 +1,9 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Data.SqlClient;
 using PatientTrackingList.Data;
 using PatientTrackingList.Models;
+using PatientTrackingList.DataServices;
 
 namespace PatientTrackingList.Pages
 {
@@ -9,11 +11,15 @@ namespace PatientTrackingList.Pages
     {
         private readonly DataContext _context;
         private readonly IConfiguration _config;
+        private readonly MetaData meta;
+        private readonly SqlServices sql;
 
         public ReferralDetailsModel(DataContext context, IConfiguration config)
         {
             _context = context;
             _config = config;
+            meta = new MetaData(_context);
+            sql = new SqlServices(_config);
         }
 
         public PTL RefDet { get; set; }
@@ -26,27 +32,19 @@ namespace PatientTrackingList.Pages
         public string Message;
         public bool isSuccess;
 
+        [Authorize]
         public void OnGet(string sPPI)
         {
-            RefDet = _context.PTL.FirstOrDefault(r => r.PPI == sPPI);
+            if (User.Identity.Name is null)
+            {
+                Response.Redirect("Login");
+            }
 
-            var Referral = _context.Activity.FirstOrDefault(r => r.RefID == RefDet.RefID);
-
-            //ActivityList = from r in _context.Activity
-            //            where r.WMFACSID == RefDet.WMFACSID 
-            //            select r;
-
-            ActivityList = from r in _context.Activity
-                           where r.REFERRAL_CLINICNO == Referral.CLINICNO
-                           select r;
-
-            DiaryList = from d in _context.Diary
-                        where d.RefID == RefDet.RefID
-                        select d;
-
-            LetterList = from l in _context.Letters
-                         where l.RefID == RefDet.RefID
-                         select l;
+            RefDet = meta.GetPTLEntryDetails(sPPI);
+            var Referral = meta.GetReferralDetails(RefDet.RefID.GetValueOrDefault());
+            ActivityList = meta.GetActivityList(Referral.CLINICNO);
+            DiaryList = meta.GetDiaryList(RefDet.RefID.GetValueOrDefault());
+            LetterList = meta.GetLetterList(RefDet.RefID.GetValueOrDefault());
 
             EighteenWeekDate = RefDet.ClockStart.GetValueOrDefault().AddDays(18 * 7);
             FiftyTwoWeekDate = RefDet.ClockStart.GetValueOrDefault().AddDays(365);
@@ -56,21 +54,11 @@ namespace PatientTrackingList.Pages
         {
             try
             {
-                RefDet = _context.PTL.FirstOrDefault(r => r.PPI == sPPI);
-
-                var Referral = _context.Activity.FirstOrDefault(r => r.RefID == RefDet.RefID);
-
-                ActivityList = from r in _context.Activity
-                               where r.REFERRAL_CLINICNO == Referral.CLINICNO
-                               select r;
-
-                DiaryList = from d in _context.Diary
-                            where d.RefID == RefDet.RefID
-                            select d;
-
-                LetterList = from l in _context.Letters
-                             where l.RefID == RefDet.RefID
-                             select l;
+                RefDet = meta.GetPTLEntryDetails(sPPI);
+                var Referral = meta.GetReferralDetails(RefDet.RefID.GetValueOrDefault());
+                ActivityList = meta.GetActivityList(Referral.CLINICNO);
+                DiaryList = meta.GetDiaryList(RefDet.RefID.GetValueOrDefault());
+                LetterList = meta.GetLetterList(RefDet.RefID.GetValueOrDefault());
 
                 EighteenWeekDate = RefDet.ClockStart.GetValueOrDefault().AddDays(18 * 7);
                 FiftyTwoWeekDate = RefDet.ClockStart.GetValueOrDefault().AddDays(365);
@@ -79,26 +67,17 @@ namespace PatientTrackingList.Pages
                 if(isChecked.GetValueOrDefault())
                 {
                     iChecked = 1;
-                }
-                
-                SqlConnection con = new SqlConnection(_config.GetConnectionString("ConString"));
-                SqlCommand cmd = new SqlCommand();
-                
+                }               
+
+                string sUsername = meta.GetStaffMemberDetails(User.Identity.Name).STAFF_CODE;
+
                 if (sComments != null)
                 {
                     sComments = sComments.Replace("'", "''");
-                    cmd = new SqlCommand("update PTL set comments='" + sComments + "', isChecked=" + iChecked + " where PPI='" + RefDet.PPI + "'", con);
-                }
-                else
-                {
-                    cmd = new SqlCommand("update PTL set comments = null, isChecked=" + iChecked + " where PPI='" + RefDet.PPI + "'", con);
                 }
                 
-                con.Open();                
-                cmd.ExecuteNonQuery();
-                con.Close();
-
-                //Response.Redirect("ReferralDetails?sPPi=" + RefDet.PPI);
+                sql.SqlUpdateComments(sComments, iChecked, sUsername, sPPI);
+                                                
                 isSuccess = true;
                 Message = "Saved.";
             }

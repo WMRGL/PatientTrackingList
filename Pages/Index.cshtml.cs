@@ -1,6 +1,8 @@
-﻿using Microsoft.AspNetCore.Mvc.RazorPages;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc.RazorPages;
 using PatientTrackingList.Data;
 using PatientTrackingList.Models;
+using PatientTrackingList.DataServices;
 
 namespace PatientTrackingList.Pages
 {
@@ -10,13 +12,20 @@ namespace PatientTrackingList.Pages
         private readonly DataContext _context;
         public IEnumerable<PTL> PTL { get; set; }
         public List<PTL> pageOfPTL { get; set; }
+        public IEnumerable<StaffMembers> staffMembers { get; set; }
+        public List<StaffMembers> consultantList { get; set; }
         public List<int> pageNumbers;
+        public MetaData meta;
+
 
         public IndexModel(DataContext context)
         {
             _context = context;
             pageNumbers = new List<int>();
+            meta = new MetaData(_context);
         }
+
+        
 
         public DateTime CurrentYear;
         public DateTime PreviousYear;
@@ -40,19 +49,26 @@ namespace PatientTrackingList.Pages
         public string pathwaySelected;
         public bool isCheckedSelected;
         public bool isUrgentSelected;
+        public string consultantSelected;
 
-        public void OnGet(int? pNo, string? sortOrder = "", bool? isDesc=false, string? sNameSearch = null, string? sCGUSearch = null, bool? isUrgent=false, bool? isChecked=false, string? sPathwayFilter=null)
+        [Authorize]
+        public void OnGet(int? pNo, string? sortOrder = "", bool? isDesc=false, string? sNameSearch = null, string? sCGUSearch = null, 
+            bool? isUrgent=false, bool? isChecked=false, string? sPathwayFilter=null, string? sConsultantFilter=null)
         {
-            int pageSize = 20;
+            if (User.Identity.Name is null)
+            {
+                Response.Redirect("Login");
+            }
 
-            PTL = from p in _context.PTL
-                  where p.ClockStart != null && p.ClockStop == null
-                  orderby p.ClockStart
-                  select p;
+            int pageSize = 20;            
+
+            PTL = meta.GetPTLList();                       
+
+            staffMembers = meta.GetStaffMemberList();
             
-            isSortDesc = isDesc.GetValueOrDefault();
-            //isUrgent = isUrgentSelected;
-            //isChecked = isCheckedSelected;
+            consultantList = meta.GetStaffTypeList(staffMembers, "Consultant");
+
+            isSortDesc = isDesc.GetValueOrDefault();            
 
             CurrentYear = DateTime.Parse(DateTime.Now.Year + "-01-01");
             PreviousYear = DateTime.Parse((DateTime.Now.Year - 1) + "-01-01");
@@ -185,6 +201,12 @@ namespace PatientTrackingList.Pages
                 pathwaySelected = sPathwayFilter;
             }
 
+            if (sConsultantFilter != null && sConsultantFilter != "")
+            {
+                pageOfPTL = pageOfPTL.Where(p => p.ReferralConsultant == sConsultantFilter).ToList();
+                consultantSelected = sConsultantFilter;
+            }
+
             //pagination
             int pp = pageOfPTL.Count() / pageSize;
 
@@ -210,20 +232,24 @@ namespace PatientTrackingList.Pages
             previousPage = currentPageNo - 1;
         }
 
-        public void OnPost(int? pNo, string? sortOrder = "", bool? isDesc=false, string? sNameSearch=null, string? sCGUSearch=null, bool? isUrgent=false, bool? isChecked=false, string? sPathwayFilter=null)
+        public void OnPost(int? pNo, string? sortOrder = "", bool? isDesc=false, string? sNameSearch=null, string? sCGUSearch=null, 
+            bool? isUrgent=false, bool? isChecked=false, string? sPathwayFilter=null, string? sConsultantFilter=null)
         {
             int pageSize = 20;
 
-            PTL = from p in _context.PTL
-                  where p.ClockStart != null && p.ClockStop == null
-                  orderby p.ClockStart
-                  select p;
+            PTL = meta.GetPTLList();
+
+            staffMembers = meta.GetStaffMemberList();
+
+            consultantList = meta.GetStaffTypeList(staffMembers, "Consultant");
 
             pageOfPTL = PTL.Skip((pNo.GetValueOrDefault() + 1) * pageSize)
                     .Take(pageSize)
                     .ToList();
             
-            Response.Redirect("Index?pNo=" + pNo + "&sortOrder=" + sortOrder + "&isDesc=" + isDesc + "&sNameSearch=" + sNameSearch + "&sCGUSearch=" + sCGUSearch + "&isUrgent=" + isUrgent + "&isChecked=" + isChecked + "&sPathwayFilter=" + sPathwayFilter);
+            Response.Redirect("Index?pNo=" + pNo + "&sortOrder=" + sortOrder + "&isDesc=" + isDesc + "&sNameSearch=" + sNameSearch + 
+                "&sCGUSearch=" + sCGUSearch + "&isUrgent=" + isUrgent + "&isChecked=" + isChecked + "&sPathwayFilter=" + sPathwayFilter + 
+                "&sConsultantFilter=" + sConsultantFilter);
         }
     }
 }

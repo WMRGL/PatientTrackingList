@@ -65,10 +65,30 @@
             </div>
         </div>
         <div class="row">
+            <div class="col-md-1">
+                <label>Consultant:</label>
+            </div>
+            <div class="col-md-4">
+                <select name="sConsultantFilter" asp-for=@Model.consultantSelected>
+                    <option value="">Select...</option>
+                    @foreach(var item in Model.consultantList)
+                    {
+                        <option value=@item.NAME>@item.NAME</option>
+                    }
+            </select>
+            </div>
+            <div class="col-md-1">@*placeholder*@</div>
+            <div class="col-md-4">@*placeholder*@</div>
+            <div class="col-md-1">
+                <input type="submit" class="btn btn-secondary" />
+            </div>
+        </div>
+
+        @*<div class="row">
             <div class="col-md-2">
                 <input type="submit" class="btn btn-secondary"  />                
             </div>
-        </div>
+        </div>*@
         <div class="row">
             <input name="isUrgent" id="txtIsUrgent" hidden="true" />
             <input name="isChecked" id="txtIsChecked" hidden="true" />

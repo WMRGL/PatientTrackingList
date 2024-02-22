@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.EntityFrameworkCore;
 using PatientTrackingList.Data;
 
@@ -7,7 +8,12 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddRazorPages();
 var config = new ConfigurationBuilder().AddJsonFile("appsettings.json", optional: false).Build();
 builder.Services.AddDbContext<DataContext>(options => options.UseSqlServer(config.GetConnectionString("ConString")));
-
+builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
+    .AddCookie(options =>
+    {
+        options.LoginPath = "/Login/UserLogin";
+    });
+builder.Services.AddRazorPages();
 
 var app = builder.Build();
 
@@ -23,8 +29,11 @@ app.UseHttpsRedirection();
 app.UseStaticFiles();
 
 app.UseRouting();
-
+app.UseAuthentication();
 app.UseAuthorization();
+app.MapControllerRoute(
+    name: "default",
+    pattern: "{controller=Login}/{id?}");
 
 app.MapRazorPages();
 
