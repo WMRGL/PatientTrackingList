@@ -274,7 +274,7 @@
                     <th class="align-top">
                         <div class="row">
                             <div class="col-7">
-                                Clock Days at TCI Date
+                                Clock Days at TCI
                             </div>
                             <div class="col-5">
                                 <div class="row">
@@ -338,7 +338,7 @@
                             }
                             @if (p.ClockStart.HasValue && p.ClockStop == null)
                             {
-                                <td>@Math.Round(((DateTime.Now - @p.ClockStart).Value/7).TotalDays)</td>
+                                <td>@Math.Floor(((DateTime.Now - @p.ClockStart).Value/7).TotalDays)</td>
                             }
 
                             @if(p.ClockDaysAtTCI.HasValue)
@@ -397,7 +397,7 @@
                             }
                             @if (p.ClockStart.HasValue && p.ClockStop == null)
                             {
-                                <td>@Math.Round(((DateTime.Now - @p.ClockStart).Value / 7).TotalDays)</td>
+                                <td>@Math.Floor(((DateTime.Now - @p.ClockStart).Value / 7).TotalDays)</td>
                             }
                             @if (p.ClockDaysAtTCI.HasValue)
                             {
@@ -455,7 +455,7 @@
                             }                            
                             @if (p.ClockStart.HasValue && p.ClockStop == null)
                             {
-                                <td>@Math.Round(((DateTime.Now - @p.ClockStart).Value / 7).TotalDays)</td>
+                                <td>@Math.Floor(((DateTime.Now - @p.ClockStart).Value / 7).TotalDays)</td>
                             }
                             @if (p.ClockDaysAtTCI.HasValue)
                             {
@@ -485,10 +485,10 @@
     {
         <div class="row">
             <ul class="d-flex flex-row list-unstyled">
-                <li><a asp-page="\Index" asp-route-pNo=1 asp-route-sPathwayFilter=@Model.pathwaySelected asp-route-sConsultantFilter=@Model.consultantSelected asp-route-sGCFilter=@Model.GCSelected>First</a>&nbsp;&nbsp;&nbsp;</li>
+                <li><a asp-page="\Index" asp-route-pNo=1 asp-route-sPathwayFilter=@Model.pathwaySelected asp-route-sConsultantFilter=@Model.consultantSelected asp-route-sGCFilter=@Model.GCSelected asp-route-isUrgent=@Model.isUrgentSelected asp-route-isChecked=@Model.isCheckedSelected>First</a>&nbsp;&nbsp;&nbsp;</li>
                 @if(Model.currentPageNo != 1)
                 {
-                    <li><a asp-page="\Index" asp-route-pNo=@Model.previousPage asp-route-sPathwayFilter=@Model.pathwaySelected asp-route-sConsultantFilter=@Model.consultantSelected asp-route-sGCFilter=@Model.GCSelected>Back</a> &nbsp;&nbsp;&nbsp;</li>
+                    <li><a asp-page="\Index" asp-route-pNo=@Model.previousPage asp-route-sPathwayFilter=@Model.pathwaySelected asp-route-sConsultantFilter=@Model.consultantSelected asp-route-sGCFilter=@Model.GCSelected asp-route-isUrgent=@Model.isUrgentSelected asp-route-isChecked=@Model.isCheckedSelected>Back</a> &nbsp;&nbsp;&nbsp;</li>
                 }
                 @foreach (var i in Model.pageNumbers)
                 {
@@ -500,15 +500,15 @@
                         }
                         else
                         {
-                            <li><a asp-page="\Index" asp-route-pNo=@i asp-route-sPathwayFilter=@Model.pathwaySelected asp-route-sConsultantFilter=@Model.consultantSelected asp-route-sGCFilter=@Model.GCSelected>@i</a> &nbsp;&nbsp;&nbsp;</li>
+                            <li><a asp-page="\Index" asp-route-pNo=@i asp-route-sPathwayFilter=@Model.pathwaySelected asp-route-sConsultantFilter=@Model.consultantSelected asp-route-sGCFilter=@Model.GCSelected asp-route-isUrgent=@Model.isUrgentSelected asp-route-isChecked=@Model.isCheckedSelected>@i</a> &nbsp;&nbsp;&nbsp;</li>
                         }
                     }
                 }
                 @if (Model.currentPageNo != Model.pageNumbers.Count())
                 {
-                    <li><a asp-page="\Index" asp-route-pNo=@Model.nextPage asp-route-sPathwayFilter=@Model.pathwaySelected asp-route-sConsultantFilter=@Model.consultantSelected asp-route-sGCFilter=@Model.GCSelected>Next</a>&nbsp;&nbsp;&nbsp;</li>
+                    <li><a asp-page="\Index" asp-route-pNo=@Model.nextPage asp-route-sPathwayFilter=@Model.pathwaySelected asp-route-sConsultantFilter=@Model.consultantSelected asp-route-sGCFilter=@Model.GCSelected asp-route-isUrgent=@Model.isUrgentSelected asp-route-isChecked=@Model.isCheckedSelected>Next</a>&nbsp;&nbsp;&nbsp;</li>
                 }
-                <li><a asp-page="\Index" asp-route-pNo=@Model.pageNumbers.Count() asp-route-sPathwayFilter=@Model.pathwaySelected asp-route-sConsultantFilter=@Model.consultantSelected asp-route-sGCFilter=@Model.GCSelected>Last</a></li>
+                <li><a asp-page="\Index" asp-route-pNo=@Model.pageNumbers.Count() asp-route-sPathwayFilter=@Model.pathwaySelected asp-route-sConsultantFilter=@Model.consultantSelected asp-route-sGCFilter=@Model.GCSelected asp-route-isUrgent=@Model.isUrgentSelected asp-route-isChecked=@Model.isCheckedSelected>Last</a></li>
             </ul>
         </div>
     }
