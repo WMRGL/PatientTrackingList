@@ -14,6 +14,7 @@ namespace PatientTrackingList.Pages
         public List<PTL> pageOfPTL { get; set; }
         public IEnumerable<StaffMembers> staffMembers { get; set; }
         public List<StaffMembers> consultantList { get; set; }
+        public List<StaffMembers> GCList { get; set; }
         public List<int> pageNumbers;
         public MetaData meta;
 
@@ -50,10 +51,11 @@ namespace PatientTrackingList.Pages
         public bool isCheckedSelected;
         public bool isUrgentSelected;
         public string consultantSelected;
+        public string GCSelected;
 
         [Authorize]
         public void OnGet(int? pNo, string? sortOrder = "", bool? isDesc=false, string? sNameSearch = null, string? sCGUSearch = null, 
-            bool? isUrgent=false, bool? isChecked=false, string? sPathwayFilter=null, string? sConsultantFilter=null)
+            bool? isUrgent=false, bool? isChecked=false, string? sPathwayFilter=null, string? sConsultantFilter=null, string? sGCFilter=null)
         {
             if (User.Identity.Name is null)
             {
@@ -67,6 +69,7 @@ namespace PatientTrackingList.Pages
             staffMembers = meta.GetStaffMemberList();
             
             consultantList = meta.GetStaffTypeList(staffMembers, "Consultant");
+            GCList = meta.GetStaffTypeList(staffMembers, "GC");
 
             isSortDesc = isDesc.GetValueOrDefault();            
 
@@ -207,6 +210,12 @@ namespace PatientTrackingList.Pages
                 consultantSelected = sConsultantFilter;
             }
 
+            if (sGCFilter != null && sGCFilter != "")
+            {
+                pageOfPTL = pageOfPTL.Where(p => p.ReferralGC == sGCFilter).ToList();
+                GCSelected = sGCFilter;
+            }
+
             //pagination
             int pp = pageOfPTL.Count() / pageSize;
 
@@ -233,7 +242,7 @@ namespace PatientTrackingList.Pages
         }
 
         public void OnPost(int? pNo, string? sortOrder = "", bool? isDesc=false, string? sNameSearch=null, string? sCGUSearch=null, 
-            bool? isUrgent=false, bool? isChecked=false, string? sPathwayFilter=null, string? sConsultantFilter=null)
+            bool? isUrgent=false, bool? isChecked=false, string? sPathwayFilter=null, string? sConsultantFilter=null, string? sGCFilter=null)
         {
             int pageSize = 20;
 
@@ -242,6 +251,7 @@ namespace PatientTrackingList.Pages
             staffMembers = meta.GetStaffMemberList();
 
             consultantList = meta.GetStaffTypeList(staffMembers, "Consultant");
+            GCList = meta.GetStaffTypeList(staffMembers, "GC");
 
             pageOfPTL = PTL.Skip((pNo.GetValueOrDefault() + 1) * pageSize)
                     .Take(pageSize)
@@ -249,7 +259,7 @@ namespace PatientTrackingList.Pages
             
             Response.Redirect("Index?pNo=" + pNo + "&sortOrder=" + sortOrder + "&isDesc=" + isDesc + "&sNameSearch=" + sNameSearch + 
                 "&sCGUSearch=" + sCGUSearch + "&isUrgent=" + isUrgent + "&isChecked=" + isChecked + "&sPathwayFilter=" + sPathwayFilter + 
-                "&sConsultantFilter=" + sConsultantFilter);
+                "&sConsultantFilter=" + sConsultantFilter + "&sGCFilter=" + sGCFilter);
         }
     }
 }
