@@ -30,34 +30,34 @@
         <div class="row mb-5">
             <h3>Search form:</h3>
             <div class="col-md-1">
-                <label>Name:</label>
+                <label class="w-100">Name:</label>
             </div>
             <div class="col-md-2">
-                <input name="sNameSearch" />
+                <input class="w-100" name="sNameSearch" />
             </div>
             <div class="col-md-1">
-                <label>CGU_No:</label>
+                <label class="w-100">CGU_No:</label>
             </div>
             <div class="col-md-2">
-                <input name="sCGUSearch" />
+                <input class="w-100" name="sCGUSearch" />
             </div>
             <div class="col-md-1">
-                <label>Show  Only Urgent:</label>
+                <label class="w-100">Show  Only Urgent:</label>
             </div>
             <div class="col-md-1">
                 <input id="chkUrgent" type="checkbox" value="false" onclick="SetUrgentCheckBox()" asp-for=@Model.isUrgentSelected/>
             </div>
             <div class="col-md-1">
-                <label>Show  Only Unchecked:</label>
+                <label class="w-100">Show  Only Unchecked:</label>
             </div>
             <div class="col-md-1">
                 <input id="chkChecked" type="checkbox" value="false" onclick="SetCheckedCheckBox()" asp-for=@Model.isCheckedSelected />
             </div>
             <div class="col-md-1">
-                <label>Referral Pathway:</label>
+                <label class="w-100">Referral Pathway:</label>
             </div>
             <div class="col-md-1">
-                <select name="sPathwayFilter" asp-for=@Model.pathwaySelected>
+                <select class="w-100" name="sPathwayFilter" asp-for=@Model.pathwaySelected>
                     <option value="">Both</option>
                     <option value="Cancer">Cancer</option>
                     <option value="General">General</option>
@@ -66,10 +66,10 @@
         </div>
         <div class="row">
             <div class="col-md-1">
-                <label>Consultant:</label>
+                <label class="w-100">Consultant:</label>
             </div>
-            <div class="col-md-4">
-                <select name="sConsultantFilter" asp-for=@Model.consultantSelected>
+            <div class="col-md-3">
+                <select class="w-100" name="sConsultantFilter" asp-for=@Model.consultantSelected>
                     <option value="">Select...</option>
                     @foreach(var item in Model.consultantList)
                     {
@@ -77,9 +77,11 @@
                     }
                 </select>
             </div>
-            <div class="col-md-1">GC:</div>
-            <div class="col-md-4">
-                <select name="sGCFilter" asp-for=@Model.GCSelected>
+            <div class="col-md-1">
+                <label class="w-100">GC:</label>
+            </div>
+            <div class="col-md-3">
+                <select class="w-100" name="sGCFilter" asp-for=@Model.GCSelected>
                     <option value="">Select...</option>
                     @foreach (var item in Model.GCList)
                     {
@@ -87,6 +89,13 @@
                     }
                 </select>
             </div>
+            <div class="col-md-1">
+                <label class="w-100">Comments:</label>
+            </div>
+            <div class="col-md-2">
+                <input class="w-100" name="sCommentSearch" type="text" asp-for=@Model.commentSearch />
+            </div>
+
             <div class="col-md-1">
                 <input type="submit" class="btn btn-secondary" />
             </div>
@@ -485,10 +494,10 @@
     {
         <div class="row">
             <ul class="d-flex flex-row list-unstyled">
-                <li><a asp-page="\Index" asp-route-pNo=1 asp-route-sPathwayFilter=@Model.pathwaySelected asp-route-sConsultantFilter=@Model.consultantSelected asp-route-sGCFilter=@Model.GCSelected asp-route-isUrgent=@Model.isUrgentSelected asp-route-isChecked=@Model.isCheckedSelected>First</a>&nbsp;&nbsp;&nbsp;</li>
+                <li><a asp-page="\Index" asp-route-pNo=1 asp-route-sPathwayFilter=@Model.pathwaySelected asp-route-sConsultantFilter=@Model.consultantSelected asp-route-sGCFilter=@Model.GCSelected asp-route-isUrgent=@Model.isUrgentSelected asp-route-isChecked=@Model.isCheckedSelected asp-route-sCommentSearch=@Model.commentSearch>First</a>&nbsp;&nbsp;&nbsp;</li>
                 @if(Model.currentPageNo != 1)
                 {
-                    <li><a asp-page="\Index" asp-route-pNo=@Model.previousPage asp-route-sPathwayFilter=@Model.pathwaySelected asp-route-sConsultantFilter=@Model.consultantSelected asp-route-sGCFilter=@Model.GCSelected asp-route-isUrgent=@Model.isUrgentSelected asp-route-isChecked=@Model.isCheckedSelected>Back</a> &nbsp;&nbsp;&nbsp;</li>
+                    <li><a asp-page="\Index" asp-route-pNo=@Model.previousPage asp-route-sPathwayFilter=@Model.pathwaySelected asp-route-sConsultantFilter=@Model.consultantSelected asp-route-sGCFilter=@Model.GCSelected asp-route-isUrgent=@Model.isUrgentSelected asp-route-isChecked=@Model.isCheckedSelected asp-route-sCommentSearch=@Model.commentSearch>Back</a> &nbsp;&nbsp;&nbsp;</li>
                 }
                 @foreach (var i in Model.pageNumbers)
                 {
@@ -500,15 +509,15 @@
                         }
                         else
                         {
-                            <li><a asp-page="\Index" asp-route-pNo=@i asp-route-sPathwayFilter=@Model.pathwaySelected asp-route-sConsultantFilter=@Model.consultantSelected asp-route-sGCFilter=@Model.GCSelected asp-route-isUrgent=@Model.isUrgentSelected asp-route-isChecked=@Model.isCheckedSelected>@i</a> &nbsp;&nbsp;&nbsp;</li>
+                            <li><a asp-page="\Index" asp-route-pNo=@i asp-route-sPathwayFilter=@Model.pathwaySelected asp-route-sConsultantFilter=@Model.consultantSelected asp-route-sGCFilter=@Model.GCSelected asp-route-isUrgent=@Model.isUrgentSelected asp-route-isChecked=@Model.isCheckedSelected asp-route-sCommentSearch=@Model.commentSearch>@i</a> &nbsp;&nbsp;&nbsp;</li>
                         }
                     }
                 }
                 @if (Model.currentPageNo != Model.pageNumbers.Count())
                 {
-                    <li><a asp-page="\Index" asp-route-pNo=@Model.nextPage asp-route-sPathwayFilter=@Model.pathwaySelected asp-route-sConsultantFilter=@Model.consultantSelected asp-route-sGCFilter=@Model.GCSelected asp-route-isUrgent=@Model.isUrgentSelected asp-route-isChecked=@Model.isCheckedSelected>Next</a>&nbsp;&nbsp;&nbsp;</li>
+                    <li><a asp-page="\Index" asp-route-pNo=@Model.nextPage asp-route-sPathwayFilter=@Model.pathwaySelected asp-route-sConsultantFilter=@Model.consultantSelected asp-route-sGCFilter=@Model.GCSelected asp-route-isUrgent=@Model.isUrgentSelected asp-route-isChecked=@Model.isCheckedSelected asp-route-sCommentSearch=@Model.commentSearch>Next</a>&nbsp;&nbsp;&nbsp;</li>
                 }
-                <li><a asp-page="\Index" asp-route-pNo=@Model.pageNumbers.Count() asp-route-sPathwayFilter=@Model.pathwaySelected asp-route-sConsultantFilter=@Model.consultantSelected asp-route-sGCFilter=@Model.GCSelected asp-route-isUrgent=@Model.isUrgentSelected asp-route-isChecked=@Model.isCheckedSelected>Last</a></li>
+                <li><a asp-page="\Index" asp-route-pNo=@Model.pageNumbers.Count() asp-route-sPathwayFilter=@Model.pathwaySelected asp-route-sConsultantFilter=@Model.consultantSelected asp-route-sGCFilter=@Model.GCSelected asp-route-isUrgent=@Model.isUrgentSelected asp-route-isChecked=@Model.isCheckedSelected asp-route-sCommentSearch=@Model.commentSearch>Last</a></li>
             </ul>
         </div>
     }

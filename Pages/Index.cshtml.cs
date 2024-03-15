@@ -52,10 +52,12 @@ namespace PatientTrackingList.Pages
         public bool isUrgentSelected;
         public string consultantSelected;
         public string GCSelected;
+        public string commentSearch;
 
         [Authorize]
-        public void OnGet(int? pNo, string? sortOrder = "", bool? isDesc=false, string? sNameSearch = null, string? sCGUSearch = null, 
-            bool? isUrgent=false, bool? isChecked=false, string? sPathwayFilter=null, string? sConsultantFilter=null, string? sGCFilter=null)
+        public void OnGet(int? pNo, string? sortOrder = "", bool? isDesc=false, string? sNameSearch = null, 
+            string? sCGUSearch = null, bool? isUrgent=false, bool? isChecked=false, string? sPathwayFilter=null, 
+            string? sConsultantFilter=null, string? sGCFilter=null, string? sCommentSearch = null)
         {
             if (User.Identity.Name is null)
             {
@@ -216,6 +218,12 @@ namespace PatientTrackingList.Pages
                 GCSelected = sGCFilter;
             }
 
+            if (sCommentSearch != null && sCommentSearch != "")
+            {
+                pageOfPTL = pageOfPTL.Where(p => p.Comments != null && p.Comments.Contains(sCommentSearch)).ToList();
+                commentSearch = sCommentSearch;
+            }
+
             //pagination
             int pp = pageOfPTL.Count() / pageSize;
 
@@ -241,8 +249,9 @@ namespace PatientTrackingList.Pages
             previousPage = currentPageNo - 1;
         }
 
-        public void OnPost(int? pNo, string? sortOrder = "", bool? isDesc=false, string? sNameSearch=null, string? sCGUSearch=null, 
-            bool? isUrgent=false, bool? isChecked=false, string? sPathwayFilter=null, string? sConsultantFilter=null, string? sGCFilter=null)
+        public void OnPost(int? pNo, string? sortOrder = "", bool? isDesc=false, string? sNameSearch=null, 
+            string? sCGUSearch=null, bool? isUrgent=false, bool? isChecked=false, string? sPathwayFilter=null, 
+            string? sConsultantFilter=null, string? sGCFilter=null, string? sCommentSearch=null)
         {
             int pageSize = 20;
 
@@ -259,7 +268,7 @@ namespace PatientTrackingList.Pages
             
             Response.Redirect("Index?pNo=" + pNo + "&sortOrder=" + sortOrder + "&isDesc=" + isDesc + "&sNameSearch=" + sNameSearch + 
                 "&sCGUSearch=" + sCGUSearch + "&isUrgent=" + isUrgent + "&isChecked=" + isChecked + "&sPathwayFilter=" + sPathwayFilter + 
-                "&sConsultantFilter=" + sConsultantFilter + "&sGCFilter=" + sGCFilter);
+                "&sConsultantFilter=" + sConsultantFilter + "&sGCFilter=" + sGCFilter + "&sCommentSearch=" + sCommentSearch);
         }
     }
 }
