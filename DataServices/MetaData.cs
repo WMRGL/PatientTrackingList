@@ -17,7 +17,7 @@ namespace PatientTrackingList.DataServices
         public IEnumerable<PTL> GetPTLList()
         {
             var ptl = from p in _context.PTL
-                    where p.ClockStart != null && p.ClockStop == null
+                    where p.ClockStart != null && p.ClockStop == null && p.MPI != 67066
                     orderby p.ClockStart
                     select p;
 
@@ -88,5 +88,15 @@ namespace PatientTrackingList.DataServices
 
             return staffMember;
         }
+
+        public bool GetIsClinical(string username)
+        {
+            string strStaffType = _context.StaffMembers.FirstOrDefault(s => s.EMPLOYEE_NUMBER == username).CLINIC_SCHEDULER_GROUPS;
+
+            if (strStaffType == "GC" || strStaffType == "Consultant" || strStaffType == "SpR") return true;
+
+            return false;
+        }
+
     }
 }

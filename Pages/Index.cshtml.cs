@@ -63,6 +63,22 @@ namespace PatientTrackingList.Pages
             {
                 Response.Redirect("Login");
             }
+            else
+            {
+                if (meta.GetIsClinical(User.Identity.Name))
+                {
+                    var staffUserType = meta.GetStaffMemberDetails(User.Identity.Name);
+
+                    if (staffUserType.CLINIC_SCHEDULER_GROUPS == "GC" && sGCFilter == null)
+                    {
+                        sGCFilter = staffUserType.NAME;
+                    }
+                    else if ((staffUserType.CLINIC_SCHEDULER_GROUPS == "Consultant" || staffUserType.CLINIC_SCHEDULER_GROUPS == "SpR") && sConsultantFilter == null)
+                    {
+                        sConsultantFilter = staffUserType.NAME;
+                    }
+                }
+            }
 
             int pageSize = 20;            
 
@@ -175,7 +191,7 @@ namespace PatientTrackingList.Pages
                 break;
             }
 
-            pageOfPTL = PTL.ToList();
+            pageOfPTL = PTL.ToList();            
 
             //for filtering/searching
             if (sNameSearch != null)
