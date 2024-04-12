@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using PatientTrackingList.Data;
+using PatientTrackingList.DataServices;
 using PatientTrackingList.Models;
 
 namespace PatientTrackingList.Pages
@@ -7,8 +8,9 @@ namespace PatientTrackingList.Pages
     public class WaitingListModel : PageModel
     {
         private readonly DataContext _context;
+        private readonly MetaData _meta;
         public IEnumerable<WaitingList> WaitingList { get; set; }
-        public List<WaitingList> WL { get; set; }
+        public List<WaitingList> pageOfWL { get; set; }
         public List<string> Clinicians { get; set; }
         public List<string> Clinics { get; set; }
         public List<int> pageNumbers;
@@ -23,40 +25,40 @@ namespace PatientTrackingList.Pages
         public WaitingListModel(DataContext context)
         {
             _context = context;
+            _meta = new MetaData(_context);
             pageNumbers = new List<int>();
-            WL = new List<WaitingList>();
+            //WL = new List<WaitingList>();
             Clinicians = new List<string>();
             Clinics = new List<string>();
         }
 
-        public void OnGet(int? pNo, string? sClinician, string? sClinic)
+        public void OnGet(int? pNo, string? clinician, string? clinic)
         {
-            int pageSize = 20;
+            int pageSize = 20;            
 
-            WaitingList = from w in _context.WaitingList
-                        orderby w.AddedDate
-                        select w;
+            WaitingList = _meta.GetWaitingList();
+
+            //for WL total
+            //listTotal = WaitingList.Count();
 
             //drop-down menus
             Clinicians = WaitingList.Select(c => c.ClinicianID).Distinct().OrderBy(c => c).ToList();
             Clinics = WaitingList.Select(c => c.ClinicID).Distinct().OrderBy(c => c).ToList();
 
-            //for WL total
-            listTotal = WaitingList.Count();
-
-            if (sClinician != null)
+            if (clinician != null)
             {
-                WaitingList = WaitingList.Where(w => w.ClinicianID == sClinician);
-                clincianSelected = sClinician;
+                WaitingList = WaitingList.Where(w => w.ClinicianID == clinician);
+                clincianSelected = clinician;
             }
 
-            if (sClinic != null)
+            if (clinic != null)
             {
-                WaitingList = WaitingList.Where(w => w.ClinicID == sClinic);
-                clinicSelected = sClinic;
+                WaitingList = WaitingList.Where(w => w.ClinicID == clinic);
+                clinicSelected = clinic;
             }
 
-            List < WaitingList > pageOfWL = new List<WaitingList>();
+            //paginator
+            //List < WaitingList > pageOfWL = new List<WaitingList>();
             pageOfWL = WaitingList.ToList();
             
             int pp = pageOfWL.Count() / pageSize;
@@ -69,30 +71,21 @@ namespace PatientTrackingList.Pages
             pageOfWL = pageOfWL.Skip((pNo.GetValueOrDefault() - 1) * pageSize)
                     .Take(pageSize)
                     .ToList();          
-            
+            /*
             foreach (var w in pageOfWL)
             {
-                string sCGU;                
-                
-                if (_context.Patients.Where(p => p.INTID == w.IntID).Count() > 0)
-                {
-                    sCGU = _context.Patients.FirstOrDefault(p => p.INTID == w.IntID).CGU_No;
-                }
-                else
-                {
-                    sCGU = "Unknown";
-                }
+                string cguNo = _meta.GetCGUNoByIntID(w.IntID);                               
                     
                 WL.Add(new WaitingList
                 {
-                    CGU_No = sCGU,
+                    CGU_No = cguNo,
                     ClinicianID = w.ClinicianID,
                     ClinicID = w.ClinicID,
                     AddedDate = w.AddedDate,
                     Instructions = w.Instructions,
                     Comment = w.Comment
                 });
-            }
+            }*/
             
             if (pNo == null)
             {
@@ -105,20 +98,20 @@ namespace PatientTrackingList.Pages
 
             nextPage = currentPageNo + 1;
             previousPage = currentPageNo - 1;
+
+            listTotal = WaitingList.Count();
         }
 
-        public void OnPost(int? pNo, string? sClinician, string? sClinic)
+        public void OnPost(int? pNo, string? clinician, string? clinic)
         {
-            WaitingList = from w in _context.WaitingList
-                          orderby w.AddedDate
-                          select w;
+            WaitingList = _meta.GetWaitingList();
 
             //have to give it something, even if I'm instantly redirecting, or it'll throw a fit
             Clinicians = WaitingList.Select(c => c.ClinicianID).Distinct().OrderBy(c => c).ToList();
             Clinics = WaitingList.Select(c => c.ClinicID).Distinct().OrderBy(c => c).ToList();
-            WL = WaitingList.ToList();
+            //WL = WaitingList.ToList();
 
-            Response.Redirect("WaitingList?pNo=" + pNo + "&sClinician=" + sClinician + "&sClinic=" + sClinic);
+            Response.Redirect("WaitingList?pNo=" + pNo + "&clinician=" + clinician + "&clinic=" + clinic);
         }
     }
 }

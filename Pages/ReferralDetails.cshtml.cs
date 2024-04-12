@@ -33,14 +33,14 @@ namespace PatientTrackingList.Pages
         public bool isSuccess;
 
         [Authorize]
-        public void OnGet(string sPPI)
+        public void OnGet(string ppi)
         {
             if (User.Identity.Name is null)
             {
                 Response.Redirect("Login");
             }
 
-            RefDet = meta.GetPTLEntryDetails(sPPI);
+            RefDet = meta.GetPTLEntryDetails(ppi);
             var Referral = meta.GetReferralDetails(RefDet.RefID.GetValueOrDefault());
             ActivityList = meta.GetActivityList(Referral.CLINICNO);
             DiaryList = meta.GetDiaryList(RefDet.RefID.GetValueOrDefault());
@@ -50,11 +50,11 @@ namespace PatientTrackingList.Pages
             FiftyTwoWeekDate = RefDet.ClockStart.GetValueOrDefault().AddDays(365);
         }
 
-        public void OnPost(string sPPI, string sComments, bool? isChecked=false)
+        public void OnPost(string ppi, string comments, bool? isChecked=false)
         {
             try
             {
-                RefDet = meta.GetPTLEntryDetails(sPPI);
+                RefDet = meta.GetPTLEntryDetails(ppi);
                 var Referral = meta.GetReferralDetails(RefDet.RefID.GetValueOrDefault());
                 ActivityList = meta.GetActivityList(Referral.CLINICNO);
                 DiaryList = meta.GetDiaryList(RefDet.RefID.GetValueOrDefault());
@@ -69,14 +69,14 @@ namespace PatientTrackingList.Pages
                     iChecked = 1;
                 }               
 
-                string sUsername = meta.GetStaffMemberDetails(User.Identity.Name).STAFF_CODE;
+                string username = meta.GetStaffMemberDetails(User.Identity.Name).STAFF_CODE;
 
-                if (sComments != null)
+                if (comments != null)
                 {
-                    sComments = sComments.Replace("'", "''");
+                    comments = comments.Replace("'", "''");
                 }
                 
-                sql.SqlUpdateComments(sComments, iChecked, sUsername, sPPI);
+                sql.SqlUpdateComments(comments, iChecked, username, ppi);
                                                 
                 isSuccess = true;
                 Message = "Saved.";

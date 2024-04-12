@@ -2,74 +2,89 @@
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using PatientTrackingList.Data;
+using PatientTrackingList.Models;
 
 namespace PatientTrackingList.DataServices
 {
     public class SqlServices
     {
         private readonly IConfiguration _config;
-        private SqlConnection con;
-        private SqlCommand cmd;
+        private readonly SqlConnection _con;
+        private readonly SqlCommand _cmd;
         public SqlServices(IConfiguration config)
         {
             _config = config;
-            con = new SqlConnection(_config.GetConnectionString("ConString"));
-            cmd = new SqlCommand("", con);
+            _con = new SqlConnection(_config.GetConnectionString("ConString"));
+            _cmd = new SqlCommand("", _con);
         }
 
 
-        public void SqlUpdateComments(string sComments, int isChecked, string sUsername, string sPPI)
+        public void SqlUpdateComments(string comments, int isChecked, string username, string ppi)
         {
-            string OldComment = GetOldComments(sPPI);
+            string oldComment = GetOldComments(ppi);
 
-            if (sComments != null && OldComment != sComments)
+            if (comments != null && oldComment != comments)
             {
-                cmd.CommandText = "update PTL set comments='" + sComments + "', isChecked=" + isChecked +
-                    ", UpdatedBy='" + sUsername + "', UpdatedDate='" + DateTime.Now.ToString("yyyy-MM-dd") +
-                    "' where PPI='" + sPPI + "'";
+                _cmd.CommandText = "update PTL set comments='" + comments + "', isChecked=" + isChecked +
+                    ", UpdatedBy='" + username + "', UpdatedDate='" + DateTime.Now.ToString("yyyy-MM-dd") +
+                    "' where PPI='" + ppi + "'";
             }
             else
             {
-                cmd.CommandText = "update PTL set comments=null, isChecked=" + isChecked +
-                    ", UpdatedBy='" + sUsername + "', UpdatedDate='" + DateTime.Now.ToString("yyyy-MM-dd") +
-                    "' where PPI='" + sPPI + "'";
+                _cmd.CommandText = "update PTL set comments=null, isChecked=" + isChecked +
+                    ", UpdatedBy='" + username + "', UpdatedDate='" + DateTime.Now.ToString("yyyy-MM-dd") +
+                    "' where PPI='" + ppi + "'";
             }
-            con.Open();                
-            cmd.ExecuteNonQuery();
-            con.Close();
+            _con.Open();                
+            _cmd.ExecuteNonQuery();
+            _con.Close();
 
-            SqlWriteAuditUpdate(sComments, OldComment, sUsername, sPPI);
+            SqlWriteAuditUpdate(comments, oldComment, username, ppi);
         }
 
-        public string GetOldComments(string sPPI)
+        public string GetOldComments(string ppi)
         {
-            string sCommentOld = "";
-            cmd.CommandText = "select comments from PTL where PPI = '" + sPPI + "'";
-            con.Open();
-            SqlDataReader reader = cmd.ExecuteReader();
+            string commentOld = "";
+            _cmd.CommandText = "select comments from PTL where PPI = '" + ppi + "'";
+            
+            _con.Open();
+            SqlDataReader reader = _cmd.ExecuteReader();
             if(reader.Read())
             {
                 if (!reader.IsDBNull(0))
                 {
-                    sCommentOld = reader.GetString(0);
+                    commentOld = reader.GetString(0);
                 }
             }
-            con.Close();
-            return sCommentOld;
+            _con.Close();
+            
+            return commentOld;
         }
 
-        public void SqlWriteAuditUpdate(string sComments, string sOldComments, string sUsername, string sPPI)
+        public void SqlWriteAuditUpdate(string comments, string oldComments, string username, string ppi)
         {
-            cmd.CommandText = "insert into AuditTable (TableName, RecordPrimaryKey, FieldName, LoginName, " +
-                "MachineName, OriginalValue, NewValue, DateEdited, WhoEdited) Values ('PTL', '" + sPPI + "', 'Comments', " 
-                + "(select EMPLOYEE_NUMBER from STAFF where STAFF_CODE = '" + sUsername + "'), '" + System.Environment.MachineName + "', '" + sOldComments + "', '" + sComments + "', '"
-                + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss") + "', '" + sUsername + "')";
+            _cmd.CommandText = "insert into AuditTable (TableName, RecordPrimaryKey, FieldName, LoginName, " +
+                "MachineName, OriginalValue, NewValue, DateEdited, WhoEdited) Values ('PTL', '" + ppi + "', 'Comments', " 
+                + "(select EMPLOYEE_NUMBER from STAFF where STAFF_CODE = '" + username + "'), '" + System.Environment.MachineName + "', '" + oldComments + "', '" + comments + "', '"
+                + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss") + "', '" + username + "')";
             
-            string bleh = cmd.CommandText;
+            _con.Open();
+            _cmd.ExecuteNonQuery();
+            _con.Close();
+        }
 
-            con.Open();
-            cmd.ExecuteNonQuery();
-            con.Close();
+        public string ValidateLogin(UserDetails user)
+        {   
+            SqlCommand cmd = new SqlCommand("sp_ValidateUserLogin", _con);
+            cmd.CommandType = System.Data.CommandType.StoredProcedure;
+            cmd.Parameters.AddWithValue("@LoginID", user.EMPLOYEE_NUMBER);
+            cmd.Parameters.AddWithValue("@LoginPassword", user.PASSWORD);
+
+            _con.Open();
+            string result = cmd.ExecuteScalar().ToString();
+            _con.Close();
+
+            return result;
         }
 
     }

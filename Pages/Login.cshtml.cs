@@ -11,13 +11,13 @@ namespace PatientTrackingList.Pages
         UserDataAccessLayer objUser = new UserDataAccessLayer();
         public UserDetails? UserDetails { get; set; }
 
-        public async void OnGet(string sUsername, string sPassword)
+        public async void OnGet(string username, string sPassword)
         {
             //if (ModelState.IsValid)
-            if (sUsername != null)
+            if (username != null)
             {
                 UserDetails user = new UserDetails();
-                user.EMPLOYEE_NUMBER = sUsername;
+                user.EMPLOYEE_NUMBER = username;
                 user.PASSWORD = sPassword;
 
                 string LoginStatus = objUser.ValidateLogin(user);

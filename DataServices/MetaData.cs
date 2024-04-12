@@ -40,9 +40,9 @@ namespace PatientTrackingList.DataServices
             return staffList;
         }
         
-        public PTL GetPTLEntryDetails(string sPPI)
+        public PTL GetPTLEntryDetails(string ppi)
         {
-            var RefDet = _context.PTL.FirstOrDefault(r => r.PPI == sPPI);
+            var RefDet = _context.PTL.FirstOrDefault(r => r.PPI == ppi);
             
 
             return RefDet;
@@ -55,10 +55,10 @@ namespace PatientTrackingList.DataServices
             return Referral;
         }
 
-        public List<Activity> GetActivityList(string sClinicNo)
+        public List<Activity> GetActivityList(string clinicNo)
         {
             var ActivityList = from r in _context.Activity
-                               where r.REFERRAL_CLINICNO == sClinicNo
+                               where r.REFERRAL_CLINICNO == clinicNo
                                select r;
 
             return ActivityList.ToList();
@@ -89,7 +89,41 @@ namespace PatientTrackingList.DataServices
             return staffMember;
         }
 
-        public bool GetIsClinical(string username)
+        public List<WaitingList> GetWaitingList()
+        {
+            var waitingList = from w in _context.WaitingList
+                          orderby w.AddedDate
+                          select w;            
+            
+            return waitingList.ToList();
+        }
+
+        public List<ClinicSlots> GetClinicSlotsList() 
+        {
+            var clinicSlots = from s in _context.ClinicSlots
+                              orderby s.SlotDate
+                              select s;
+
+            return clinicSlots.ToList();
+        }
+
+        /*public string GetCGUNoByIntID(int intID)
+        {
+            string cguNo;
+
+            if (_context.Patients.Where(p => p.INTID == intID).Count() > 0)
+            {
+                cguNo = _context.Patients.FirstOrDefault(p => p.INTID == intID).CGU_No;
+            }
+            else
+            {
+                cguNo = "Unknown";
+            }
+
+            return cguNo;
+        }*/
+
+        public bool GetIclinical(string username)
         {
             string strStaffType = _context.StaffMembers.FirstOrDefault(s => s.EMPLOYEE_NUMBER == username).CLINIC_SCHEDULER_GROUPS;
 

@@ -26,6 +26,14 @@
     </div>
     <br />
 
+    <div class="row mb-5">
+        <div class="col-md-2">
+            <a class="btn btn-secondary" asp-area="" asp-page="/Download" asp-route-consultantFilter=@Model.consultantSelected asp-route-gcFilter=@Model.GCSelected asp-route-pathwayFilter=@Model.pathwaySelected asp-route-username=@Model.User.Identity.Name>Export Data</a>
+        </div>
+    </div>
+
+
+
     <form id="frmMenu" method="Post">
         <div class="row mb-5">
             <h3>Search form:</h3>
@@ -57,7 +65,7 @@
                 <label class="w-100">Referral Pathway:</label>
             </div>
             <div class="col-md-1">
-                <select class="w-100" name="sPathwayFilter" asp-for=@Model.pathwaySelected>
+                <select class="w-100" name="pathwayFilter" asp-for=@Model.pathwaySelected>
                     <option value="">Both</option>
                     <option value="Cancer">Cancer</option>
                     <option value="General">General</option>
@@ -69,7 +77,7 @@
                 <label class="w-100">Consultant:</label>
             </div>
             <div class="col-md-3">
-                <select class="w-100" name="sConsultantFilter" asp-for=@Model.consultantSelected>
+                <select class="w-100" name="consultantFilter" asp-for=@Model.consultantSelected>
                     <option value="">Select...</option>
                     @foreach(var item in Model.consultantList)
                     {
@@ -81,7 +89,7 @@
                 <label class="w-100">GC:</label>
             </div>
             <div class="col-md-3">
-                <select class="w-100" name="sGCFilter" asp-for=@Model.GCSelected>
+                <select class="w-100" name="gcFilter" asp-for=@Model.GCSelected>
                     <option value="">Select...</option>
                     @foreach (var item in Model.GCList)
                     {
@@ -93,7 +101,7 @@
                 <label class="w-100">Comments:</label>
             </div>
             <div class="col-md-2">
-                <input class="w-100" name="sCommentSearch" type="text" asp-for=@Model.commentSearch />
+                <input class="w-100" name="commentsearch" type="text" asp-for=@Model.commentSearch />
             </div>
 
             <div class="col-md-1">
@@ -313,7 +321,7 @@
                     @if (@p.ClockStart < Model.FiftyTwoWeekDate)
                     {
                         <tr style ="color:red">
-                            <td><a type="button" class="btn btn-secondary" asp-area="" asp-page="/ReferralDetails" asp-route-sPPI=@p.PPI>@p.CGUNo</a></td>
+                            <td><a type="button" class="btn btn-secondary" asp-area="" asp-page="/ReferralDetails" asp-route-ppi=@p.PPI>@p.CGUNo</a></td>
                             <td>@p.PatientName</td>                                                       
                             @if (p.ReferralDate.HasValue)
                             {
@@ -372,7 +380,7 @@
                     else if (@p.ClockStart < Model.EighteenWeekDate)
                     {                        
                         <tr style="color:orange">
-                            <td><a type="button" class="btn btn-secondary" asp-area="" asp-page="/ReferralDetails" asp-route-sPPI=@p.PPI>@p.CGUNo</a></td>
+                            <td><a type="button" class="btn btn-secondary" asp-area="" asp-page="/ReferralDetails" asp-route-ppi=@p.PPI>@p.CGUNo</a></td>
                             <td>@p.PatientName</td>                           
                             @if (p.ReferralDate.HasValue)
                             {
@@ -430,7 +438,7 @@
                     else
                     {
                         <tr>
-                            <td><a type="button" class="btn btn-secondary" asp-area="" asp-page="/ReferralDetails" asp-route-sPPI=@p.PPI>@p.CGUNo</a></td>
+                            <td><a type="button" class="btn btn-secondary" asp-area="" asp-page="/ReferralDetails" asp-route-ppi=@p.PPI>@p.CGUNo</a></td>
                             <td>@p.PatientName</td>                            
                             @if (p.ReferralDate.HasValue)
                             {
@@ -494,10 +502,10 @@
     {
         <div class="row">
             <ul class="d-flex flex-row list-unstyled">
-                <li><a asp-page="\Index" asp-route-pNo=1 asp-route-sPathwayFilter=@Model.pathwaySelected asp-route-sConsultantFilter=@Model.consultantSelected asp-route-sGCFilter=@Model.GCSelected asp-route-isUrgent=@Model.isUrgentSelected asp-route-isChecked=@Model.isCheckedSelected asp-route-sCommentSearch=@Model.commentSearch>First</a>&nbsp;&nbsp;&nbsp;</li>
+                <li><a asp-page="\Index" asp-route-pNo=1 asp-route-pathwayFilter=@Model.pathwaySelected asp-route-consultantFilter=@Model.consultantSelected asp-route-gcFilter=@Model.GCSelected asp-route-isUrgent=@Model.isUrgentSelected asp-route-isChecked=@Model.isCheckedSelected asp-route-commentsearch=@Model.commentSearch>First</a>&nbsp;&nbsp;&nbsp;</li>
                 @if(Model.currentPageNo != 1)
                 {
-                    <li><a asp-page="\Index" asp-route-pNo=@Model.previousPage asp-route-sPathwayFilter=@Model.pathwaySelected asp-route-sConsultantFilter=@Model.consultantSelected asp-route-sGCFilter=@Model.GCSelected asp-route-isUrgent=@Model.isUrgentSelected asp-route-isChecked=@Model.isCheckedSelected asp-route-sCommentSearch=@Model.commentSearch>Back</a> &nbsp;&nbsp;&nbsp;</li>
+                    <li><a asp-page="\Index" asp-route-pNo=@Model.previousPage asp-route-pathwayFilter=@Model.pathwaySelected asp-route-consultantFilter=@Model.consultantSelected asp-route-gcFilter=@Model.GCSelected asp-route-isUrgent=@Model.isUrgentSelected asp-route-isChecked=@Model.isCheckedSelected asp-route-commentsearch=@Model.commentSearch>Back</a> &nbsp;&nbsp;&nbsp;</li>
                 }
                 @foreach (var i in Model.pageNumbers)
                 {
@@ -509,15 +517,15 @@
                         }
                         else
                         {
-                            <li><a asp-page="\Index" asp-route-pNo=@i asp-route-sPathwayFilter=@Model.pathwaySelected asp-route-sConsultantFilter=@Model.consultantSelected asp-route-sGCFilter=@Model.GCSelected asp-route-isUrgent=@Model.isUrgentSelected asp-route-isChecked=@Model.isCheckedSelected asp-route-sCommentSearch=@Model.commentSearch>@i</a> &nbsp;&nbsp;&nbsp;</li>
+                            <li><a asp-page="\Index" asp-route-pNo=@i asp-route-pathwayFilter=@Model.pathwaySelected asp-route-consultantFilter=@Model.consultantSelected asp-route-gcFilter=@Model.GCSelected asp-route-isUrgent=@Model.isUrgentSelected asp-route-isChecked=@Model.isCheckedSelected asp-route-commentsearch=@Model.commentSearch>@i</a> &nbsp;&nbsp;&nbsp;</li>
                         }
                     }
                 }
                 @if (Model.currentPageNo != Model.pageNumbers.Count())
                 {
-                    <li><a asp-page="\Index" asp-route-pNo=@Model.nextPage asp-route-sPathwayFilter=@Model.pathwaySelected asp-route-sConsultantFilter=@Model.consultantSelected asp-route-sGCFilter=@Model.GCSelected asp-route-isUrgent=@Model.isUrgentSelected asp-route-isChecked=@Model.isCheckedSelected asp-route-sCommentSearch=@Model.commentSearch>Next</a>&nbsp;&nbsp;&nbsp;</li>
+                    <li><a asp-page="\Index" asp-route-pNo=@Model.nextPage asp-route-pathwayFilter=@Model.pathwaySelected asp-route-consultantFilter=@Model.consultantSelected asp-route-gcFilter=@Model.GCSelected asp-route-isUrgent=@Model.isUrgentSelected asp-route-isChecked=@Model.isCheckedSelected asp-route-commentsearch=@Model.commentSearch>Next</a>&nbsp;&nbsp;&nbsp;</li>
                 }
-                <li><a asp-page="\Index" asp-route-pNo=@Model.pageNumbers.Count() asp-route-sPathwayFilter=@Model.pathwaySelected asp-route-sConsultantFilter=@Model.consultantSelected asp-route-sGCFilter=@Model.GCSelected asp-route-isUrgent=@Model.isUrgentSelected asp-route-isChecked=@Model.isCheckedSelected asp-route-sCommentSearch=@Model.commentSearch>Last</a></li>
+                <li><a asp-page="\Index" asp-route-pNo=@Model.pageNumbers.Count() asp-route-pathwayFilter=@Model.pathwaySelected asp-route-consultantFilter=@Model.consultantSelected asp-route-gcFilter=@Model.GCSelected asp-route-isUrgent=@Model.isUrgentSelected asp-route-isChecked=@Model.isCheckedSelected asp-route-commentsearch=@Model.commentSearch>Last</a></li>
             </ul>
         </div>
     }

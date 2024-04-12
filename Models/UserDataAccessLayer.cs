@@ -2,17 +2,20 @@
 using Microsoft.Data.SqlClient;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Microsoft.Extensions.Configuration;
+using PatientTrackingList.DataServices;
 
 namespace PatientTrackingList.Models
 {
     public class UserDataAccessLayer : Controller
     {
         public static IConfiguration Configuration { get; set; }
+        private readonly SqlServices _sql = new SqlServices(Configuration);
+
         private static string GetConnectionString()
         {
             var builder = new ConfigurationBuilder()
                 .SetBasePath(Directory.GetCurrentDirectory())
-                .AddJsonFile("appsettings.json")
+                //.AddJsonFile("appsettings.json")
                 .AddJsonFile("secrets.json");
 
             Configuration = builder.Build();
@@ -25,20 +28,8 @@ namespace PatientTrackingList.Models
 
 
         public string ValidateLogin(UserDetails user)
-        {
-            using (SqlConnection con = new SqlConnection(connectionString))
-            {
-                SqlCommand cmd = new SqlCommand("sp_ValidateUserLogin", con);
-                cmd.CommandType = System.Data.CommandType.StoredProcedure;
-                cmd.Parameters.AddWithValue("@LoginID", user.EMPLOYEE_NUMBER);
-                cmd.Parameters.AddWithValue("@LoginPassword", user.PASSWORD);
-                
-                con.Open();
-                string result = cmd.ExecuteScalar().ToString();
-                con.Close();
-                
-                return result;
-            }
+        {            
+            return _sql.ValidateLogin(user);
         }
     }
 }
