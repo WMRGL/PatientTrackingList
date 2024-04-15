@@ -1,7 +1,7 @@
 ﻿@page
 @model PatientTrackingList.Pages.CapacityUtilisationModel
 @{
-    ViewData["Title"] = "Waiting List";
+    ViewData["Title"] = "Capacity Utilisation";
 }
 
 
@@ -9,6 +9,12 @@
 
     <h2>Clinic Slots - Total: @Model.listTotal</h2>
     <br /><br />
+
+    <div class="row mb-5">
+        <div class="col-md-2">            
+            <a class="btn btn-secondary" asp-area="" asp-page="/Download" asp-route-clinicianFilter=@Model.clincianSelected asp-route-clinicFilter=@Model.clinicSelected asp-route-dateFrom=@Model.fromDateSelected asp-route-dateTo=@Model.toDateSelected asp-route-statusFilter=@Model.statusSelected asp-route-username=@Model.User.Identity.Name asp-route-type="capacityutilisation">Export Data</a>
+        </div>
+    </div>
 
     <form id="frmWLSearch" method="post">
         <div class="row">        

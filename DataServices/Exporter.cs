@@ -72,13 +72,76 @@ namespace PatientTrackingList.DataServices
             }
 
             //return table;
-            ToCSV(table, username);
+            ToCSV(table, username, "ptl");
         }
 
-        public void ToCSV(DataTable table, string username)
+        public void ExportWL(List<WaitingList> wlToExport, string username)
+        {
+            DataTable table = new DataTable();
+
+            table.Columns.Add("CGU Number", typeof(string));
+            table.Columns.Add("Patient", typeof(string));
+            table.Columns.Add("Clinician", typeof(string));
+            table.Columns.Add("Clinic", typeof(string));
+            table.Columns.Add("Comments", typeof(string));
+            //table.Columns.Add("Instructions", typeof(string));
+            table.Columns.Add("Added Date", typeof(string));
+            
+
+            foreach (var wl in wlToExport)
+            {
+                int ctdays = 0;
+                int ctweeks = 0;
+                int tcidays = 0;
+                string tcidate = "N/A";
+                                
+                table.Rows.Add(wl.CGU_No,
+                    wl.FIRSTNAME + " " + wl.LASTNAME,
+                    wl.ClinicianName,
+                    wl.ClinicName,
+                    wl.Comment,
+                    //wl.Instructions,                    
+                    wl.AddedDate.Value.ToString("dd/MM/yyyy"));
+            }
+
+            //return table;
+            ToCSV(table, username, "waitinglist");
+        }
+
+        public void ExportCap(List<ClinicSlots> capToExport, string username)
+        {
+            DataTable table = new DataTable();
+
+            table.Columns.Add("Clinician", typeof(string));
+            table.Columns.Add("Clinic", typeof(string));
+            table.Columns.Add("SlotDate", typeof(string));
+            table.Columns.Add("SlotTime", typeof(string));
+            table.Columns.Add("Status", typeof(string));
+            
+
+
+            foreach (var cs in capToExport)
+            {
+                int ctdays = 0;
+                int ctweeks = 0;
+                int tcidays = 0;
+                string tcidate = "N/A";
+
+                table.Rows.Add(cs.ClinicianID,
+                    cs.ClinicID,
+                    cs.SlotDate.Value.ToString("dd/MM/yyyy"),
+                    cs.SlotTime.Value.ToString("HH:mm"),
+                    cs.SlotStatus);
+            }
+
+            //return table;
+            ToCSV(table, username, "capacityutil");
+        }
+
+        public void ToCSV(DataTable table, string username, string type)
         {
             //string filePath = $"C:\\CGU_DB\\ptl-{username}.csv";
-            string fileName = $"ptl-{username}.csv";
+            string fileName = $"{type}-{username}.csv";
             string filePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot\\Downloads\\" + fileName);
             StreamWriter sw = new StreamWriter(filePath, false);
             //headers
@@ -124,37 +187,83 @@ namespace PatientTrackingList.DataServices
 
         [HttpGet("download")]
         //public async Task<IActionResult> DownloadFile(string filePath)
-        public async Task<IActionResult> DownloadFile(string consultantFilter, string gcFilter, string pathwayFilter, string username)
+        public async Task<IActionResult> DownloadFile(string type, string username, string consultantFilter, string gcFilter, string pathwayFilter, 
+            string clinicianFilter, string clinicFilter, string statusFilter, string dateTo, string dateFrom)
         {
-            string filePath = "";
-            
-            List<PTL> ptlToExport = new List<PTL>();
-            ptlToExport = _meta.GetPTLList().ToList();
-
-            if (pathwayFilter != null && pathwayFilter != "")
+            if (type == "ptl")
             {
-                ptlToExport = ptlToExport.Where(p => p.ReferralReason == pathwayFilter).ToList();
+                List<PTL> ptlToExport = new List<PTL>();
+                ptlToExport = _meta.GetPTLList().ToList();
+
+                if (pathwayFilter != null && pathwayFilter != "")
+                {
+                    ptlToExport = ptlToExport.Where(p => p.ReferralReason == pathwayFilter).ToList();
+                }
+
+                if (consultantFilter != null && consultantFilter != "")
+                {
+                    ptlToExport = ptlToExport.Where(p => p.ReferralConsultant == consultantFilter).ToList();
+                }
+
+                if (gcFilter != null && gcFilter != "")
+                {
+                    ptlToExport = ptlToExport.Where(p => p.ReferralGC == gcFilter).ToList();
+                }
+
+                ExportPTL(ptlToExport, username);
             }
 
-            if (consultantFilter != null && consultantFilter != "")
+            else if (type == "waitinglist")
             {
-                ptlToExport = ptlToExport.Where(p => p.ReferralConsultant == consultantFilter).ToList();
+                List<WaitingList> wlToExport = new List<WaitingList>();
+                wlToExport = _meta.GetWaitingList().ToList();
+
+                
+                if (clinicianFilter != null && clinicianFilter != "")
+                {
+                    wlToExport = wlToExport.Where(p => p.ClinicianID == clinicianFilter).ToList();
+                }
+
+                if (clinicFilter != null && clinicFilter != "")
+                {
+                    wlToExport = wlToExport.Where(p => p.ClinicID == clinicFilter).ToList();
+                }
+
+                ExportWL(wlToExport, username);
             }
 
-            if (gcFilter != null && gcFilter != "")
+            else if (type == "capacityutilisation")
             {
-                ptlToExport = ptlToExport.Where(p => p.ReferralGC == gcFilter).ToList();
+                List<ClinicSlots> capToExport = new List<ClinicSlots>();
+                capToExport = _meta.GetClinicSlotsList().ToList();
+
+
+                if (clinicianFilter != null && clinicianFilter != "")
+                {
+                    capToExport = capToExport.Where(p => p.ClinicianID == clinicianFilter).ToList();
+                }
+
+                if (clinicFilter != null && clinicFilter != "")
+                {
+                    capToExport = capToExport.Where(p => p.ClinicID == clinicFilter).ToList();
+                }
+
+                if (statusFilter != null && statusFilter != "")
+                {
+                    capToExport = capToExport.Where(p => p.SlotStatus == statusFilter).ToList();
+                }
+
+                //I can't pass it a date, for some reason, so it has to be a string!
+                DateTime dfrom = DateTime.Parse(dateFrom);
+                DateTime dTo = DateTime.Parse(dateTo);
+                capToExport = capToExport.Where(p => p.SlotDate >= dfrom && p.SlotDate <= dTo).ToList();
+
+                ExportCap(capToExport, username);
             }
 
-
-            ExportPTL(ptlToExport, username);
-
-            filePath = dlFilePath;
-
-
-            if (System.IO.File.Exists(filePath))
+            if (System.IO.File.Exists(dlFilePath))
             {
-                return File(System.IO.File.ReadAllBytes(filePath), "text/csv", System.IO.Path.GetFileName(filePath));
+                return File(System.IO.File.ReadAllBytes(dlFilePath), "text/csv", System.IO.Path.GetFileName(dlFilePath));
             }
             return Redirect("Error");
         }

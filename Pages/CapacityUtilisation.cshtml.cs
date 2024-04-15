@@ -23,8 +23,9 @@ namespace PatientTrackingList.Pages
         public string clincianSelected;
         public string clinicSelected;
         public string statusSelected;
-        public DateTime fromDateSelected;
         public DateTime toDateSelected;
+        public DateTime fromDateSelected;
+        
 
         public CapacityUtilisationModel(DataContext context)
         {
@@ -33,7 +34,7 @@ namespace PatientTrackingList.Pages
             pageNumbers = new List<int>();            
             Clinicians = new List<string>();
             Clinics = new List<string>();
-            Stati = new List<string>();
+            Stati = new List<string>();           
         }
 
         public void OnGet(int? pNo, string? clinician, string? clinic, DateTime? fromDate, DateTime? toDate, string? status)
@@ -71,10 +72,11 @@ namespace PatientTrackingList.Pages
             {
                 toDate = DateTime.Now.AddDays(500);
             }
-            //ClinicSlots = ClinicSlots.Where(w => w.SlotDate <= toDate);
+
             ClinicSlots = ClinicSlots.Where(w => w.SlotDate >= fromDate && w.SlotDate <= toDate);
-            fromDateSelected = fromDate.GetValueOrDefault();
             toDateSelected = toDate.GetValueOrDefault();
+            fromDateSelected = fromDate.GetValueOrDefault();
+            
 
             if (status != null)
             {
