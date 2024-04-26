@@ -10,6 +10,7 @@ namespace PatientTrackingList.Pages
     {
 
         private readonly DataContext _context;
+        private readonly IConfiguration _config;
         public IEnumerable<PTL> PTL { get; set; }
         public List<PTL> pageOfPTL { get; set; }
         public IEnumerable<StaffMembers> staffMembers { get; set; }
@@ -19,9 +20,10 @@ namespace PatientTrackingList.Pages
         private readonly MetaData _meta;
 
 
-        public IndexModel(DataContext context)
+        public IndexModel(DataContext context, IConfiguration config)
         {
             _context = context;
+            _config = config;
             pageNumbers = new List<int>();
             _meta = new MetaData(_context);
         }
@@ -53,6 +55,7 @@ namespace PatientTrackingList.Pages
         public string consultantSelected;
         public string GCSelected;
         public string commentSearch;
+        public bool isLive;
 
         [Authorize]
         public void OnGet(int? pNo, string? sortOrder = "", bool? isDesc=false, string? sNameSearch = null, 
@@ -77,6 +80,7 @@ namespace PatientTrackingList.Pages
                     {
                         consultantFilter = staffUserType.NAME;
                     }
+                    isLive = bool.Parse(_config.GetValue("IsLive", ""));
                 }
             }
 
