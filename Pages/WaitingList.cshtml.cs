@@ -8,7 +8,7 @@ namespace PatientTrackingList.Pages
     public class WaitingListModel : PageModel
     {
         private readonly DataContext _context;
-        private readonly MetaData _meta;
+        private readonly WaitingListData _waitingListData;
         public IEnumerable<WaitingList> WaitingList { get; set; }
         public List<WaitingList> pageOfWL { get; set; }
         public List<string> Clinicians { get; set; }
@@ -25,7 +25,7 @@ namespace PatientTrackingList.Pages
         public WaitingListModel(DataContext context)
         {
             _context = context;
-            _meta = new MetaData(_context);
+            _waitingListData = new WaitingListData(_context);
             pageNumbers = new List<int>();
             //WL = new List<WaitingList>();
             Clinicians = new List<string>();
@@ -34,9 +34,14 @@ namespace PatientTrackingList.Pages
 
         public void OnGet(int? pNo, string? clinician, string? clinic)
         {
+            if (User.Identity.Name is null)
+            {
+                Response.Redirect("Login");
+            }
+
             int pageSize = 20;            
 
-            WaitingList = _meta.GetWaitingList();
+            WaitingList = _waitingListData.GetWaitingList();
 
             //for WL total
             //listTotal = WaitingList.Count();
@@ -71,22 +76,7 @@ namespace PatientTrackingList.Pages
             pageOfWL = pageOfWL.Skip((pNo.GetValueOrDefault() - 1) * pageSize)
                     .Take(pageSize)
                     .ToList();          
-            /*
-            foreach (var w in pageOfWL)
-            {
-                string cguNo = _meta.GetCGUNoByIntID(w.IntID);                               
-                    
-                WL.Add(new WaitingList
-                {
-                    CGU_No = cguNo,
-                    ClinicianID = w.ClinicianID,
-                    ClinicID = w.ClinicID,
-                    AddedDate = w.AddedDate,
-                    Instructions = w.Instructions,
-                    Comment = w.Comment
-                });
-            }*/
-            
+                        
             if (pNo == null)
             {
                 currentPageNo = 1;
@@ -104,7 +94,7 @@ namespace PatientTrackingList.Pages
 
         public void OnPost(int? pNo, string? clinician, string? clinic)
         {
-            WaitingList = _meta.GetWaitingList();
+            WaitingList = _waitingListData.GetWaitingList();
 
             //have to give it something, even if I'm instantly redirecting, or it'll throw a fit
             Clinicians = WaitingList.Select(c => c.ClinicianID).Distinct().OrderBy(c => c).ToList();

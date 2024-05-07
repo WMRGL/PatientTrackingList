@@ -8,7 +8,7 @@ namespace PatientTrackingList.Pages
     public class CapacityUtilisationModel : PageModel
     {
         private readonly DataContext _context;
-        private readonly MetaData _meta;
+        private readonly ClinicSlotData _clinicSlotData;
         public IEnumerable<ClinicSlots> ClinicSlots { get; set; }
         public List<ClinicSlots> pageOfSlot { get; set; }
         public List<string> Clinicians { get; set; }
@@ -30,7 +30,7 @@ namespace PatientTrackingList.Pages
         public CapacityUtilisationModel(DataContext context)
         {
             _context = context;
-            _meta = new MetaData(_context);           
+            _clinicSlotData = new ClinicSlotData(_context);
             pageNumbers = new List<int>();            
             Clinicians = new List<string>();
             Clinics = new List<string>();
@@ -39,9 +39,14 @@ namespace PatientTrackingList.Pages
 
         public void OnGet(int? pNo, string? clinician, string? clinic, DateTime? fromDate, DateTime? toDate, string? status)
         {
+            if (User.Identity.Name is null)
+            {
+                Response.Redirect("Login");
+            }
+
             int pageSize = 20;            
 
-            ClinicSlots = _meta.GetClinicSlotsList();
+            ClinicSlots = _clinicSlotData.GetClinicSlotsList();
 
             //for total
             //listTotal = ClinicSlots.Count();
@@ -116,7 +121,7 @@ namespace PatientTrackingList.Pages
         public void OnPost(int? pNo, string? clinician, string? clinic, DateTime? fromDate, DateTime? toDate, string? status)
         {
             int pageSize = 20;
-            ClinicSlots = _meta.GetClinicSlotsList();
+            ClinicSlots = _clinicSlotData.GetClinicSlotsList();
 
             pageOfSlot = ClinicSlots.Skip((pNo.GetValueOrDefault() + 1) * pageSize)
                     .Take(pageSize)

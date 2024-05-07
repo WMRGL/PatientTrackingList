@@ -17,15 +17,16 @@ namespace PatientTrackingList.Pages
         public List<StaffMembers> consultantList { get; set; }
         public List<StaffMembers> GCList { get; set; }
         public List<int> pageNumbers;
-        private readonly MetaData _meta;
-
+        private readonly PTLData _ptlData;
+        private readonly StaffData _staffData;
 
         public IndexModel(DataContext context, IConfiguration config)
         {
             _context = context;
             _config = config;
             pageNumbers = new List<int>();
-            _meta = new MetaData(_context);
+            _ptlData = new PTLData(_context);
+            _staffData = new StaffData(_context);
         }
 
         
@@ -51,7 +52,7 @@ namespace PatientTrackingList.Pages
 
         public string pathwaySelected;
         public bool isCheckedSelected;
-        public bool isUrgentSelected;
+        public string prioritySelected;
         public string consultantSelected;
         public string GCSelected;
         public string commentSearch;
@@ -59,7 +60,7 @@ namespace PatientTrackingList.Pages
 
         [Authorize]
         public void OnGet(int? pNo, string? sortOrder = "", bool? isDesc=false, string? sNameSearch = null, 
-            string? sCGUSearch = null, bool? isUrgent=false, bool? isChecked=false, string? pathwayFilter=null, 
+            string? sCGUSearch = null, string? priorityFilter = null, bool? isChecked=false, string? pathwayFilter=null, 
             string? consultantFilter=null, string? gcFilter=null, string? commentsearch = null)
         {
             if (User.Identity.Name is null)
@@ -68,9 +69,9 @@ namespace PatientTrackingList.Pages
             }
             else
             {
-                if (_meta.GetIclinical(User.Identity.Name))
+                if (_staffData.GetIsClinical(User.Identity.Name))
                 {
-                    var staffUserType = _meta.GetStaffMemberDetails(User.Identity.Name);
+                    var staffUserType = _staffData.GetStaffMemberDetails(User.Identity.Name);
 
                     if (staffUserType.CLINIC_SCHEDULER_GROUPS == "GC" && gcFilter == null)
                     {
@@ -86,12 +87,12 @@ namespace PatientTrackingList.Pages
 
             int pageSize = 20;            
 
-            PTL = _meta.GetPTLList();                       
+            PTL = _ptlData.GetPTLList();                       
 
-            staffMembers = _meta.GetStaffMemberList();
+            staffMembers = _staffData.GetStaffMemberList();
             
-            consultantList = _meta.GetStaffTypeList(staffMembers, "Consultant");
-            GCList = _meta.GetStaffTypeList(staffMembers, "GC");
+            consultantList = _staffData.GetStaffTypeList(staffMembers, "Consultant");
+            GCList = _staffData.GetStaffTypeList(staffMembers, "GC");
 
             isSortDesc = isDesc.GetValueOrDefault();            
 
@@ -208,10 +209,16 @@ namespace PatientTrackingList.Pages
                 pageOfPTL = pageOfPTL.Where(p => p.CGUNo.Contains(sCGUSearch)).ToList();
             }
 
-            if(isUrgent.GetValueOrDefault())
+            /*if(priorityFilter.GetValueOrDefault())
             {
                 pageOfPTL = pageOfPTL.Where(p => p.Class == "Urgent").ToList();
-                isUrgentSelected = isUrgent.GetValueOrDefault();
+                prioritySelected = priorityFilter.GetValueOrDefault();
+            }*/
+
+            if (priorityFilter != null && priorityFilter != "")
+            {
+                pageOfPTL = pageOfPTL.Where(p => p.Class == priorityFilter).ToList();
+                prioritySelected = priorityFilter;
             }
 
             if (isChecked.GetValueOrDefault())
@@ -270,24 +277,24 @@ namespace PatientTrackingList.Pages
         }
 
         public void OnPost(int? pNo, string? sortOrder = "", bool? isDesc=false, string? sNameSearch=null, 
-            string? sCGUSearch=null, bool? isUrgent=false, bool? isChecked=false, string? pathwayFilter=null, 
+            string? sCGUSearch=null, string? priorityFilter = null, bool? isChecked=false, string? pathwayFilter=null, 
             string? consultantFilter=null, string? gcFilter=null, string? commentsearch=null)
         {
             int pageSize = 20;
 
-            PTL = _meta.GetPTLList();
+            PTL = _ptlData.GetPTLList();
 
-            staffMembers = _meta.GetStaffMemberList();
+            staffMembers = _staffData.GetStaffMemberList();
 
-            consultantList = _meta.GetStaffTypeList(staffMembers, "Consultant");
-            GCList = _meta.GetStaffTypeList(staffMembers, "GC");
+            consultantList = _staffData.GetStaffTypeList(staffMembers, "Consultant");
+            GCList = _staffData.GetStaffTypeList(staffMembers, "GC");
 
             pageOfPTL = PTL.Skip((pNo.GetValueOrDefault() + 1) * pageSize)
                     .Take(pageSize)
                     .ToList();
             
             Response.Redirect($"Index?pNo={pNo}&sortOrder={sortOrder}&isDesc={isDesc}&sNameSearch={sNameSearch}&sCGUSearch={sCGUSearch}" +
-                $"&isUrgent={isUrgent}&isChecked={isChecked}&pathwayFilter={pathwayFilter}&consultantFilter={consultantFilter}&gcFilter={gcFilter}" +
+                $"&priorityFilter={priorityFilter}&isChecked={isChecked}&pathwayFilter={pathwayFilter}&consultantFilter={consultantFilter}&gcFilter={gcFilter}" +
                 $"&commentsearch={commentsearch}");
         }
     }

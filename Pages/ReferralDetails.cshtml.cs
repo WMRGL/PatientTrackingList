@@ -11,15 +11,23 @@ namespace PatientTrackingList.Pages
     {
         private readonly DataContext _context;
         private readonly IConfiguration _config;
-        private readonly MetaData meta;
-        private readonly SqlServices sql;
+        private readonly PTLData _ptlData;
+        private readonly SqlServices _sql;
+        private readonly StaffData _staffData;
+        private readonly ActivityData _activityData;
+        private readonly DiaryData _diaryData;
+        private readonly LetterData _letterData;
 
         public ReferralDetailsModel(DataContext context, IConfiguration config)
         {
             _context = context;
             _config = config;
-            meta = new MetaData(_context);
-            sql = new SqlServices(_config);
+            _ptlData = new PTLData(_context);
+            _staffData = new StaffData(_context);
+            _activityData = new ActivityData(_context);
+            _diaryData = new DiaryData(_context);
+            _letterData = new LetterData(_context);
+            _sql = new SqlServices(_config);
         }
 
         public PTL RefDet { get; set; }
@@ -40,11 +48,11 @@ namespace PatientTrackingList.Pages
                 Response.Redirect("Login");
             }
 
-            RefDet = meta.GetPTLEntryDetails(ppi);
-            var Referral = meta.GetReferralDetails(RefDet.RefID.GetValueOrDefault());
-            ActivityList = meta.GetActivityList(Referral.CLINICNO);
-            DiaryList = meta.GetDiaryList(RefDet.RefID.GetValueOrDefault());
-            LetterList = meta.GetLetterList(RefDet.RefID.GetValueOrDefault());
+            RefDet = _ptlData.GetPTLEntryDetails(ppi);
+            var Referral = _activityData.GetReferralDetails(RefDet.RefID.GetValueOrDefault());
+            ActivityList = _activityData.GetActivityList(Referral.CLINICNO);
+            DiaryList = _diaryData.GetDiaryList(RefDet.RefID.GetValueOrDefault());
+            LetterList = _letterData.GetLetterList(RefDet.RefID.GetValueOrDefault());
 
             EighteenWeekDate = RefDet.ClockStart.GetValueOrDefault().AddDays(18 * 7);
             FiftyTwoWeekDate = RefDet.ClockStart.GetValueOrDefault().AddDays(365);
@@ -54,11 +62,11 @@ namespace PatientTrackingList.Pages
         {
             try
             {
-                RefDet = meta.GetPTLEntryDetails(ppi);
-                var Referral = meta.GetReferralDetails(RefDet.RefID.GetValueOrDefault());
-                ActivityList = meta.GetActivityList(Referral.CLINICNO);
-                DiaryList = meta.GetDiaryList(RefDet.RefID.GetValueOrDefault());
-                LetterList = meta.GetLetterList(RefDet.RefID.GetValueOrDefault());
+                RefDet = _ptlData.GetPTLEntryDetails(ppi);
+                var Referral = _activityData.GetReferralDetails(RefDet.RefID.GetValueOrDefault());
+                ActivityList = _activityData.GetActivityList(Referral.CLINICNO);
+                DiaryList = _diaryData.GetDiaryList(RefDet.RefID.GetValueOrDefault());
+                LetterList = _letterData.GetLetterList(RefDet.RefID.GetValueOrDefault());
 
                 EighteenWeekDate = RefDet.ClockStart.GetValueOrDefault().AddDays(18 * 7);
                 FiftyTwoWeekDate = RefDet.ClockStart.GetValueOrDefault().AddDays(365);
@@ -69,14 +77,14 @@ namespace PatientTrackingList.Pages
                     iChecked = 1;
                 }               
 
-                string username = meta.GetStaffMemberDetails(User.Identity.Name).STAFF_CODE;
+                string username = _staffData.GetStaffMemberDetails(User.Identity.Name).STAFF_CODE;
 
                 if (comments != null)
                 {
                     comments = comments.Replace("'", "''");
                 }
-                
-                sql.SqlUpdateComments(comments, iChecked, username, ppi);
+
+                _sql.SqlUpdateComments(comments, iChecked, username, ppi);
                                                 
                 isSuccess = true;
                 Message = "Saved.";

@@ -1,12 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Authorization;
 using PatientTrackingList.Data;
 using PatientTrackingList.Models;
 using System.Data;
-using System.Net.Mail;
-using System.Net.Mime;
-using System.Text;
-using System.Collections.Generic;
+
 
 namespace PatientTrackingList.DataServices
 {
@@ -14,12 +10,16 @@ namespace PatientTrackingList.DataServices
     {
         public string dlFilePath;
         private readonly DataContext _context;
-        private readonly MetaData _meta;
+        private readonly PTLData _ptlData;
+        private readonly WaitingListData _waitingListData;
+        private readonly ClinicSlotData _clinicSlotData;
 
         public Exporter(DataContext context)
         {
             _context = context;
-            _meta = new MetaData(_context);
+            _ptlData = new PTLData(_context);
+            _waitingListData = new WaitingListData(_context);
+            _clinicSlotData = new ClinicSlotData(_context);
         }
         public void ExportPTL(List<PTL> ptlToExport, string username)
         {
@@ -193,7 +193,7 @@ namespace PatientTrackingList.DataServices
             if (type == "ptl")
             {
                 List<PTL> ptlToExport = new List<PTL>();
-                ptlToExport = _meta.GetPTLList().ToList();
+                ptlToExport = _ptlData.GetPTLList().ToList();
 
                 if (pathwayFilter != null && pathwayFilter != "")
                 {
@@ -216,7 +216,7 @@ namespace PatientTrackingList.DataServices
             else if (type == "waitinglist")
             {
                 List<WaitingList> wlToExport = new List<WaitingList>();
-                wlToExport = _meta.GetWaitingList().ToList();
+                wlToExport = _waitingListData.GetWaitingList().ToList();
 
                 
                 if (clinicianFilter != null && clinicianFilter != "")
@@ -235,7 +235,7 @@ namespace PatientTrackingList.DataServices
             else if (type == "capacityutilisation")
             {
                 List<ClinicSlots> capToExport = new List<ClinicSlots>();
-                capToExport = _meta.GetClinicSlotsList().ToList();
+                capToExport = _clinicSlotData.GetClinicSlotsList().ToList();
 
 
                 if (clinicianFilter != null && clinicianFilter != "")
