@@ -19,6 +19,7 @@ namespace PatientTrackingList.Pages
         public List<int> pageNumbers;
         private readonly PTLData _ptlData;
         private readonly StaffData _staffData;
+        private readonly NotificationData _notificationData;
 
         public IndexModel(DataContext context, IConfiguration config)
         {
@@ -27,6 +28,7 @@ namespace PatientTrackingList.Pages
             pageNumbers = new List<int>();
             _ptlData = new PTLData(_context);
             _staffData = new StaffData(_context);
+            _notificationData = new NotificationData(_context);
         }
 
         
@@ -56,6 +58,7 @@ namespace PatientTrackingList.Pages
         public string consultantSelected;
         public string GCSelected;
         public string commentSearch;
+        public string notificationMessage;
         public bool isLive;
 
         [Authorize]
@@ -71,6 +74,8 @@ namespace PatientTrackingList.Pages
             {
                 if (_staffData.GetIsClinical(User.Identity.Name))
                 {
+                    notificationMessage = _notificationData.GetMessage();
+
                     var staffUserType = _staffData.GetStaffMemberDetails(User.Identity.Name);
 
                     if (staffUserType.CLINIC_SCHEDULER_GROUPS == "GC" && gcFilter == null)
