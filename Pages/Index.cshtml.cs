@@ -72,9 +72,10 @@ namespace PatientTrackingList.Pages
             }
             else
             {
+                notificationMessage = _notificationData.GetMessage();
                 if (_staffData.GetIsClinical(User.Identity.Name))
                 {
-                    notificationMessage = _notificationData.GetMessage();
+                    
 
                     var staffUserType = _staffData.GetStaffMemberDetails(User.Identity.Name);
 
@@ -86,8 +87,9 @@ namespace PatientTrackingList.Pages
                     {
                         consultantFilter = staffUserType.NAME;
                     }
-                    isLive = bool.Parse(_config.GetValue("IsLive", ""));
+                    
                 }
+                isLive = bool.Parse(_config.GetValue("IsLive", ""));
             }
 
             int pageSize = 20;            
