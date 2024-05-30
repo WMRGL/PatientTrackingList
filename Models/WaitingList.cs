@@ -21,8 +21,8 @@ namespace PatientTrackingList.Models
         public DateTime? AddedDate { get; set; }
         public string? ToBeSeenBy { get; set; }
         public bool isChildRequired { get; set; }
-        //[NotMapped]
-        //public string? CGU_No {  get; set; }
+        public int PriorityLevel { get; set; }
+        public string Priority {  get; set; }
     }
     
 }

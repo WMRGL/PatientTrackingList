@@ -15,7 +15,7 @@ namespace PatientTrackingList.DataServices
         public List<WaitingList> GetWaitingList()
         {
             var waitingList = from w in _context.WaitingList
-                          orderby w.AddedDate
+                          orderby w.PriorityLevel, w.AddedDate
                           select w;            
             
             return waitingList.ToList();

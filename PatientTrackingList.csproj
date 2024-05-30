@@ -20,6 +20,8 @@
   </ItemGroup>
 
   <ItemGroup>
+    <_WebToolingArtifacts Remove="Properties\PublishProfiles\WebServerDeployment-Test.pubxml" />
+    <_WebToolingArtifacts Remove="Properties\PublishProfiles\WebServerDeployment.pubxml" />
     <_WebToolingArtifacts Remove="Properties\PublishProfiles\WebServerStagingFolder.pubxml" />
   </ItemGroup>
 

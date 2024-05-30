@@ -5,17 +5,17 @@
 }
 
 <div class="container-fluid">
-    <h1 style="text-align:center">PTL-X - The New Patient Tracking List</h1>
+    <h1 class="text-center">PTL-X - The New Patient Tracking List</h1>
     <br />
     <br />
     @if(!Model.isLive)
     {
-        <h1 class="text-center" style="color:red">NOTE: This is a test system, work completed here will not be reflected in production</h1>
+        <h1 class="text-center redtext">NOTE: This is a test system, work completed here will not be reflected in production</h1>
     }
 
     @if (Model.notificationMessage != null && Model.notificationMessage != "")
     {
-        <h1 class="text-center" style="color:red">@Model.notificationMessage</h1>
+        <h1 class="text-center redtext">@Model.notificationMessage</h1>
     }
 
     <div class="row">
@@ -335,7 +335,7 @@
                 {
                     @if (@p.ClockStart < Model.FiftyTwoWeekDate)
                     {
-                        <tr style ="color:red">
+                        <tr class="redalert">
                             <td><a type="button" class="btn btn-secondary" asp-area="" asp-page="/ReferralDetails" asp-route-ppi=@p.PPI>@p.CGUNo</a></td>
                             <td>@p.PatientName</td>                                                       
                             @if (p.ReferralDate.HasValue)
@@ -394,7 +394,7 @@
                     }
                     else if (@p.ClockStart < Model.EighteenWeekDate)
                     {                        
-                        <tr style="color:orange">
+                        <tr class="ambertext">
                             <td><a type="button" class="btn btn-secondary" asp-area="" asp-page="/ReferralDetails" asp-route-ppi=@p.PPI>@p.CGUNo</a></td>
                             <td>@p.PatientName</td>                           
                             @if (p.ReferralDate.HasValue)

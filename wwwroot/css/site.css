@@ -16,3 +16,16 @@ html {
 body {
   margin-bottom: 60px;
 }
+
+.redtext{
+    color:red;
+}
+
+.ambertext {
+    color:orange;
+}
+
+.redalert{
+    background-color:red;
+    color:whitesmoke;
+}

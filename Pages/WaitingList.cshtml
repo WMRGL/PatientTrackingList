@@ -64,20 +64,38 @@
                 <th>Date Added</th>
                 <th>Instructions</th>
                 <th>Comments</th>
+                <th>Priority</th>
             </tr>
         </thead>
         <tbody>
             @foreach (var wl in Model.WaitingList)
             {
-                <tr>
-                    <td>@wl.CGU_No</td>
-                    <td>@wl.FIRSTNAME @wl.LASTNAME</td>
-                    <td>@wl.ClinicianName</td>
-                    <td>@wl.ClinicName</td>
-                    <td>@wl.AddedDate.Value.ToString("dd/MM/yyyy")</td>
-                    <td>@wl.Instructions</td>
-                    <td>@wl.Comment</td>
-                </tr>
+                @if (wl.Priority == "Urgent")
+                {
+                    <tr class="redalert">
+                        <td>@wl.CGU_No</td>
+                        <td>@wl.FIRSTNAME @wl.LASTNAME</td>
+                        <td>@wl.ClinicianName</td>
+                        <td>@wl.ClinicName</td>
+                        <td>@wl.AddedDate.Value.ToString("dd/MM/yyyy")</td>
+                        <td>@wl.Instructions</td>
+                        <td>@wl.Comment</td>
+                        <td>@wl.Priority</td>
+                    </tr>
+                }
+                else
+                {
+                    <tr>
+                        <td>@wl.CGU_No</td>
+                        <td>@wl.FIRSTNAME @wl.LASTNAME</td>
+                        <td>@wl.ClinicianName</td>
+                        <td>@wl.ClinicName</td>
+                        <td>@wl.AddedDate.Value.ToString("dd/MM/yyyy")</td>
+                        <td>@wl.Instructions</td>
+                        <td>@wl.Comment</td>
+                        <td>@wl.Priority</td>
+                    </tr>
+                }
             }
         </tbody>
     </table>
