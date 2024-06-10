@@ -52,19 +52,19 @@ namespace PatientTrackingList.Pages
             //listTotal = ClinicSlots.Count();
 
             //drop-down menus
-            Clinicians = ClinicSlots.Select(c => c.ClinicianID).Distinct().OrderBy(c => c).ToList();
-            Clinics = ClinicSlots.Select(c => c.ClinicID).Distinct().OrderBy(c => c).ToList();
+            Clinicians = ClinicSlots.Select(c => c.Clinician).Distinct().OrderBy(c => c).ToList();
+            Clinics = ClinicSlots.Select(c => c.Facility).Distinct().OrderBy(c => c).ToList();
             Stati = ClinicSlots.Select(c => c.SlotStatus).Distinct().OrderBy(c => c).ToList();
 
             if (clinician != null)
             {
-                ClinicSlots = ClinicSlots.Where(w => w.ClinicianID == clinician);
+                ClinicSlots = ClinicSlots.Where(w => w.Clinician == clinician);
                 clincianSelected = clinician;
             }
 
             if (clinic != null)
             {
-                ClinicSlots = ClinicSlots.Where(w => w.ClinicID == clinic);
+                ClinicSlots = ClinicSlots.Where(w => w.Facility == clinic);
                 clinicSelected = clinic;
             }
 

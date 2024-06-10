@@ -93,8 +93,8 @@
             @foreach (var wl in Model.pageOfSlot)
             {
                 <tr>
-                    <td>@wl.ClinicianID</td>                    
-                    <td>@wl.ClinicID</td>
+                    <td>@wl.Clinician</td>                    
+                    <td>@wl.Facility</td>
                     <td>@wl.SlotDate.Value.ToString("dd/MM/yyyy")</td>
                     <td>@wl.SlotTime.Value.ToString("HH:mm")</td>
                     <td>@wl.SlotStatus</td>                    
