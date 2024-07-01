@@ -78,7 +78,7 @@ namespace PatientTrackingList.Pages
                     
 
                     var staffUserType = _staffData.GetStaffMemberDetails(User.Identity.Name);
-
+                    /*
                     if (staffUserType.CLINIC_SCHEDULER_GROUPS == "GC" && gcFilter == null)
                     {
                         gcFilter = staffUserType.NAME;
@@ -86,7 +86,7 @@ namespace PatientTrackingList.Pages
                     else if ((staffUserType.CLINIC_SCHEDULER_GROUPS == "Consultant" || staffUserType.CLINIC_SCHEDULER_GROUPS == "SpR") && consultantFilter == null)
                     {
                         consultantFilter = staffUserType.NAME;
-                    }
+                    }*/
                     
                 }
                 isLive = bool.Parse(_config.GetValue("IsLive", ""));
