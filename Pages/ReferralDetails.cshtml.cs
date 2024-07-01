@@ -1,6 +1,5 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using Microsoft.Data.SqlClient;
 using PatientTrackingList.Data;
 using PatientTrackingList.Models;
 using PatientTrackingList.DataServices;
@@ -41,13 +40,15 @@ namespace PatientTrackingList.Pages
         public bool isSuccess;
 
         [Authorize]
-        public void OnGet(string ppi)
+        public void OnGet(string ppi, string? message = "", bool? success = false)
         {
             if (User.Identity.Name is null)
             {
                 Response.Redirect("Login");
             }
 
+            Message = message;
+            isSuccess = success.GetValueOrDefault();
             RefDet = _ptlData.GetPTLEntryDetails(ppi);
             var Referral = _activityData.GetReferralDetails(RefDet.RefID.GetValueOrDefault());
             ActivityList = _activityData.GetActivityList(Referral.CLINICNO);
@@ -62,6 +63,7 @@ namespace PatientTrackingList.Pages
         {
             try
             {
+                //
                 RefDet = _ptlData.GetPTLEntryDetails(ppi);
                 var Referral = _activityData.GetReferralDetails(RefDet.RefID.GetValueOrDefault());
                 ActivityList = _activityData.GetActivityList(Referral.CLINICNO);
@@ -87,7 +89,9 @@ namespace PatientTrackingList.Pages
                 _sql.SqlUpdateComments(comments, iChecked, username, ppi);
                                                 
                 isSuccess = true;
-                Message = "Saved.";
+                string message = "Saved.";
+                
+                Response.Redirect("ReferralDetails?ppi=" + ppi + "&message=" + message + "&success=" + isSuccess);
             }
             catch (Exception ex)
             {

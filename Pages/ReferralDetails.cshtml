@@ -5,7 +5,7 @@
 
 <div class="container">
 
-    @if (Model.Message != null)
+    @if (Model.Message != "")
     {
         @if (!Model.isSuccess)
         {
@@ -80,7 +80,7 @@
                     <label>Comments:</label>
                 </div>
                 <div class="col-md-10">
-                    <input asp-for=@Model.RefDet.Comments name="comments" />
+                    <input id="txtComments" asp-for=@Model.RefDet.Comments name="comments" />
                 </div>
             </div>
             <div class="row">
@@ -88,7 +88,7 @@
                     <label>Mark as checked:</label>
                 </div>
                 <div class="col-md-2">
-                    <input id="chkChecked" asp-for=@Model.RefDet.isChecked type="checkbox" value="false" onclick="SetCheckedCheckBox()" />
+                    <input id="chkChecked" asp-for=@Model.RefDet.isChecked type="checkbox" onclick="SetCheckedCheckBox()" />
                 </div>
                 <div class="col-md-2">
                     <input id="txtIsChecked" hidden="true" name="isChecked"  />
@@ -248,15 +248,16 @@
 
     <div class="row mb-5 g-5">
         <div class="col-md-2">
-            <a type="button" class="btn btn-secondary" asp-area="" asp-page="\Index">Return</a>
-            @*<button type="button" class="btn btn-secondary" onclick="GoBack()">Return</button>*@
+            @*<a type="button" class="btn btn-secondary" asp-area="" asp-page="\Index">Return</a>*@
+            <button type="button" class="btn btn-secondary" onclick="GoBack()">Return</button>
         </div>
     </div>
 
 </div>
 
 <script>
-
+    window.addEventListener("load", SetCheckedCheckBox);
+        
     function SetCheckedCheckBox()
     {
         document.getElementById("txtIsChecked").value = document.getElementById("chkChecked").checked;
@@ -264,7 +265,7 @@
 
     function GoBack()
     {
-        window.history.back()
+        window.close()
     }
 
 </script>

@@ -336,7 +336,7 @@
                     @if (@p.ClockStart < Model.FiftyTwoWeekDate)
                     {
                         <tr class="redtext">
-                            <td><a type="button" class="btn btn-secondary" asp-area="" asp-page="/ReferralDetails" asp-route-ppi=@p.PPI>@p.CGUNo</a></td>
+                            <td><a type="button" class="btn btn-secondary" asp-area="" asp-page="/ReferralDetails" asp-route-ppi=@p.PPI target="_blank">@p.CGUNo</a></td>
                             <td>@p.PatientName</td>                                                       
                             @if (p.ReferralDate.HasValue)
                             {
