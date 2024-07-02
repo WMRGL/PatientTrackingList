@@ -9,10 +9,10 @@ namespace PatientTrackingList.Models
     {
         [Key]
         public int RefID { get; set; }
-        public string CLINICNO { get; set; }
+        public string? CLINICNO { get; set; }
         public string? REFERRAL_CLINICNO { get; set; }
         public int MPI { get; set; }
-        public int WMFACSID { get; set; }
+        public int? WMFACSID { get; set; }
         public DateTime? REFERRAL_DATE { get; set; }
         public DateTime? ClockStartDate { get; set; }
         public DateTime? ClockStopDate { get; set; }

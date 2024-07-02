@@ -17,7 +17,7 @@ namespace PatientTrackingList.DataServices
 
         public Activity GetReferralDetails(int iRefID)
         {
-            var Referral = _context.Activity.FirstOrDefault(r => r.RefID == iRefID);
+            var Referral = _context.Activity.FirstOrDefault(r => r.RefID == iRefID);            
 
             return Referral;
         }
