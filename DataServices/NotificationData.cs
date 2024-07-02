@@ -1,9 +1,14 @@
 ﻿
 using PatientTrackingList.Data;
+using PatientTrackingList.Models;
 
 namespace PatientTrackingList.DataServices
 {
-    public class NotificationData
+    interface INotificationData
+    {
+        public string GetMessage();
+    }
+    public class NotificationData : INotificationData
     {
         private readonly DataContext _context;
 
@@ -16,7 +21,7 @@ namespace PatientTrackingList.DataServices
         {
             string message = "";
 
-            var messageNotifications = _context.Notifications.Where(n => n.MessageCode == "PTLXOutage" && n.IsActive == true);
+            IQueryable<Notifications> messageNotifications = _context.Notifications.Where(n => n.MessageCode == "PTLXOutage" && n.IsActive == true);
 
             if (messageNotifications.Count() > 0)
             {

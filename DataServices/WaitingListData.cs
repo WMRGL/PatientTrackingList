@@ -3,7 +3,11 @@ using PatientTrackingList.Models;
 
 namespace PatientTrackingList.DataServices
 {
-    public class WaitingListData
+    interface IWaitingListData
+    {
+        public IEnumerable<WaitingList> GetWaitingList();
+    }
+    public class WaitingListData : IWaitingListData
     { 
         private readonly DataContext _context;
 
@@ -12,13 +16,13 @@ namespace PatientTrackingList.DataServices
             _context = context;            
         }
                     
-        public List<WaitingList> GetWaitingList()
+        public IEnumerable<WaitingList> GetWaitingList()
         {
-            var waitingList = from w in _context.WaitingList
+            IEnumerable<WaitingList> waitingList = from w in _context.WaitingList
                           orderby w.PriorityLevel, w.AddedDate
                           select w;            
             
-            return waitingList.ToList();
+            return waitingList;
         }
 
                 

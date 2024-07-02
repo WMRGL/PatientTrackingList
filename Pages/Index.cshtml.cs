@@ -7,20 +7,12 @@ using PatientTrackingList.DataServices;
 namespace PatientTrackingList.Pages
 {
     public class IndexModel : PageModel
-    {
-
-        private readonly DataContext _context;
+    {   
         private readonly IConfiguration _config;
-        public IEnumerable<PTL> PTL { get; set; }
-        public List<PTL> pageOfPTL { get; set; }
-        public IEnumerable<StaffMembers> staffMembers { get; set; }
-        public List<StaffMembers> consultantList { get; set; }
-        public List<StaffMembers> GCList { get; set; }
-        public List<int> pageNumbers;
-        private readonly PTLData _ptlData;
-        private readonly StaffData _staffData;
-        private readonly NotificationData _notificationData;
-
+        private readonly IPTLData _ptlData;
+        private readonly IStaffData _staffData;
+        private readonly INotificationData _notificationData;
+        private readonly DataContext _context;        
         public IndexModel(DataContext context, IConfiguration config)
         {
             _context = context;
@@ -30,9 +22,12 @@ namespace PatientTrackingList.Pages
             _staffData = new StaffData(_context);
             _notificationData = new NotificationData(_context);
         }
-
-        
-
+        public IEnumerable<PTL> PTL { get; set; }
+        public List<int> pageNumbers;
+        public List<StaffMembers> staffMembers { get; set; }
+        public List<StaffMembers> consultantList { get; set; }
+        public List<StaffMembers> GCList { get; set; }
+        public List<PTL> pageOfPTL { get; set; }
         public DateTime CurrentYear;
         public DateTime PreviousYear;
         public DateTime EighteenWeekDate;

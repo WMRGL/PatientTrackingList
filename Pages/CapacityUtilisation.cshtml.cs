@@ -8,25 +8,8 @@ namespace PatientTrackingList.Pages
     public class CapacityUtilisationModel : PageModel
     {
         private readonly DataContext _context;
-        private readonly ClinicSlotData _clinicSlotData;
-        public IEnumerable<ClinicSlots> ClinicSlots { get; set; }
-        public List<ClinicSlots> pageOfSlot { get; set; }
-        public List<string> Clinicians { get; set; }
-        public List<string> Clinics { get; set; }
-        public List<string> Stati { get; set; }
-        public List<int> pageNumbers;
+        private readonly IClinicSlotData _clinicSlotData;
         
-        public int currentPageNo;
-        public int nextPage;
-        public int previousPage;
-        public int listTotal;
-        public string clincianSelected;
-        public string clinicSelected;
-        public string statusSelected;
-        public DateTime toDateSelected;
-        public DateTime fromDateSelected;
-        
-
         public CapacityUtilisationModel(DataContext context)
         {
             _context = context;
@@ -36,6 +19,23 @@ namespace PatientTrackingList.Pages
             Clinics = new List<string>();
             Stati = new List<string>();           
         }
+
+        public IEnumerable<ClinicSlots> ClinicSlots { get; set; }
+        public List<ClinicSlots> pageOfSlot { get; set; }
+        public List<string> Clinicians { get; set; }
+        public List<string> Clinics { get; set; }
+        public List<string> Stati { get; set; }
+        public List<int> pageNumbers;
+
+        public int currentPageNo;
+        public int nextPage;
+        public int previousPage;
+        public int listTotal;
+        public string clincianSelected;
+        public string clinicSelected;
+        public string statusSelected;
+        public DateTime toDateSelected;
+        public DateTime fromDateSelected;
 
         public void OnGet(int? pNo, string? clinician, string? clinic, DateTime? fromDate, DateTime? toDate, string? status)
         {

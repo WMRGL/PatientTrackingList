@@ -9,13 +9,13 @@ namespace PatientTrackingList.Pages
     public class ReferralDetailsModel : PageModel
     {
         private readonly DataContext _context;
-        private readonly IConfiguration _config;
-        private readonly PTLData _ptlData;
         private readonly SqlServices _sql;
-        private readonly StaffData _staffData;
-        private readonly ActivityData _activityData;
-        private readonly DiaryData _diaryData;
-        private readonly LetterData _letterData;
+        private readonly IConfiguration _config;
+        private readonly IPTLData _ptlData;        
+        private readonly IStaffData _staffData;
+        private readonly IActivityData _activityData;
+        private readonly IDiaryData _diaryData;
+        private readonly ILetterData _letterData;
 
         public ReferralDetailsModel(DataContext context, IConfiguration config)
         {
@@ -30,9 +30,9 @@ namespace PatientTrackingList.Pages
         }
 
         public PTL RefDet { get; set; }
-        public IEnumerable<Activity> ActivityList { get; set; }        
-        public IEnumerable<Diary> DiaryList { get; set; }
-        public IEnumerable<Letters> LetterList { get; set; }
+        public List<Activity> ActivityList { get; set; }        
+        public List<Diary> DiaryList { get; set; }
+        public List<Letters> LetterList { get; set; }
 
         public DateTime EighteenWeekDate;
         public DateTime FiftyTwoWeekDate;

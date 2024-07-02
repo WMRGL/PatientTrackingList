@@ -45,25 +45,36 @@
 
     <form id="frmMenu" method="Post">
         <div class="row mb-5">
-            <h3>Search form:</h3>
+            <div class="row">
+                <div class="col-md-2">
+                    <h3>Search form:</h3>
+                </div>
+                <div class="col-md-6">
+                    <button type="button" class="btn btn-secondary" onclick="ClearFilters()">Reset Filters</button>
+                </div>
+                <div class="col-md-2">
+                    
+                </div>
+            </div>
+            
             <div class="col-md-1">
                 <label class="w-100">Name:</label>
             </div>
             <div class="col-md-2">
-                <input class="w-100" name="sNameSearch" />
+                <input class="w-100" id="txtName" name="sNameSearch" />
             </div>
             <div class="col-md-1">
                 <label class="w-100">CGU_No:</label>
             </div>
             <div class="col-md-2">
-                <input class="w-100" name="sCGUSearch" />
+                <input class="w-100" id="txtCGU" name="sCGUSearch" />
             </div>
             <div class="col-md-1">
                 <label class="w-100">Priority:</label>
             </div>
             <div class="col-md-1">
                 @*<input id="chkUrgent" type="checkbox" value="false" onclick="SetUrgentCheckBox()" asp-for=@Model.prioritySelected/>*@
-                <select class="w-100" name="priorityFilter" asp-for=@Model.prioritySelected>
+                <select class="w-100" id="ddlPriority" name="priorityFilter" asp-for=@Model.prioritySelected>
                     <option value="">Any</option>
                     <option value="Routine">Routine</option>
                     <option value="Fast-Track">Fast-track</option>
@@ -80,7 +91,7 @@
                 <label class="w-100">Referral Pathway:</label>
             </div>
             <div class="col-md-1">
-                <select class="w-100" name="pathwayFilter" asp-for=@Model.pathwaySelected>
+                <select class="w-100" id="ddlPathway" name="pathwayFilter" asp-for=@Model.pathwaySelected>
                     <option value="">Both</option>
                     <option value="Cancer">Cancer</option>
                     <option value="General">General</option>
@@ -92,7 +103,7 @@
                 <label class="w-100">Consultant:</label>
             </div>
             <div class="col-md-3">
-                <select class="w-100" name="consultantFilter" asp-for=@Model.consultantSelected>
+                <select class="w-100" id="ddlConsultant" name="consultantFilter" asp-for=@Model.consultantSelected>
                     <option value="">Select...</option>
                     @foreach(var item in Model.consultantList)
                     {
@@ -104,7 +115,7 @@
                 <label class="w-100">GC:</label>
             </div>
             <div class="col-md-3">
-                <select class="w-100" name="gcFilter" asp-for=@Model.GCSelected>
+                <select class="w-100" id="ddlGC" name="gcFilter" asp-for=@Model.GCSelected>
                     <option value="">Select...</option>
                     @foreach (var item in Model.GCList)
                     {
@@ -116,7 +127,7 @@
                 <label class="w-100">Comments:</label>
             </div>
             <div class="col-md-2">
-                <input class="w-100" name="commentsearch" type="text" asp-for=@Model.commentSearch />
+                <input class="w-100" id="txtComments" name="commentsearch" type="text" asp-for=@Model.commentSearch />
             </div>
 
             <div class="col-md-1">
@@ -558,6 +569,20 @@
         document.getElementById("txtpriorityFilter").value = document.getElementById("chkUrgent").checked;
     }
 
+    function ClearFilters()
+    {
+        //document.getElementById("txtpriorityFilter").value = document.getElementById("chkUrgent").checked;
+        document.getElementById("chkChecked").checked = false
+        document.getElementById("txtIsChecked").value = false;        
+        document.getElementById("ddlConsultant").value = "";
+        document.getElementById("ddlGC").value = "";
+        document.getElementById("txtComments").value = "";
+        document.getElementById("ddlPathway").value = "";
+        document.getElementById("ddlPriority").value = "";
+        document.getElementById("txtName").value = "";
+        document.getElementById("txtCGU").value = "";
+    }
+
     function SetCheckedCheckBox() 
     {        
         document.getElementById("txtIsChecked").value = document.getElementById("chkChecked").checked;
@@ -565,7 +590,7 @@
 
     function SetCheckBoxes()
     {        
-        SetUrgentCheckBox();
+        //SetUrgentCheckBox();
         SetCheckedCheckBox();
     }
 

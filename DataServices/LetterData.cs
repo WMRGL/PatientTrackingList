@@ -3,7 +3,11 @@ using PatientTrackingList.Models;
 
 namespace PatientTrackingList.DataServices
 {
-    public class LetterData
+    interface ILetterData
+    {
+        public List<Letters> GetLetterList(int iRefID);
+    }
+    public class LetterData : ILetterData
     {
         private readonly DataContext _context;
 
@@ -12,11 +16,9 @@ namespace PatientTrackingList.DataServices
             _context = context;            
         }
              
-
-
         public List<Letters> GetLetterList(int iRefID)
         {
-            var LetterList = from l in _context.Letters
+            IQueryable<Letters> LetterList = from l in _context.Letters
                          where l.RefID == iRefID
                          select l;
 

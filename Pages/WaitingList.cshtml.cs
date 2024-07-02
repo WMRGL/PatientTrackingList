@@ -8,29 +8,30 @@ namespace PatientTrackingList.Pages
     public class WaitingListModel : PageModel
     {
         private readonly DataContext _context;
-        private readonly WaitingListData _waitingListData;
-        public IEnumerable<WaitingList> WaitingList { get; set; }
-        public List<WaitingList> pageOfWL { get; set; }
-        public List<string> Clinicians { get; set; }
-        public List<string> Clinics { get; set; }
-        public List<int> pageNumbers;
+        private readonly IWaitingListData _waitingListData;
         
-        public int currentPageNo;
-        public int nextPage;
-        public int previousPage;
-        public int listTotal;
-        public string clincianSelected;
-        public string clinicSelected;
+        
 
         public WaitingListModel(DataContext context)
         {
             _context = context;
             _waitingListData = new WaitingListData(_context);
             pageNumbers = new List<int>();
-            //WL = new List<WaitingList>();
             Clinicians = new List<string>();
             Clinics = new List<string>();
         }
+        public IEnumerable<WaitingList> WaitingList { get; set; }
+        public List<WaitingList> pageOfWL { get; set; }
+        public List<string> Clinicians { get; set; }
+        public List<string> Clinics { get; set; }
+        public List<int> pageNumbers;
+
+        public int currentPageNo;
+        public int nextPage;
+        public int previousPage;
+        public int listTotal;
+        public string clincianSelected;
+        public string clinicSelected;
 
         public void OnGet(int? pNo, string? clinician, string? clinic)
         {

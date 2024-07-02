@@ -3,7 +3,11 @@ using PatientTrackingList.Models;
 
 namespace PatientTrackingList.DataServices
 {
-    public class ClinicSlotData
+    interface IClinicSlotData
+    {
+        public List<ClinicSlots> GetClinicSlotsList();
+    }
+    public class ClinicSlotData : IClinicSlotData
     {
         private readonly DataContext _context;
 
@@ -14,7 +18,7 @@ namespace PatientTrackingList.DataServices
         
         public List<ClinicSlots> GetClinicSlotsList() 
         {
-            var clinicSlots = from s in _context.ClinicSlots
+            IQueryable<ClinicSlots> clinicSlots = from s in _context.ClinicSlots
                               orderby s.SlotDate
                               select s;
 

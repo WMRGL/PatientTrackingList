@@ -1,11 +1,16 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using PatientTrackingList.Data;
+﻿using PatientTrackingList.Data;
 using PatientTrackingList.Models;
 
 namespace PatientTrackingList.DataServices
 {
-    public class StaffData
+    interface IStaffData
+    {
+        public List<StaffMembers> GetStaffMemberList();
+        public List<StaffMembers> GetStaffTypeList(IEnumerable<StaffMembers> staffMembers, string sStaffType);
+        public StaffMembers GetStaffMemberDetails(string username);
+        public bool GetIsClinical(string username);
+    }
+    public class StaffData : IStaffData
     {
         private readonly DataContext _context;
 
@@ -15,26 +20,26 @@ namespace PatientTrackingList.DataServices
         }
                
 
-        public IEnumerable<StaffMembers> GetStaffMemberList() 
+        public List<StaffMembers> GetStaffMemberList() 
         { 
-            var staffMembers = from s in _context.StaffMembers
+            IQueryable<StaffMembers> staffMembers = from s in _context.StaffMembers
                                where s.InPost == true
                                select s;
 
-            return staffMembers;
+            return staffMembers.ToList();
         }
 
         public List<StaffMembers> GetStaffTypeList(IEnumerable<StaffMembers> staffMembers, string sStaffType) 
-        { 
-            var staffList = staffMembers.Where(s => s.CLINIC_SCHEDULER_GROUPS == sStaffType).OrderBy(s => s.NAME).ToList();
+        {
+            IEnumerable<StaffMembers> staffList = staffMembers.Where(s => s.CLINIC_SCHEDULER_GROUPS == sStaffType).OrderBy(s => s.NAME);
 
-            return staffList;
+            return staffList.ToList();
         }
         
         
         public StaffMembers GetStaffMemberDetails(string username)
         {
-            var staffMember = _context.StaffMembers.FirstOrDefault(s => s.EMPLOYEE_NUMBER == username);
+            StaffMembers staffMember = _context.StaffMembers.FirstOrDefault(s => s.EMPLOYEE_NUMBER == username);
 
             return staffMember;
         }

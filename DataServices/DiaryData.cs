@@ -3,7 +3,11 @@ using PatientTrackingList.Models;
 
 namespace PatientTrackingList.DataServices
 {
-    public class DiaryData
+    interface IDiaryData
+    {
+        public List<Diary> GetDiaryList(int iRefID);
+    }
+    public class DiaryData : IDiaryData
     {
         private readonly DataContext _context;
 
@@ -15,7 +19,7 @@ namespace PatientTrackingList.DataServices
 
         public List<Diary> GetDiaryList(int iRefID)
         {
-            var DiaryList = from d in _context.Diary
+            IQueryable<Diary> DiaryList = from d in _context.Diary
                         where d.RefID == iRefID
                         select d;
 

@@ -1,11 +1,14 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using PatientTrackingList.Data;
+﻿using PatientTrackingList.Data;
 using PatientTrackingList.Models;
 
 namespace PatientTrackingList.DataServices
 {
-    public class PTLData
+    interface IPTLData
+    {
+        public IEnumerable<PTL> GetPTLList();
+        public PTL GetPTLEntryDetails(string ppi);
+    }
+    public class PTLData : IPTLData
     {
         private readonly DataContext _context;
 
@@ -16,7 +19,7 @@ namespace PatientTrackingList.DataServices
 
         public IEnumerable<PTL> GetPTLList()
         {
-            var ptl = from p in _context.PTL
+            IEnumerable<PTL> ptl = from p in _context.PTL
                     where p.ClockStart != null && p.ClockStop == null && p.MPI != 67066
                     orderby p.ClockStart
                     select p;
@@ -26,7 +29,7 @@ namespace PatientTrackingList.DataServices
                 
         public PTL GetPTLEntryDetails(string ppi)
         {
-            var RefDet = _context.PTL.FirstOrDefault(r => r.PPI == ppi);
+            PTL RefDet = _context.PTL.FirstOrDefault(r => r.PPI == ppi);
             
 
             return RefDet;

@@ -6,7 +6,14 @@ using PatientTrackingList.Models;
 
 namespace PatientTrackingList.DataServices
 {
-    public class SqlServices
+    interface ISqlServices
+    {
+        public void SqlUpdateComments(string comments, int isChecked, string username, string ppi);
+        public string GetOldComments(string ppi);
+        public void SqlWriteAuditUpdate(string comments, string oldComments, string username, string ppi);
+        public string ValidateLogin(UserDetails user);
+    }
+    public class SqlServices : ISqlServices
     {
         private readonly IConfiguration _config;
         private readonly SqlConnection _con;
@@ -23,7 +30,7 @@ namespace PatientTrackingList.DataServices
         {
             string oldComment = GetOldComments(ppi);
 
-            if (comments != null && oldComment != comments)
+            if (comments != null)
             {
                 _cmd.CommandText = "update PTL set comments='" + comments + "', isChecked=" + isChecked +
                     ", UpdatedBy='" + username + "', UpdatedDate='" + DateTime.Now.ToString("yyyy-MM-dd") +
