@@ -198,8 +198,7 @@ namespace PatientTrackingList.Pages
                 break;
             }
 
-            pageOfPTL = PTL.ToList();            
-
+            pageOfPTL = PTL.ToList();
             //for filtering/searching
             if (sNameSearch != null)
             {
@@ -256,7 +255,7 @@ namespace PatientTrackingList.Pages
             //pagination
             int pp = pageOfPTL.Count() / pageSize;
 
-            for (int i = 1; i <= pp; i++)
+            for (int i = 1; i <= pp+1; i++)
             {
                 pageNumbers.Add(i);
             }

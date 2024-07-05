@@ -31,7 +31,7 @@
         <dt class="col-md-2">GC:</dt><dd class="col-md-10">@Model.RefDet.ReferralGC</dd>
         <dt class="col-md-2">Clock Start Date:</dt><dd class="col-md-10">@Model.RefDet.ClockStart.Value.ToString("dd/MM/yyyy")</dd>
         <dt class="col-md-2">Referred by:</dt><dd class="col-md-10">@Model.RefDet.ReferralBy</dd>
-        <dt class="col-md-2">Organisation:</dt><dd class="col-md-10">@Model.RefDet.OrgCode - @Model.RefDet.OrgName</dd>
+        @*<dt class="col-md-2">Organisation:</dt><dd class="col-md-10">@Model.RefDet.OrgCode - @Model.RefDet.OrgName</dd>*@
 
         @if (@DateTime.Now > @Model.FiftyTwoWeekDate)
         {

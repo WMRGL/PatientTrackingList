@@ -3,14 +3,15 @@ using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using PatientTrackingList.Data;
 using PatientTrackingList.Models;
+using System.Data;
 
 namespace PatientTrackingList.DataServices
 {
     interface ISqlServices
     {
-        public void SqlUpdateComments(string comments, int isChecked, string username, string ppi);
-        public string GetOldComments(string ppi);
-        public void SqlWriteAuditUpdate(string comments, string oldComments, string username, string ppi);
+        public void SqlUpdateComments(string comments, int isChecked, string username, int id);
+        public string GetOldComments(int id);
+        public void SqlWriteAuditUpdate(string comments, string oldComments, string username, int id);
         public string ValidateLogin(UserDetails user);
     }
     public class SqlServices : ISqlServices
@@ -26,33 +27,34 @@ namespace PatientTrackingList.DataServices
         }
 
 
-        public void SqlUpdateComments(string comments, int isChecked, string username, string ppi)
+        public void SqlUpdateComments(string comments, int isChecked, string username, int id)
         {
-            string oldComment = GetOldComments(ppi);
+            string oldComment = GetOldComments(id);
+            
+            if(comments == null) { comments = ""; }
 
-            if (comments != null)
-            {
-                _cmd.CommandText = "update PTL set comments='" + comments + "', isChecked=" + isChecked +
-                    ", UpdatedBy='" + username + "', UpdatedDate='" + DateTime.Now.ToString("yyyy-MM-dd") +
-                    "' where PPI='" + ppi + "'";
-            }
-            else
-            {
-                _cmd.CommandText = "update PTL set comments=null, isChecked=" + isChecked +
-                    ", UpdatedBy='" + username + "', UpdatedDate='" + DateTime.Now.ToString("yyyy-MM-dd") +
-                    "' where PPI='" + ppi + "'";
-            }
+            SqlCommand cmd = new SqlCommand("[sp_PTLUpdateComments]", _con);
+            cmd.CommandType = System.Data.CommandType.StoredProcedure;
+            cmd.Parameters.Add("@staffCode", SqlDbType.VarChar).Value = username;
+            cmd.Parameters.Add("@isChecked", SqlDbType.SmallInt).Value = isChecked;
+            cmd.Parameters.Add("@id", SqlDbType.Int).Value = id;
+            cmd.Parameters.Add("@comment", SqlDbType.VarChar).Value = comments;
+
+            _con.Open();            
+            cmd.ExecuteNonQuery();
+            _con.Close();
+
             _con.Open();                
             _cmd.ExecuteNonQuery();
             _con.Close();
 
-            SqlWriteAuditUpdate(comments, oldComment, username, ppi);
+            SqlWriteAuditUpdate(comments, oldComment, username, id);
         }
 
-        public string GetOldComments(string ppi)
+        public string GetOldComments(int id)
         {
             string commentOld = "";
-            _cmd.CommandText = "select comments from PTL where PPI = '" + ppi + "'";
+            _cmd.CommandText = "select comments from PTLValidationData where ID = " + id;
             
             _con.Open();
             SqlDataReader reader = _cmd.ExecuteReader();
@@ -68,15 +70,21 @@ namespace PatientTrackingList.DataServices
             return commentOld;
         }
 
-        public void SqlWriteAuditUpdate(string comments, string oldComments, string username, string ppi)
-        {
-            _cmd.CommandText = "insert into AuditTable (TableName, RecordPrimaryKey, FieldName, LoginName, " +
-                "MachineName, OriginalValue, NewValue, DateEdited, WhoEdited) Values ('PTL', '" + ppi + "', 'Comments', " 
-                + "(select EMPLOYEE_NUMBER from STAFF where STAFF_CODE = '" + username + "'), '" + System.Environment.MachineName + "', '" + oldComments + "', '" + comments + "', '"
-                + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss") + "', '" + username + "')";
-            
+        public void SqlWriteAuditUpdate(string comments, string oldComments, string username, int id)
+        {            
+            SqlCommand cmd = new SqlCommand("[sp_WriteAuditUpdate]", _con);
+            cmd.CommandType = System.Data.CommandType.StoredProcedure;
+            cmd.Parameters.Add("@staffCode", SqlDbType.VarChar).Value = username;
+            cmd.Parameters.Add("@form", SqlDbType.VarChar).Value = "comments";
+            cmd.Parameters.Add("@tableName", SqlDbType.VarChar).Value = "PTLValidationData";
+            cmd.Parameters.Add("@recordkey", SqlDbType.VarChar).Value = id.ToString();
+            cmd.Parameters.Add("@oldValue", SqlDbType.VarChar).Value = oldComments;
+            cmd.Parameters.Add("@newValue", SqlDbType.VarChar).Value = comments;
+            cmd.Parameters.Add("machineName", SqlDbType.VarChar).Value = System.Environment.MachineName;
+
+
             _con.Open();
-            _cmd.ExecuteNonQuery();
+            cmd.ExecuteNonQuery();
             _con.Close();
         }
 

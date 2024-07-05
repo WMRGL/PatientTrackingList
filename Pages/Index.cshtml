@@ -339,6 +339,7 @@
                     </th>
                     <th class="align-top">Comments</th>
                     <th class="align-top">Checked</th>
+                    <th class="align-top">Last Updated</th>
                 </tr>
             </thead>
             <tbody>
@@ -346,8 +347,8 @@
                 {
                     @if (@p.ClockStart < Model.FiftyTwoWeekDate)
                     {
-                        <tr class="redtext">
-                            <td><a type="button" class="btn btn-secondary" asp-area="" asp-page="/ReferralDetails" asp-route-ppi=@p.PPI target="_blank">@p.CGUNo</a></td>
+                        <tr class="redtext">                            
+                            <td><a type="button" class="btn btn-secondary" asp-area="" asp-page="/ReferralDetails" asp-route-id=@p.ID target="_blank">@p.CGUNo</a></td>
                             <td>@p.PatientName</td>                                                       
                             @if (p.ReferralDate.HasValue)
                             {
@@ -401,12 +402,20 @@
                             {
                                 <td>No</td>
                             }
+                            @if (p.UpdatedDate.HasValue)
+                            {
+                                <td>@p.UpdatedDate.Value.ToString("dd/MM/yyyy") by @p.UpdatedBy</td>
+                            }
+                            else
+                            {
+                                <td>N/A</td>
+                            }
                         </tr>
                     }
                     else if (@p.ClockStart < Model.EighteenWeekDate)
                     {                        
                         <tr class="ambertext">
-                            <td><a type="button" class="btn btn-secondary" asp-area="" asp-page="/ReferralDetails" asp-route-ppi=@p.PPI target="_blank">@p.CGUNo</a></td>
+                            <td><a type="button" class="btn btn-secondary" asp-area="" asp-page="/ReferralDetails" asp-route-id=@p.ID target="_blank">@p.CGUNo</a></td>
                             <td>@p.PatientName</td>                           
                             @if (p.ReferralDate.HasValue)
                             {
@@ -459,12 +468,20 @@
                             {
                                 <td>No</td>
                             }
+                            @if (p.UpdatedDate.HasValue)
+                            {
+                                <td>@p.UpdatedDate.Value.ToString("dd/MM/yyyy") by @p.UpdatedBy</td>
+                            }
+                            else
+                            {
+                                <td>N/A</td>
+                            }
                         </tr>
                     }
                     else
                     {
                         <tr>
-                            <td><a type="button" class="btn btn-secondary" asp-area="" asp-page="/ReferralDetails" asp-route-ppi=@p.PPI target="_blank">@p.CGUNo</a></td>
+                            <td><a type="button" class="btn btn-secondary" asp-area="" asp-page="/ReferralDetails" asp-route-id=@p.ID target="_blank">@p.CGUNo</a></td>
                             <td>@p.PatientName</td>                            
                             @if (p.ReferralDate.HasValue)
                             {
@@ -516,6 +533,14 @@
                             else
                             {
                                 <td>No</td>
+                            }
+                            @if(p.UpdatedDate.HasValue)
+                            {
+                                <td>@p.UpdatedDate.Value.ToString("dd/MM/yyyy") by @p.UpdatedBy</td>
+                            }
+                            else
+                            {
+                                <td>N/A</td>
                             }
                         </tr>
                     }  

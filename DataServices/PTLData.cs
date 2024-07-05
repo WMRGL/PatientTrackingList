@@ -6,7 +6,7 @@ namespace PatientTrackingList.DataServices
     interface IPTLData
     {
         public IEnumerable<PTL> GetPTLList();
-        public PTL GetPTLEntryDetails(string ppi);
+        public PTL GetPTLEntryDetails(int id);       
     }
     public class PTLData : IPTLData
     {
@@ -23,17 +23,14 @@ namespace PatientTrackingList.DataServices
                     where p.ClockStart != null && p.ClockStop == null && p.MPI != 67066
                     orderby p.ClockStart
                     select p;
-
             return ptl;
         }
-                
-        public PTL GetPTLEntryDetails(string ppi)
+
+        public PTL GetPTLEntryDetails(int id)
         {
-            PTL RefDet = _context.PTL.FirstOrDefault(r => r.PPI == ppi);
-            
+            PTL RefDet = _context.PTL.FirstOrDefault(r => r.ID == id);
 
             return RefDet;
         }
-
     }
 }

@@ -40,7 +40,7 @@ namespace PatientTrackingList.Pages
         public bool isSuccess;
 
         [Authorize]
-        public void OnGet(string ppi, string? message = "", bool? success = false)
+        public void OnGet(int id, string? message = "", bool? success = false)
         {
             if (User.Identity.Name is null)
             {
@@ -49,26 +49,26 @@ namespace PatientTrackingList.Pages
 
             Message = message;
             isSuccess = success.GetValueOrDefault();
-            RefDet = _ptlData.GetPTLEntryDetails(ppi);
-            var Referral = _activityData.GetReferralDetails(RefDet.RefID.GetValueOrDefault());
+            RefDet = _ptlData.GetPTLEntryDetails(id);
+            var Referral = _activityData.GetReferralDetails(RefDet.RefID);
             ActivityList = _activityData.GetActivityList(Referral.CLINICNO);
-            DiaryList = _diaryData.GetDiaryList(RefDet.RefID.GetValueOrDefault());
-            LetterList = _letterData.GetLetterList(RefDet.RefID.GetValueOrDefault());
+            DiaryList = _diaryData.GetDiaryList(RefDet.RefID);
+            LetterList = _letterData.GetLetterList(RefDet.RefID);
 
             EighteenWeekDate = RefDet.ClockStart.GetValueOrDefault().AddDays(18 * 7);
             FiftyTwoWeekDate = RefDet.ClockStart.GetValueOrDefault().AddDays(365);
         }
 
-        public void OnPost(string ppi, string comments, bool? isChecked=false)
+        public void OnPost(int id, string comments, bool? isChecked=false)
         {
             try
             {
                 //
-                RefDet = _ptlData.GetPTLEntryDetails(ppi);
-                var Referral = _activityData.GetReferralDetails(RefDet.RefID.GetValueOrDefault());
+                RefDet = _ptlData.GetPTLEntryDetails(id);
+                var Referral = _activityData.GetReferralDetails(RefDet.RefID);
                 ActivityList = _activityData.GetActivityList(Referral.CLINICNO);
-                DiaryList = _diaryData.GetDiaryList(RefDet.RefID.GetValueOrDefault());
-                LetterList = _letterData.GetLetterList(RefDet.RefID.GetValueOrDefault());
+                DiaryList = _diaryData.GetDiaryList(RefDet.RefID);
+                LetterList = _letterData.GetLetterList(RefDet.RefID);
 
                 EighteenWeekDate = RefDet.ClockStart.GetValueOrDefault().AddDays(18 * 7);
                 FiftyTwoWeekDate = RefDet.ClockStart.GetValueOrDefault().AddDays(365);
@@ -86,12 +86,12 @@ namespace PatientTrackingList.Pages
                     comments = comments.Replace("'", "''");
                 }
 
-                _sql.SqlUpdateComments(comments, iChecked, username, ppi);
+                _sql.SqlUpdateComments(comments, iChecked, username, id);
                                                 
                 isSuccess = true;
                 string message = "Saved.";
                 
-                Response.Redirect("ReferralDetails?ppi=" + ppi + "&message=" + message + "&success=" + isSuccess);
+                Response.Redirect("ReferralDetails?id=" + id.ToString() + "&message=" + message + "&success=" + isSuccess);
             }
             catch (Exception ex)
             {
