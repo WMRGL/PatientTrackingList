@@ -1,5 +1,9 @@
-﻿using PatientTrackingList.Data;
+﻿using Microsoft.AspNetCore.Identity;
+using PatientTrackingList.Data;
 using PatientTrackingList.Models;
+using Microsoft.EntityFrameworkCore;
+using System.Linq;
+using Microsoft.AspNetCore.Razor.TagHelpers;
 
 namespace PatientTrackingList.DataServices
 {
@@ -11,6 +15,7 @@ namespace PatientTrackingList.DataServices
     public class PTLData : IPTLData
     {
         private readonly DataContext _context;
+        private readonly IConfiguration _config;
 
         public PTLData(DataContext context)
         {
@@ -19,10 +24,8 @@ namespace PatientTrackingList.DataServices
 
         public IEnumerable<PTL> GetPTLList()
         {
-            IEnumerable<PTL> ptl = from p in _context.PTL
-                    where p.ClockStart != null && p.ClockStop == null && p.MPI != 67066
-                    orderby p.ClockStart
-                    select p;
+            IEnumerable<PTL> ptl = _context.PTL.Where(p => p.ClockStart != null && p.MPI != 67066).AsNoTracking();
+            
             return ptl;
         }
 

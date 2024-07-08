@@ -30,9 +30,9 @@
     </div>
     <br />
 
-    <div class="row">
+    @*<div class="row">
         <dt class="col-md-2">Last updated:</dt><dd class="col-md-2">@Model.LastUpdatedDate.ToString("dd/MM/yyyy")</dd>
-    </div>
+    </div>*@
     <br />
 
     <div class="row mb-5">
@@ -376,11 +376,11 @@
                             {
                                 <td>N/A</td>
                             }
-                            @if (p.ClockStart.HasValue && p.ClockStop == null)
+                            @if (p.ClockStart.HasValue)
                             {
                                 <td>@((DateTime.Now - @p.ClockStart).Value.ToString("dd"))</td>
                             }
-                            @if (p.ClockStart.HasValue && p.ClockStop == null)
+                            @if (p.ClockStart.HasValue)
                             {
                                 <td>@Math.Floor(((DateTime.Now - @p.ClockStart).Value/7).TotalDays)</td>
                             }
@@ -443,11 +443,11 @@
                             {
                                 <td>N/A</td>
                             }
-                            @if (p.ClockStart.HasValue && p.ClockStop == null)
+                            @if (p.ClockStart.HasValue)
                             {
                                 <td>@((DateTime.Now - @p.ClockStart).Value.ToString("dd"))</td>
                             }
-                            @if (p.ClockStart.HasValue && p.ClockStop == null)
+                            @if (p.ClockStart.HasValue)
                             {
                                 <td>@Math.Floor(((DateTime.Now - @p.ClockStart).Value / 7).TotalDays)</td>
                             }
@@ -509,11 +509,11 @@
                             {
                                 <td>N/A</td>
                             }
-                            @if (p.ClockStart.HasValue && p.ClockStop == null)
+                            @if (p.ClockStart.HasValue)
                             {
                                 <td>@((DateTime.Now - @p.ClockStart).Value.ToString("dd"))</td>
                             }                            
-                            @if (p.ClockStart.HasValue && p.ClockStop == null)
+                            @if (p.ClockStart.HasValue)
                             {
                                 <td>@Math.Floor(((DateTime.Now - @p.ClockStart).Value / 7).TotalDays)</td>
                             }

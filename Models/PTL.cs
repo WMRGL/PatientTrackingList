@@ -17,7 +17,7 @@ namespace PatientTrackingList.Models
         public DateTime? ReferralDate { get; set; }
         public int RefID { get; set; }
         public DateTime? ClockStart { get; set; }
-        public DateTime? ClockStop { get; set; }
+        //public DateTime? ClockStop { get; set; }
         public string? PatientName { get; set; }
         //public string? PtPc { get; set; }
         //public string? OrgCode { get; set; }
@@ -32,8 +32,8 @@ namespace PatientTrackingList.Models
         //public string? BreachReason {  get; set; }
         public DateTime? TCIDate { get; set; }
         //public string? ApptType { get; set; }
-        public string? REF_PHYS { get; set; }
-        public string? GPPc {  get; set; }
+        //public string? REF_PHYS { get; set; }
+        //public string? GPPc {  get; set; }
         public int? ClockDaysAtTCI { get; set; }
         public DateTime LastUpdatedDate { get; set; }
         public string? Comments {  get; set; }

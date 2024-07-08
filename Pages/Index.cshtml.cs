@@ -102,18 +102,10 @@ namespace PatientTrackingList.Pages
             PreviousYear = DateTime.Parse((DateTime.Now.Year - 1) + "-01-01");
             EighteenWeekDate = DateTime.Now.AddDays(-18 * 7);
             FiftyTwoWeekDate = DateTime.Now.AddDays(-365);
-            LastUpdatedDate = PTL.OrderByDescending(p => p.LastUpdatedDate).First().LastUpdatedDate;
-
-            //variables for totals on main page
-            listTotal = PTL.Count();
-            currentYearTotal = PTL.Where(i => i.ReferralDate > CurrentYear).Count();
-            prevYearTotal = PTL.Where(i => i.ReferralDate > PreviousYear && i.ReferralDate < CurrentYear).Count();
-            olderTotal = PTL.Where(i => i.ReferralDate < PreviousYear).Count();
-            breachingTotal = PTL.Where(i => i.ClockStart < EighteenWeekDate).Count();
-            apptDueTotal = PTL.Where(i => i.TCIDate != null).Count();
-            unapptTotal = PTL.Where(i => i.TCIDate == null).Count();
-
+            //LastUpdatedDate = PTL.OrderByDescending(p => p.LastUpdatedDate).First().LastUpdatedDate;
+            
             //for sorting (ascending and descending on each column)
+            
             switch (sortOrder)
             {
                 case "ref_date":
@@ -198,7 +190,17 @@ namespace PatientTrackingList.Pages
                 break;
             }
 
-            pageOfPTL = PTL.ToList();
+            pageOfPTL = PTL.ToList();            
+
+            //variables for totals on main page
+            listTotal = pageOfPTL.Count();
+            currentYearTotal = pageOfPTL.Where(i => i.ReferralDate > CurrentYear).Count();
+            prevYearTotal = pageOfPTL.Where(i => i.ReferralDate > PreviousYear && i.ReferralDate < CurrentYear).Count();
+            olderTotal = pageOfPTL.Where(i => i.ReferralDate < PreviousYear).Count();
+            breachingTotal = pageOfPTL.Where(i => i.ClockStart < EighteenWeekDate).Count();
+            apptDueTotal = pageOfPTL.Where(i => i.TCIDate != null).Count();
+            unapptTotal = pageOfPTL.Where(i => i.TCIDate == null).Count();
+
             //for filtering/searching
             if (sNameSearch != null)
             {
@@ -208,13 +210,7 @@ namespace PatientTrackingList.Pages
             if (sCGUSearch != null)
             {
                 pageOfPTL = pageOfPTL.Where(p => p.CGUNo.Contains(sCGUSearch)).ToList();
-            }
-
-            /*if(priorityFilter.GetValueOrDefault())
-            {
-                pageOfPTL = pageOfPTL.Where(p => p.Class == "Urgent").ToList();
-                prioritySelected = priorityFilter.GetValueOrDefault();
-            }*/
+            }                       
 
             if (priorityFilter != null && priorityFilter != "")
             {
