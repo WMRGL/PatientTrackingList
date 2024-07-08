@@ -81,9 +81,9 @@ namespace PatientTrackingList.Pages
 
                 string username = _staffData.GetStaffMemberDetails(User.Identity.Name).STAFF_CODE;
 
-                if (comments != null)
+                if (comments == null)
                 {
-                    comments = comments.Replace("'", "''");
+                    comments = "";
                 }
 
                 _sql.SqlUpdateComments(comments, iChecked, username, id);
