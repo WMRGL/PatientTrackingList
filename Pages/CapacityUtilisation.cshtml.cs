@@ -9,15 +9,21 @@ namespace PatientTrackingList.Pages
     {
         private readonly DataContext _context;
         private readonly IClinicSlotData _clinicSlotData;
-        
-        public CapacityUtilisationModel(DataContext context)
+        private readonly IConfiguration _config;
+        private readonly ISqlServices _sql;
+        private readonly IStaffData _staffData;
+
+        public CapacityUtilisationModel(DataContext context, IConfiguration config)
         {
             _context = context;
+            _config = config;
             _clinicSlotData = new ClinicSlotData(_context);
             pageNumbers = new List<int>();            
             Clinicians = new List<string>();
             Clinics = new List<string>();
-            Stati = new List<string>();           
+            Stati = new List<string>();
+            _sql = new SqlServices(_config);
+            _staffData = new StaffData(_context);
         }
 
         public IEnumerable<ClinicSlots> ClinicSlots { get; set; }
@@ -37,11 +43,21 @@ namespace PatientTrackingList.Pages
         public DateTime toDateSelected;
         public DateTime fromDateSelected;
 
+        public int openSlots;
+        public int usedSlots;
+        public int unavailableSlots;
+
         public void OnGet(int? pNo, string? clinician, string? clinic, DateTime? fromDate, DateTime? toDate, string? status)
         {
+            string staffCode = "";
             if (User.Identity.Name is null)
             {
                 Response.Redirect("Login");
+            }
+            else
+            {
+                staffCode = _staffData.GetStaffMemberDetails(User.Identity.Name).STAFF_CODE;
+                _sql.SqlWriteUsageAudit(staffCode, "", "Capacity Utilisation");
             }
 
             int pageSize = 20;            
@@ -59,12 +75,14 @@ namespace PatientTrackingList.Pages
             if (clinician != null)
             {
                 ClinicSlots = ClinicSlots.Where(w => w.Clinician == clinician);
+                _sql.SqlWriteUsageAudit(staffCode, $"Clinician={clinician}", "Capacity Utilisation");
                 clincianSelected = clinician;
             }
 
             if (clinic != null)
             {
                 ClinicSlots = ClinicSlots.Where(w => w.Facility == clinic);
+                _sql.SqlWriteUsageAudit(staffCode, $"Clinic={clinic}", "Capacity Utilisation");
                 clinicSelected = clinic;
             }
 
@@ -92,7 +110,11 @@ namespace PatientTrackingList.Pages
             //paginator
             //List <ClinicSlots> pageOfSlot = new List<ClinicSlots>();
             pageOfSlot = ClinicSlots.ToList();
-            
+
+            openSlots = pageOfSlot.Where(s => s.SlotStatus == "Open").Count();
+            usedSlots = pageOfSlot.Where(s => s.SlotStatus == "Booked").Count();
+            unavailableSlots = pageOfSlot.Where(s => s.SlotStatus != "Booked" && s.SlotStatus != "Open").Count();
+
             int pp = pageOfSlot.Count() / pageSize;
 
             for (int i = 1; i <= pp; i++)

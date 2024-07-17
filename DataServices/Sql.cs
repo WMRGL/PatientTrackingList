@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using PatientTrackingList.Data;
 using PatientTrackingList.Models;
 using System.Data;
+using System.Xml.Linq;
 
 namespace PatientTrackingList.DataServices
 {
@@ -12,6 +13,7 @@ namespace PatientTrackingList.DataServices
         public void SqlUpdateComments(string comments, int isChecked, string username, int id);
         public string GetOldComments(int id);
         public void SqlWriteAuditUpdate(string comments, string oldComments, string username, int id);
+        public void SqlWriteUsageAudit(string username, string searchTerm, string formName);
         public string ValidateLogin(UserDetails user);
     }
     public class SqlServices : ISqlServices
@@ -82,6 +84,21 @@ namespace PatientTrackingList.DataServices
             cmd.Parameters.Add("@newValue", SqlDbType.VarChar).Value = comments;
             cmd.Parameters.Add("machineName", SqlDbType.VarChar).Value = System.Environment.MachineName;
 
+
+            _con.Open();
+            cmd.ExecuteNonQuery();
+            _con.Close();
+        }
+
+        public void SqlWriteUsageAudit(string username, string searchTerm, string formName)
+        {
+            SqlCommand cmd = new SqlCommand("[sp_CreateAudit]", _con);
+            cmd.CommandType = System.Data.CommandType.StoredProcedure;
+            cmd.Parameters.Add("@staffCode", SqlDbType.VarChar).Value = username;
+            cmd.Parameters.Add("@form", SqlDbType.VarChar).Value = formName;
+            cmd.Parameters.Add("@database", SqlDbType.VarChar).Value = "PTL-X";
+            cmd.Parameters.Add("@searchTerm", SqlDbType.VarChar).Value = searchTerm;
+            cmd.Parameters.Add("@machine", SqlDbType.VarChar).Value = System.Environment.MachineName;
 
             _con.Open();
             cmd.ExecuteNonQuery();

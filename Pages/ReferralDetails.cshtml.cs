@@ -9,13 +9,13 @@ namespace PatientTrackingList.Pages
     public class ReferralDetailsModel : PageModel
     {
         private readonly DataContext _context;
-        private readonly SqlServices _sql;
         private readonly IConfiguration _config;
         private readonly IPTLData _ptlData;        
         private readonly IStaffData _staffData;
         private readonly IActivityData _activityData;
         private readonly IDiaryData _diaryData;
         private readonly ILetterData _letterData;
+        private readonly ISqlServices _sql;
 
         public ReferralDetailsModel(DataContext context, IConfiguration config)
         {
@@ -42,56 +42,63 @@ namespace PatientTrackingList.Pages
         [Authorize]
         public void OnGet(int id, string? message = "", bool? success = false)
         {
-            if (User.Identity.Name is null)
-            {
-                Response.Redirect("Login");
-            }
-
-            Message = message;
-            isSuccess = success.GetValueOrDefault();
-            RefDet = _ptlData.GetPTLEntryDetails(id);
-            var Referral = _activityData.GetReferralDetails(RefDet.RefID);
-            ActivityList = _activityData.GetActivityList(Referral.CLINICNO);
-            DiaryList = _diaryData.GetDiaryList(RefDet.RefID);
-            LetterList = _letterData.GetLetterList(RefDet.RefID);
-
-            EighteenWeekDate = RefDet.ClockStart.GetValueOrDefault().AddDays(18 * 7);
-            FiftyTwoWeekDate = RefDet.ClockStart.GetValueOrDefault().AddDays(365);
-        }
-
-        public void OnPost(int id, string comments, bool? isChecked=false)
-        {
             try
             {
-                //
+                string staffCode = "";
+                if (User.Identity.Name is null)
+                {
+                    Response.Redirect("Login");
+                }
+                else
+                {
+                    staffCode = _staffData.GetStaffMemberDetails(User.Identity.Name).STAFF_CODE;
+                    _sql.SqlWriteUsageAudit(staffCode, $"PTL ID={id.ToString()}", "Details");
+                }
+
+                Message = message;
+                isSuccess = success.GetValueOrDefault();
                 RefDet = _ptlData.GetPTLEntryDetails(id);
-                var Referral = _activityData.GetReferralDetails(RefDet.RefID);
+                int refID = RefDet.RefID;
+                var Referral = _activityData.GetReferralDetails(refID);
                 ActivityList = _activityData.GetActivityList(Referral.CLINICNO);
-                DiaryList = _diaryData.GetDiaryList(RefDet.RefID);
-                LetterList = _letterData.GetLetterList(RefDet.RefID);
+                DiaryList = _diaryData.GetDiaryList(refID);
+                LetterList = _letterData.GetLetterList(refID);
+
+                EighteenWeekDate = RefDet.ClockStart.GetValueOrDefault().AddDays(18 * 7);
+                FiftyTwoWeekDate = RefDet.ClockStart.GetValueOrDefault().AddDays(365);
+            }
+            catch (Exception ex)
+            {
+                Message = ex.Message;
+            }
+        }
+
+        public void OnPost(int id, string? comments="", bool? isChecked=false)
+        {
+            try
+            {                
+                RefDet = _ptlData.GetPTLEntryDetails(id);
+                int refID = RefDet.RefID;
+                var Referral = _activityData.GetReferralDetails(refID);
+                ActivityList = _activityData.GetActivityList(Referral.CLINICNO);
+                DiaryList = _diaryData.GetDiaryList(refID);
+                LetterList = _letterData.GetLetterList(refID);
 
                 EighteenWeekDate = RefDet.ClockStart.GetValueOrDefault().AddDays(18 * 7);
                 FiftyTwoWeekDate = RefDet.ClockStart.GetValueOrDefault().AddDays(365);
 
                 int iChecked = 0; //because SQL needs it to be a binary value
-                if(isChecked.GetValueOrDefault())
-                {
-                    iChecked = 1;
-                }               
+                
+                if(isChecked.GetValueOrDefault()) { iChecked = 1; }
 
                 string username = _staffData.GetStaffMemberDetails(User.Identity.Name).STAFF_CODE;
-
-                if (comments == null)
-                {
-                    comments = "";
-                }
 
                 _sql.SqlUpdateComments(comments, iChecked, username, id);
                                                 
                 isSuccess = true;
                 string message = "Saved.";
                 
-                Response.Redirect("ReferralDetails?id=" + id.ToString() + "&message=" + message + "&success=" + isSuccess);
+                Response.Redirect($"ReferralDetails?id={id.ToString()}&message={message}&success={isSuccess}");
             }
             catch (Exception ex)
             {
