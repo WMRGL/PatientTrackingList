@@ -127,8 +127,8 @@ namespace PatientTrackingList.DataServices
                 int tcidays = 0;
                 string tcidate = "N/A";
 
-                table.Rows.Add(cs.ClinicianID,
-                    cs.ClinicID,
+                table.Rows.Add(cs.Clinician,
+                    cs.Facility+" ("+cs.ClinicID + ")",
                     cs.SlotDate.Value.ToString("dd/MM/yyyy"),
                     cs.SlotTime.Value.ToString("HH:mm"),
                     cs.SlotStatus);
@@ -240,12 +240,12 @@ namespace PatientTrackingList.DataServices
 
                 if (clinicianFilter != null && clinicianFilter != "")
                 {
-                    capToExport = capToExport.Where(p => p.ClinicianID == clinicianFilter).ToList();
+                    capToExport = capToExport.Where(p => p.Clinician == clinicianFilter).ToList();
                 }
 
                 if (clinicFilter != null && clinicFilter != "")
                 {
-                    capToExport = capToExport.Where(p => p.ClinicID == clinicFilter).ToList();
+                    capToExport = capToExport.Where(p => p.Facility == clinicFilter).ToList();
                 }
 
                 if (statusFilter != null && statusFilter != "")
