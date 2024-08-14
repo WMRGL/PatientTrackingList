@@ -4,11 +4,11 @@
     ViewData["Title"] = "Patient Tracking List";
 }
 
-<div class="container-fluid">
+<div >
     <h1 class="text-center">PTL-X - The New Patient Tracking List</h1>
     <br />
     <br />
-    @if(!Model.isLive)
+    @if (!Model.isLive)
     {
         <h1 class="text-center redtext">NOTE: This is a test system, work completed here will not be reflected in production</h1>
     }
@@ -26,12 +26,12 @@
         <dt class="col-md-2">Currently Over 18 Weeks:</dt><dd class="col-md-2">@Model.breachingTotal</dd>
         <dd class="col-md-8">(18 week clock start date: @Model.EighteenWeekDate.ToString("dd/MM/yyyy"))</dd>
         <dt class="col-md-2">Appointment due:</dt><dd class="col-md-2">@Model.apptDueTotal</dd>
-        <dt class="col-md-2">Unappointed:</dt><dd class="col-md-2">@Model.unapptTotal</dd>            
+        <dt class="col-md-2">Unappointed:</dt><dd class="col-md-2">@Model.unapptTotal</dd>
     </div>
     <br />
 
     @*<div class="row">
-        <dt class="col-md-2">Last updated:</dt><dd class="col-md-2">@Model.LastUpdatedDate.ToString("dd/MM/yyyy")</dd>
+    <dt class="col-md-2">Last updated:</dt><dd class="col-md-2">@Model.LastUpdatedDate.ToString("dd/MM/yyyy")</dd>
     </div>*@
     <br />
 
@@ -41,520 +41,510 @@
         </div>
     </div>
 
-
-
-    <form id="frmMenu" method="Post">
-        <div class="row mb-5">
-            <div class="row">
-                <div class="col-md-2">
-                    <h3>Search form:</h3>
-                </div>
-                <div class="col-md-6">
-                    <button type="button" class="btn btn-secondary" onclick="ClearFilters()">Reset Filters</button>
-                </div>
-                <div class="col-md-2">
-                    
-                </div>
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="card-title">Search Form</h5>
             </div>
-            
-            <div class="col-md-1">
-                <label class="w-100">Name:</label>
-            </div>
-            <div class="col-md-2">
-                <input class="w-100" id="txtName" name="sNameSearch" />
-            </div>
-            <div class="col-md-1">
-                <label class="w-100">CGU_No:</label>
-            </div>
-            <div class="col-md-2">
-                <input class="w-100" id="txtCGU" name="sCGUSearch" />
-            </div>
-            <div class="col-md-1">
-                <label class="w-100">Priority:</label>
-            </div>
-            <div class="col-md-1">
-                @*<input id="chkUrgent" type="checkbox" value="false" onclick="SetUrgentCheckBox()" asp-for=@Model.prioritySelected/>*@
-                <select class="w-100" id="ddlPriority" name="priorityFilter" asp-for=@Model.prioritySelected>
-                    <option value="">Any</option>
-                    <option value="Routine">Routine</option>
-                    <option value="Fast-Track">Fast-track</option>
-                    <option value="Urgent">Urgent</option>
-                </select>
-            </div>
-            <div class="col-md-1">
-                <label class="w-100">Show  Only Unchecked:</label>
-            </div>
-            <div class="col-md-1">
-                <input id="chkChecked" type="checkbox" value="false" onclick="SetCheckedCheckBox()" asp-for=@Model.isCheckedSelected />
-            </div>
-            <div class="col-md-1">
-                <label class="w-100">Referral Pathway:</label>
-            </div>
-            <div class="col-md-1">
-                <select class="w-100" id="ddlPathway" name="pathwayFilter" asp-for=@Model.pathwaySelected>
-                    <option value="">Both</option>
-                    <option value="Cancer">Cancer</option>
-                    <option value="General">General</option>
-                </select>
+            <div class="card-body">
+                <form id="frmMenu" method="post">
+                    <button type="reset" class="btn btn-dark mb-3">Reset Filters</button>
+                    <div class="row">
+                        <div class="mb-3 col-md-4">
+                            <label class="form-label" for="txtName">Name:</label>
+                            <input type="text" class="form-control" id="txtName" name="sNameSearch" placeholder="Name">
+                        </div>
+                        <div class="mb-3 col-md-4">
+                            <label class="form-label" for="txtCGU">CGU_No:</label>
+                            <input type="text" class="form-control" id="txtCGU" name="sCGUSearch" placeholder="CGU_No">
+                        </div>
+                        <div class="mb-3 col-md-4">
+                            <label class="form-label" for="inputPassword4">Priority:</label>
+                            <select class="form-select mb-3" id="ddlPriority" name="priorityFilter" asp-for=@Model.prioritySelected>
+                                <option value="">Any</option>
+                                <option value="Routine">Routine</option>
+                                <option value="Fast-Track">Fast-track</option>
+                                <option value="Urgent">Urgent</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="mb-3 col-md-4">
+                            <label class="form-label" for="inputAddress">Show  Only Unchecked:</label>
+                            <input class="form-check-input" type="checkbox" id="chkChecked" value="false" onclick="SetCheckedCheckBox()" asp-for=@Model.isCheckedSelected>
+                        </div>
+                        <div class="mb-3 col-md-4">
+                            <label class="form-label" for="inputAddress">Referral Pathway:</label>
+                            <select class="form-select mb-3" id="ddlPathway" name="pathwayFilter" asp-for=@Model.pathwaySelected>
+                                <option value="">Both</option>
+                                <option value="Cancer">Cancer</option>
+                                <option value="General">General</option>
+                            </select>
+                        </div>
+                        <div class="mb-3 col-md-4">
+                            <label class="form-label" for="inputAddress">Consultant:</label>
+                            <select class="form-select mb-3" id="ddlConsultant" name="consultantFilter" asp-for=@Model.consultantSelected>
+                                <option value="">Select...</option>
+                                @foreach (var item in Model.consultantList)
+                                {
+                                    <option value=@item.NAME>@item.NAME</option>
+                                }
+                            </select>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="mb-3 col-md-4">
+                            <label class="form-label" for="ddlGC">GC</label>
+                            <select class="form-select" id="ddlGC" name="gcFilter" asp-for=@Model.GCSelected>
+                                <option value="">Select...</option>
+                                @foreach (var item in Model.GCList)
+                                {
+                                    <option value=@item.NAME>@item.NAME</option>
+                                }
+                            </select>
+                        </div>
+                        <div class="mb-3 col-md-4">
+                            <label class="form-label" for="txtComments">Comments:</label>
+                            <input type="text" class="form-control" id="txtComments" name="commentsearch" type="text" asp-for=@Model.commentSearch>
+                        </div>
+                        <div class="mb-3 col-md-4">
+                            <label class="form-label" for="inputState">Triage Pathway:</label>
+                            <select id="inputState" class="form-select" asp-for=@Model.triagePathway name="triagePathwayFilter">
+                                <option value="">Select...</option>
+                                @if (Model.UniqueTriagePathways != null && Model.UniqueTriagePathways.Any())
+                                {
+                                    foreach (var triagePathway in Model.UniqueTriagePathways)
+                                    {
+                                        <option value="@triagePathway">@triagePathway</option>
+                                    }
+                                }
+                            </select>
+                        </div>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Submit</button>
+                </form>
             </div>
         </div>
-        <div class="row">
-            <div class="col-md-1">
-                <label class="w-100">Consultant:</label>
-            </div>
-            <div class="col-md-3">
-                <select class="w-100" id="ddlConsultant" name="consultantFilter" asp-for=@Model.consultantSelected>
-                    <option value="">Select...</option>
-                    @foreach(var item in Model.consultantList)
-                    {
-                        <option value=@item.NAME>@item.NAME</option>
-                    }
-                </select>
-            </div>
-            <div class="col-md-1">
-                <label class="w-100">GC:</label>
-            </div>
-            <div class="col-md-3">
-                <select class="w-100" id="ddlGC" name="gcFilter" asp-for=@Model.GCSelected>
-                    <option value="">Select...</option>
-                    @foreach (var item in Model.GCList)
-                    {
-                        <option value=@item.NAME>@item.NAME</option>
-                    }
-                </select>
-            </div>
-            <div class="col-md-1">
-                <label class="w-100">Comments:</label>
-            </div>
-            <div class="col-md-2">
-                <input class="w-100" id="txtComments" name="commentsearch" type="text" asp-for=@Model.commentSearch />
-            </div>
-
-            <div class="col-md-1">
-                <input type="submit" class="btn btn-secondary" />
-            </div>
-        </div>
-
-        @*<div class="row">
-            <div class="col-md-2">
-                <input type="submit" class="btn btn-secondary"  />                
-            </div>
-        </div>*@
-        <div class="row">
-            <input name="priorityFilter" id="txtpriorityFilter" hidden="true" />
-            <input name="isChecked" id="txtIsChecked" hidden="true" />
-        </div>
-    </form>
-    <br />
-
-    <div class="row">      
-        <table class="table table-bordered">
-            <thead>
-                <tr>            
-                    <th class="align-top">CGU Number</th>
-                    <th class="align-top">Name</th>                    
-                    <th class="align-top">
-                        <div class="row">
-                            <div class="col-7">
-                                Ref Date
-                            </div>
-                            <div class="col-5">
-                                <div class="row">
-                                    <a asp-page="\Index" asp-route-sortOrder="ref_date" asp-route-isDesc=false>
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-chevron-compact-up" viewBox="0 0 16 16">
-                                        <path fill-rule="evenodd" d="M7.776 5.553a.5.5 0 0 1 .448 0l6 3a.5.5 0 1 1-.448.894L8 6.56 2.224 9.447a.5.5 0 1 1-.448-.894l6-3z" />
-                                    </svg>
-                                    </a>
-                                </div>
-                                <div class="row">
-                                    <a asp-page="\Index" asp-route-sortOrder="ref_date" asp-route-isDesc=true>
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-chevron-compact-down" viewBox="0 0 16 16">
-                                        <path fill-rule="evenodd" d="M1.553 6.776a.5.5 0 0 1 .67-.223L8 9.44l5.776-2.888a.5.5 0 1 1 .448.894l-6 3a.5.5 0 0 1-.448 0l-6-3a.5.5 0 0 1-.223-.67z" />
-                                    </svg>
-                                    </a>
-                                </div>
-                            </div>
-                        </div>
-                    </th>
-                    <th class="align-top">
-                        <div class="row">
-                            <div class="col-8">
-                                Clock Start
-                            </div>
-                            <div class="col-4">
-                                <ul class="list-unstyled list-group">
-                                    <li><a asp-page="\Index" asp-route-sortOrder="cs_date" asp-route-isDesc=false>
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-chevron-compact-up" viewBox="0 0 16 16">
-                                            <path fill-rule="evenodd" d="M7.776 5.553a.5.5 0 0 1 .448 0l6 3a.5.5 0 1 1-.448.894L8 6.56 2.224 9.447a.5.5 0 1 1-.448-.894l6-3z" />
-                                        </svg>
-                                        </a>
-                                    </li>
-                                
-                                    <li><a asp-page="\Index" asp-route-sortOrder="cs_date" asp-route-isDesc=true>
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-chevron-compact-down" viewBox="0 0 16 16">
-                                            <path fill-rule="evenodd" d="M1.553 6.776a.5.5 0 0 1 .67-.223L8 9.44l5.776-2.888a.5.5 0 1 1 .448.894l-6 3a.5.5 0 0 1-.448 0l-6-3a.5.5 0 0 1-.223-.67z" />
-                                        </svg>
-                                        </a>
-                                    </li>                               
-                                </ul>
-                            </div>
-                        </div>
-                    <th class="align-top">
-                        <div class="row">
-                            <div class="col-7">
-                                Reason
-                            </div>
-                            <div class="col-5">
-                                <div class="row">
-                                    <a asp-page="\Index" asp-route-sortOrder="ref_reason" asp-route-isDesc=false>
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-chevron-compact-up" viewBox="0 0 16 16">
-                                            <path fill-rule="evenodd" d="M7.776 5.553a.5.5 0 0 1 .448 0l6 3a.5.5 0 1 1-.448.894L8 6.56 2.224 9.447a.5.5 0 1 1-.448-.894l6-3z" />
-                                        </svg>
-                                    </a>
-                                </div>
-                                <div class="row">
-                                    <a asp-page="\Index" asp-route-sortOrder="ref_reason" asp-route-isDesc=true>
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-chevron-compact-down" viewBox="0 0 16 16">
-                                            <path fill-rule="evenodd" d="M1.553 6.776a.5.5 0 0 1 .67-.223L8 9.44l5.776-2.888a.5.5 0 1 1 .448.894l-6 3a.5.5 0 0 1-.448 0l-6-3a.5.5 0 0 1-.223-.67z" />
-                                        </svg>
-                                    </a>
-                                </div>
-                            </div>
-                        </div>
-                    </th>                    
-                    <th class="align-top">
-                        <div class="row">
-                            <div class="col-7">
-                                Urgency
-                            </div>
-                            <div class="col-5">
-                                <div class="row">
-                                    <a asp-page="\Index" asp-route-sortOrder="ref_class" asp-route-isDesc=false>
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-chevron-compact-up" viewBox="0 0 16 16">
-                                            <path fill-rule="evenodd" d="M7.776 5.553a.5.5 0 0 1 .448 0l6 3a.5.5 0 1 1-.448.894L8 6.56 2.224 9.447a.5.5 0 1 1-.448-.894l6-3z" />
-                                        </svg>
-                                    </a>
-                                </div>
-                                <div class="row">
-                                    <a asp-page="\Index" asp-route-sortOrder="ref_class" asp-route-isDesc=true>
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-chevron-compact-down" viewBox="0 0 16 16">
-                                            <path fill-rule="evenodd" d="M1.553 6.776a.5.5 0 0 1 .67-.223L8 9.44l5.776-2.888a.5.5 0 1 1 .448.894l-6 3a.5.5 0 0 1-.448 0l-6-3a.5.5 0 0 1-.223-.67z" />
-                                        </svg>
-                                    </a>
-                                </div>
-                            </div>
-                        </div>
-                    </th>
-                    <th class="align-top">
-                        <div class="row">
-                            <div class="col-7">
-                                TCI Date
-                            </div>
-                            <div class="col-5">
-                                <div class="row">
-                                    <a asp-page="\Index" asp-route-sortOrder="tci_date" asp-route-isDesc=false>
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-chevron-compact-up" viewBox="0 0 16 16">
-                                            <path fill-rule="evenodd" d="M7.776 5.553a.5.5 0 0 1 .448 0l6 3a.5.5 0 1 1-.448.894L8 6.56 2.224 9.447a.5.5 0 1 1-.448-.894l6-3z" />
-                                        </svg>
-                                    </a>
-                                </div>
-                                <div class="row">
-                                    <a asp-page="\Index" asp-route-sortOrder="tci_date" asp-route-isDesc=true>
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-chevron-compact-down" viewBox="0 0 16 16">
-                                            <path fill-rule="evenodd" d="M1.553 6.776a.5.5 0 0 1 .67-.223L8 9.44l5.776-2.888a.5.5 0 1 1 .448.894l-6 3a.5.5 0 0 1-.448 0l-6-3a.5.5 0 0 1-.223-.67z" />
-                                        </svg>
-                                    </a>
-                                </div>
-                            </div>
-                        </div>
-                    </th>
-                    <th class="align-top">
-                        <div class="row">
-                            <div class="col-7">
-                                Clock Ticking (Days)
-                            </div>
-                            <div class="col-5">
-                                <div class="row">
-                                    <a asp-page="\Index" asp-route-sortOrder="clock_day" asp-route-isDesc=false>
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-chevron-compact-up" viewBox="0 0 16 16">
-                                            <path fill-rule="evenodd" d="M7.776 5.553a.5.5 0 0 1 .448 0l6 3a.5.5 0 1 1-.448.894L8 6.56 2.224 9.447a.5.5 0 1 1-.448-.894l6-3z" />
-                                        </svg>
-                                    </a>
-                                </div>
-                                <div class="row">
-                                    <a asp-page="\Index" asp-route-sortOrder="clock_day" asp-route-isDesc=true>
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-chevron-compact-down" viewBox="0 0 16 16">
-                                            <path fill-rule="evenodd" d="M1.553 6.776a.5.5 0 0 1 .67-.223L8 9.44l5.776-2.888a.5.5 0 1 1 .448.894l-6 3a.5.5 0 0 1-.448 0l-6-3a.5.5 0 0 1-.223-.67z" />
-                                        </svg>
-                                    </a>
-                                </div>
-                            </div>
-                        </div>
-                    </th>
-                    <th class="align-top">
-                        <div class="row">
-                            <div class="col-7">
-                                Clock Ticking (Weeks)
-                            </div>
-                            <div class="col-5">
-                                <div class="row">
-                                    <a asp-page="\Index" asp-route-sortOrder="clock_day" asp-route-isDesc=false>
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-chevron-compact-up" viewBox="0 0 16 16">
-                                            <path fill-rule="evenodd" d="M7.776 5.553a.5.5 0 0 1 .448 0l6 3a.5.5 0 1 1-.448.894L8 6.56 2.224 9.447a.5.5 0 1 1-.448-.894l6-3z" />
-                                        </svg>
-                                    </a>
-                                </div>
-                                <div class="row">
-                                    <a asp-page="\Index" asp-route-sortOrder="clock_day" asp-route-isDesc=true>
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-chevron-compact-down" viewBox="0 0 16 16">
-                                            <path fill-rule="evenodd" d="M1.553 6.776a.5.5 0 0 1 .67-.223L8 9.44l5.776-2.888a.5.5 0 1 1 .448.894l-6 3a.5.5 0 0 1-.448 0l-6-3a.5.5 0 0 1-.223-.67z" />
-                                        </svg>
-                                    </a>
-                                </div>
-                            </div>
-                        </div>
-                    </th>
-                    <th class="align-top">
-                        <div class="row">
-                            <div class="col-7">
-                                Clock Days at TCI
-                            </div>
-                            <div class="col-5">
-                                <div class="row">
-                                    <a asp-page="\Index" asp-route-sortOrder="clock_tci" asp-route-isDesc=false>
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-chevron-compact-up" viewBox="0 0 16 16">
-                                            <path fill-rule="evenodd" d="M7.776 5.553a.5.5 0 0 1 .448 0l6 3a.5.5 0 1 1-.448.894L8 6.56 2.224 9.447a.5.5 0 1 1-.448-.894l6-3z" />
-                                        </svg>
-                                    </a>
-                                </div>
-                                <div class="row">
-                                    <a asp-page="\Index" asp-route-sortOrder="clock_tci" asp-route-isDesc=true>
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-chevron-compact-down" viewBox="0 0 16 16">
-                                            <path fill-rule="evenodd" d="M1.553 6.776a.5.5 0 0 1 .67-.223L8 9.44l5.776-2.888a.5.5 0 1 1 .448.894l-6 3a.5.5 0 0 1-.448 0l-6-3a.5.5 0 0 1-.223-.67z" />
-                                        </svg>
-                                    </a>
-                                </div>
-                            </div>
-                        </div>
-                    </th>
-                    <th class="align-top">Comments</th>
-                    <th class="align-top">Checked</th>
-                    <th class="align-top">Last Updated</th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach(var p in Model.pageOfPTL)
-                {
-                    @if (@p.ClockStart < Model.FiftyTwoWeekDate)
-                    {
-                        <tr class="redtext">                            
-                            <td><a type="button" class="btn btn-secondary" asp-area="" asp-page="/ReferralDetails" asp-route-id=@p.ID target="_blank">@p.CGUNo</a></td>
-                            <td>@p.PatientName</td>                                                       
-                            @if (p.ReferralDate.HasValue)
-                            {
-                                <td>@p.ReferralDate.Value.ToString("dd/MM/yyyy")</td>
-                            }
-                            else
-                            {
-                                <td>N/A</td>
-                            }
-                            @if (@p.ClockStart.HasValue)
-                            {
-                                <td>@p.ClockStart.Value.ToString("dd/MM/yyyy")</td>
-                            }
-                            else
-                            {
-                                <td>N/A</td>
-                            }
-                            <td>@p.ReferralReason</td>                           
-                            <td>@p.Class</td>
-                            @if (@p.TCIDate.HasValue)
-                            {
-                                <td>@p.TCIDate.Value.ToString("dd/MM/yyyy")</td>
-                            }
-                            else
-                            {
-                                <td>N/A</td>
-                            }
-                            @if (p.ClockStart.HasValue)
-                            {
-                                <td>@((DateTime.Now - @p.ClockStart).Value.ToString("dd"))</td>
-                            }
-                            @if (p.ClockStart.HasValue)
-                            {
-                                <td>@Math.Floor(((DateTime.Now - @p.ClockStart).Value/7).TotalDays)</td>
-                            }
-
-                            @if(p.ClockDaysAtTCI.HasValue)
-                            {
-                                <td>@p.ClockDaysAtTCI</td>
-                            }
-                            else
-                            {
-                                <td>N/A</td>
-                            }
-                            <td>@p.Comments</td>
-                            @if (p.isChecked)
-                            {
-                                <td>Yes</td>
-                            }
-                            else
-                            {
-                                <td>No</td>
-                            }
-                            @if (p.UpdatedDate.HasValue)
-                            {
-                                <td>@p.UpdatedDate.Value.ToString("dd/MM/yyyy") by @p.UpdatedBy</td>
-                            }
-                            else
-                            {
-                                <td>N/A</td>
-                            }
-                        </tr>
-                    }
-                    else if (@p.ClockStart < Model.EighteenWeekDate)
-                    {                        
-                        <tr class="ambertext">
-                            <td><a type="button" class="btn btn-secondary" asp-area="" asp-page="/ReferralDetails" asp-route-id=@p.ID target="_blank">@p.CGUNo</a></td>
-                            <td>@p.PatientName</td>                           
-                            @if (p.ReferralDate.HasValue)
-                            {
-                                <td>@p.ReferralDate.Value.ToString("dd/MM/yyyy")</td>
-                            }
-                            else
-                            {
-                                <td>N/A</td>
-                            }
-                            @if (@p.ClockStart.HasValue)
-                            {
-                                <td>@p.ClockStart.Value.ToString("dd/MM/yyyy")</td>
-                            }
-                            else
-                            {
-                                <td>N/A</td>
-                            }
-                            <td>@p.ReferralReason</td>
-                            <td>@p.Class</td>
-                            @if (@p.TCIDate.HasValue)
-                            {
-                                <td>@p.TCIDate.Value.ToString("dd/MM/yyyy")</td>
-                            }
-                            else
-                            {
-                                <td>N/A</td>
-                            }
-                            @if (p.ClockStart.HasValue)
-                            {
-                                <td>@((DateTime.Now - @p.ClockStart).Value.ToString("dd"))</td>
-                            }
-                            @if (p.ClockStart.HasValue)
-                            {
-                                <td>@Math.Floor(((DateTime.Now - @p.ClockStart).Value / 7).TotalDays)</td>
-                            }
-                            @if (p.ClockDaysAtTCI.HasValue)
-                            {
-                                <td>@p.ClockDaysAtTCI</td>
-                            }
-                            else
-                            {
-                                <td>N/A</td>
-                            }
-                            <td>@p.Comments</td>
-                            @if (p.isChecked)
-                            {
-                                <td>Yes</td>
-                            }
-                            else
-                            {
-                                <td>No</td>
-                            }
-                            @if (p.UpdatedDate.HasValue)
-                            {
-                                <td>@p.UpdatedDate.Value.ToString("dd/MM/yyyy") by @p.UpdatedBy</td>
-                            }
-                            else
-                            {
-                                <td>N/A</td>
-                            }
-                        </tr>
-                    }
-                    else
-                    {
-                        <tr>
-                            <td><a type="button" class="btn btn-secondary" asp-area="" asp-page="/ReferralDetails" asp-route-id=@p.ID target="_blank">@p.CGUNo</a></td>
-                            <td>@p.PatientName</td>                            
-                            @if (p.ReferralDate.HasValue)
-                            {
-                                <td>@p.ReferralDate.Value.ToString("dd/MM/yyyy")</td>
-                            }
-                            else
-                            {
-                                <td>N/A</td>
-                            }
-                            @if (@p.ClockStart.HasValue)
-                            {
-                                <td>@p.ClockStart.Value.ToString("dd/MM/yyyy")</td>
-                            }
-                            else
-                            {
-                                <td>N/A</td>
-                            }
-                            <td>@p.ReferralReason</td>                            
-                            <td>@p.Class</td>
-                            @if (p.TCIDate.HasValue)
-                            {
-                                <td>@p.TCIDate.Value.ToString("dd/MM/yyyy")</td>
-                            }
-                            else
-                            {
-                                <td>N/A</td>
-                            }
-                            @if (p.ClockStart.HasValue)
-                            {
-                                <td>@((DateTime.Now - @p.ClockStart).Value.ToString("dd"))</td>
-                            }                            
-                            @if (p.ClockStart.HasValue)
-                            {
-                                <td>@Math.Floor(((DateTime.Now - @p.ClockStart).Value / 7).TotalDays)</td>
-                            }
-                            @if (p.ClockDaysAtTCI.HasValue)
-                            {
-                                <td>@p.ClockDaysAtTCI</td>
-                            }
-                            else
-                            {
-                                <td>N/A</td>
-                            }
-                            <td>@p.Comments</td>
-                            @if (p.isChecked)
-                            {
-                                <td>Yes</td>
-                            }
-                            else
-                            {
-                                <td>No</td>
-                            }
-                            @if(p.UpdatedDate.HasValue)
-                            {
-                                <td>@p.UpdatedDate.Value.ToString("dd/MM/yyyy") by @p.UpdatedBy</td>
-                            }
-                            else
-                            {
-                                <td>N/A</td>
-                            }
-                        </tr>
-                    }  
-                }
-            </tbody>
-        </table>
     </div>
 
-    @if(Model.pageNumbers.Count() > 1)
+
+    <div class="card">
+        <div class="card-body">
+            <div class="">
+                <table class="table table-bordered table-responsive">
+                    <thead>
+                        <tr>
+                            <th class="align-top">CGU Number</th>
+                            <th class="align-top">Name</th>
+                            <th class="align-top">
+                                <div class="row">
+                                    <div class="col-7">
+                                        Ref Date
+                                    </div>
+                                    <div class="col-5">
+                                        <div class="row">
+                                            <a asp-page="\Index" asp-route-sortOrder="ref_date" asp-route-isDesc=false>
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-chevron-compact-up" viewBox="0 0 16 16">
+                                                    <path fill-rule="evenodd" d="M7.776 5.553a.5.5 0 0 1 .448 0l6 3a.5.5 0 1 1-.448.894L8 6.56 2.224 9.447a.5.5 0 1 1-.448-.894l6-3z" />
+                                                </svg>
+                                            </a>
+                                        </div>
+                                        <div class="row">
+                                            <a asp-page="\Index" asp-route-sortOrder="ref_date" asp-route-isDesc=true>
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-chevron-compact-down" viewBox="0 0 16 16">
+                                                    <path fill-rule="evenodd" d="M1.553 6.776a.5.5 0 0 1 .67-.223L8 9.44l5.776-2.888a.5.5 0 1 1 .448.894l-6 3a.5.5 0 0 1-.448 0l-6-3a.5.5 0 0 1-.223-.67z" />
+                                                </svg>
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </th>
+                            <th class="align-top">
+                                <div class="row">
+                                    <div class="col-8">
+                                        Clock Start
+                                    </div>
+                                    <div class="col-4">
+                                        <ul class="list-unstyled list-group">
+                                            <li>
+                                                <a asp-page="\Index" asp-route-sortOrder="cs_date" asp-route-isDesc=false>
+                                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-chevron-compact-up" viewBox="0 0 16 16">
+                                                        <path fill-rule="evenodd" d="M7.776 5.553a.5.5 0 0 1 .448 0l6 3a.5.5 0 1 1-.448.894L8 6.56 2.224 9.447a.5.5 0 1 1-.448-.894l6-3z" />
+                                                    </svg>
+                                                </a>
+                                            </li>
+
+                                            <li>
+                                                <a asp-page="\Index" asp-route-sortOrder="cs_date" asp-route-isDesc=true>
+                                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-chevron-compact-down" viewBox="0 0 16 16">
+                                                        <path fill-rule="evenodd" d="M1.553 6.776a.5.5 0 0 1 .67-.223L8 9.44l5.776-2.888a.5.5 0 1 1 .448.894l-6 3a.5.5 0 0 1-.448 0l-6-3a.5.5 0 0 1-.223-.67z" />
+                                                    </svg>
+                                                </a>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            <th class="align-top">
+                                <div class="row">
+                                    <div class="col-7">
+                                        Reason
+                                    </div>
+                                    <div class="col-5">
+                                        <div class="row">
+                                            <a asp-page="\Index" asp-route-sortOrder="ref_reason" asp-route-isDesc=false>
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-chevron-compact-up" viewBox="0 0 16 16">
+                                                    <path fill-rule="evenodd" d="M7.776 5.553a.5.5 0 0 1 .448 0l6 3a.5.5 0 1 1-.448.894L8 6.56 2.224 9.447a.5.5 0 1 1-.448-.894l6-3z" />
+                                                </svg>
+                                            </a>
+                                        </div>
+                                        <div class="row">
+                                            <a asp-page="\Index" asp-route-sortOrder="ref_reason" asp-route-isDesc=true>
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-chevron-compact-down" viewBox="0 0 16 16">
+                                                    <path fill-rule="evenodd" d="M1.553 6.776a.5.5 0 0 1 .67-.223L8 9.44l5.776-2.888a.5.5 0 1 1 .448.894l-6 3a.5.5 0 0 1-.448 0l-6-3a.5.5 0 0 1-.223-.67z" />
+                                                </svg>
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </th>
+                            <th class="align-top">
+                                <div class="row">
+                                    <div class="col-7">
+                                        Urgency
+                                    </div>
+                                    <div class="col-5">
+                                        <div class="row">
+                                            <a asp-page="\Index" asp-route-sortOrder="ref_class" asp-route-isDesc=false>
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-chevron-compact-up" viewBox="0 0 16 16">
+                                                    <path fill-rule="evenodd" d="M7.776 5.553a.5.5 0 0 1 .448 0l6 3a.5.5 0 1 1-.448.894L8 6.56 2.224 9.447a.5.5 0 1 1-.448-.894l6-3z" />
+                                                </svg>
+                                            </a>
+                                        </div>
+                                        <div class="row">
+                                            <a asp-page="\Index" asp-route-sortOrder="ref_class" asp-route-isDesc=true>
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-chevron-compact-down" viewBox="0 0 16 16">
+                                                    <path fill-rule="evenodd" d="M1.553 6.776a.5.5 0 0 1 .67-.223L8 9.44l5.776-2.888a.5.5 0 1 1 .448.894l-6 3a.5.5 0 0 1-.448 0l-6-3a.5.5 0 0 1-.223-.67z" />
+                                                </svg>
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </th>
+                            <th class="align-top">
+                                <div class="row">
+                                    <div class="col-7">
+                                        TCI Date
+                                    </div>
+                                    <div class="col-5">
+                                        <div class="row">
+                                            <a asp-page="\Index" asp-route-sortOrder="tci_date" asp-route-isDesc=false>
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-chevron-compact-up" viewBox="0 0 16 16">
+                                                    <path fill-rule="evenodd" d="M7.776 5.553a.5.5 0 0 1 .448 0l6 3a.5.5 0 1 1-.448.894L8 6.56 2.224 9.447a.5.5 0 1 1-.448-.894l6-3z" />
+                                                </svg>
+                                            </a>
+                                        </div>
+                                        <div class="row">
+                                            <a asp-page="\Index" asp-route-sortOrder="tci_date" asp-route-isDesc=true>
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-chevron-compact-down" viewBox="0 0 16 16">
+                                                    <path fill-rule="evenodd" d="M1.553 6.776a.5.5 0 0 1 .67-.223L8 9.44l5.776-2.888a.5.5 0 1 1 .448.894l-6 3a.5.5 0 0 1-.448 0l-6-3a.5.5 0 0 1-.223-.67z" />
+                                                </svg>
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </th>
+                            <th class="align-top">
+                                <div class="row">
+                                    <div class="col-7">
+                                        Clock Ticking (Days)
+                                    </div>
+                                    <div class="col-5">
+                                        <div class="row">
+                                            <a asp-page="\Index" asp-route-sortOrder="clock_day" asp-route-isDesc=false>
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-chevron-compact-up" viewBox="0 0 16 16">
+                                                    <path fill-rule="evenodd" d="M7.776 5.553a.5.5 0 0 1 .448 0l6 3a.5.5 0 1 1-.448.894L8 6.56 2.224 9.447a.5.5 0 1 1-.448-.894l6-3z" />
+                                                </svg>
+                                            </a>
+                                        </div>
+                                        <div class="row">
+                                            <a asp-page="\Index" asp-route-sortOrder="clock_day" asp-route-isDesc=true>
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-chevron-compact-down" viewBox="0 0 16 16">
+                                                    <path fill-rule="evenodd" d="M1.553 6.776a.5.5 0 0 1 .67-.223L8 9.44l5.776-2.888a.5.5 0 1 1 .448.894l-6 3a.5.5 0 0 1-.448 0l-6-3a.5.5 0 0 1-.223-.67z" />
+                                                </svg>
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </th>
+                            <th class="align-top">
+                                <div class="row">
+                                    <div class="col-7">
+                                        Clock Ticking (Weeks)
+                                    </div>
+                                    <div class="col-5">
+                                        <div class="row">
+                                            <a asp-page="\Index" asp-route-sortOrder="clock_day" asp-route-isDesc=false>
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-chevron-compact-up" viewBox="0 0 16 16">
+                                                    <path fill-rule="evenodd" d="M7.776 5.553a.5.5 0 0 1 .448 0l6 3a.5.5 0 1 1-.448.894L8 6.56 2.224 9.447a.5.5 0 1 1-.448-.894l6-3z" />
+                                                </svg>
+                                            </a>
+                                        </div>
+                                        <div class="row">
+                                            <a asp-page="\Index" asp-route-sortOrder="clock_day" asp-route-isDesc=true>
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-chevron-compact-down" viewBox="0 0 16 16">
+                                                    <path fill-rule="evenodd" d="M1.553 6.776a.5.5 0 0 1 .67-.223L8 9.44l5.776-2.888a.5.5 0 1 1 .448.894l-6 3a.5.5 0 0 1-.448 0l-6-3a.5.5 0 0 1-.223-.67z" />
+                                                </svg>
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </th>
+                            <th class="align-top">
+                                <div class="row">
+                                    <div class="col-7">
+                                        Clock Days at TCI
+                                    </div>
+                                    <div class="col-5">
+                                        <div class="row">
+                                            <a asp-page="\Index" asp-route-sortOrder="clock_tci" asp-route-isDesc=false>
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-chevron-compact-up" viewBox="0 0 16 16">
+                                                    <path fill-rule="evenodd" d="M7.776 5.553a.5.5 0 0 1 .448 0l6 3a.5.5 0 1 1-.448.894L8 6.56 2.224 9.447a.5.5 0 1 1-.448-.894l6-3z" />
+                                                </svg>
+                                            </a>
+                                        </div>
+                                        <div class="row">
+                                            <a asp-page="\Index" asp-route-sortOrder="clock_tci" asp-route-isDesc=true>
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-chevron-compact-down" viewBox="0 0 16 16">
+                                                    <path fill-rule="evenodd" d="M1.553 6.776a.5.5 0 0 1 .67-.223L8 9.44l5.776-2.888a.5.5 0 1 1 .448.894l-6 3a.5.5 0 0 1-.448 0l-6-3a.5.5 0 0 1-.223-.67z" />
+                                                </svg>
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </th>
+                            <th class="align-top">Triage Pathway</th>
+                            <th class="align-top">Comments</th>
+                            <th class="align-top">Checked</th>
+                            <th class="align-top">Last Updated</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var p in Model.pageOfPTL)
+                        {
+                            @if (@p.ClockStart < Model.FiftyTwoWeekDate)
+                            {
+                                <tr >
+                                    <td><a type="button" class="btn btn-secondary" asp-area="" asp-page="/ReferralDetails" asp-route-id=@p.ID target="_blank">@p.CGUNo</a></td>
+                                    <td class="text-danger">@p.PatientName</td>
+                                    @if (p.ReferralDate.HasValue)
+                                    {
+                                        <td class="text-danger">@p.ReferralDate.Value.ToString("dd/MM/yyyy")</td>
+                                    }
+                                    else
+                                    {
+                                        <td class="text-danger">N/A</td>
+                                    }
+                                    @if (@p.ClockStart.HasValue)
+                                    {
+                                        <td class="text-danger">@p.ClockStart.Value.ToString("dd/MM/yyyy")</td>
+                                    }
+                                    else
+                                    {
+                                        <td class="text-danger">N/A</td>
+                                    }
+                                    <td class="text-danger">@p.ReferralReason</td>
+                                    <td class="text-danger">@p.Class</td>
+                                    @if (@p.TCIDate.HasValue)
+                                    {
+                                        <td class="text-danger">@p.TCIDate.Value.ToString("dd/MM/yyyy")</td>
+                                    }
+                                    else
+                                    {
+                                        <td class="text-danger">N/A</td>
+                                    }
+                                    @if (p.ClockStart.HasValue)
+                                    {
+                                        <td class="text-danger">@((DateTime.Now - @p.ClockStart).Value.ToString("dd"))</td>
+                                    }
+                                    @if (p.ClockStart.HasValue)
+                                    {
+                                        <td class="text-danger">@Math.Floor(((DateTime.Now - @p.ClockStart).Value / 7).TotalDays)</td>
+                                    }
+
+                                    @if (p.ClockDaysAtTCI.HasValue)
+                                    {
+                                        <td class="text-danger">@p.ClockDaysAtTCI</td>
+                                    }
+                                    else
+                                    {
+                                        <td class="text-danger">N/A</td>
+                                    }
+                                    <td class="text-danger">@p.TriagePathway</td>
+                                    <td class="text-danger">@p.Comments</td>
+                                    @if (p.isChecked)
+                                    {
+                                        <td class="text-danger">Yes</td>
+                                    }
+                                    else
+                                    {
+                                        <td class="text-danger">No</td>
+                                    }
+                                    @if (p.UpdatedDate.HasValue)
+                                    {
+                                        <td class="text-danger">@p.UpdatedDate.Value.ToString("dd/MM/yyyy") by @p.UpdatedBy</td>
+                                    }
+                                    else
+                                    {
+                                        <td class="text-danger">N/A</td>
+                                    }
+                                </tr>
+                            }
+                            else if (@p.ClockStart < Model.EighteenWeekDate)
+                            {
+                                <tr class="table-warning">
+                                    <td><a type="button" class="btn btn-secondary" asp-area="" asp-page="/ReferralDetails" asp-route-id=@p.ID target="_blank">@p.CGUNo</a></td>
+                                    <td>@p.PatientName</td>
+                                    @if (p.ReferralDate.HasValue)
+                                    {
+                                        <td>@p.ReferralDate.Value.ToString("dd/MM/yyyy")</td>
+                                    }
+                                    else
+                                    {
+                                        <td>N/A</td>
+                                    }
+                                    @if (@p.ClockStart.HasValue)
+                                    {
+                                        <td>@p.ClockStart.Value.ToString("dd/MM/yyyy")</td>
+                                    }
+                                    else
+                                    {
+                                        <td>N/A</td>
+                                    }
+                                    <td>@p.ReferralReason</td>
+                                    <td>@p.Class</td>
+                                    @if (@p.TCIDate.HasValue)
+                                    {
+                                        <td>@p.TCIDate.Value.ToString("dd/MM/yyyy")</td>
+                                    }
+                                    else
+                                    {
+                                        <td>N/A</td>
+                                    }
+                                    @if (p.ClockStart.HasValue)
+                                    {
+                                        <td>@((DateTime.Now - @p.ClockStart).Value.ToString("dd"))</td>
+                                    }
+                                    @if (p.ClockStart.HasValue)
+                                    {
+                                        <td>@Math.Floor(((DateTime.Now - @p.ClockStart).Value / 7).TotalDays)</td>
+                                    }
+                                    @if (p.ClockDaysAtTCI.HasValue)
+                                    {
+                                        <td>@p.ClockDaysAtTCI</td>
+                                    }
+                                    else
+                                    {
+                                        <td>N/A</td>
+                                    }
+                                    <td>@p.Comments</td>
+                                    @if (p.isChecked)
+                                    {
+                                        <td>Yes</td>
+                                    }
+                                    else
+                                    {
+                                        <td>No</td>
+                                    }
+                                    @if (p.UpdatedDate.HasValue)
+                                    {
+                                        <td>@p.UpdatedDate.Value.ToString("dd/MM/yyyy") by @p.UpdatedBy</td>
+                                    }
+                                    else
+                                    {
+                                        <td>N/A</td>
+                                    }
+                                </tr>
+                            }
+                            else
+                            {
+                                <tr>
+                                    <td><a type="button" class="btn btn-secondary" asp-area="" asp-page="/ReferralDetails" asp-route-id=@p.ID target="_blank">@p.CGUNo</a></td>
+                                    <td>@p.PatientName</td>
+                                    @if (p.ReferralDate.HasValue)
+                                    {
+                                        <td>@p.ReferralDate.Value.ToString("dd/MM/yyyy")</td>
+                                    }
+                                    else
+                                    {
+                                        <td>N/A</td>
+                                    }
+                                    @if (@p.ClockStart.HasValue)
+                                    {
+                                        <td>@p.ClockStart.Value.ToString("dd/MM/yyyy")</td>
+                                    }
+                                    else
+                                    {
+                                        <td>N/A</td>
+                                    }
+                                    <td>@p.ReferralReason</td>
+                                    <td>@p.Class</td>
+                                    @if (p.TCIDate.HasValue)
+                                    {
+                                        <td>@p.TCIDate.Value.ToString("dd/MM/yyyy")</td>
+                                    }
+                                    else
+                                    {
+                                        <td>N/A</td>
+                                    }
+                                    @if (p.ClockStart.HasValue)
+                                    {
+                                        <td>@((DateTime.Now - @p.ClockStart).Value.ToString("dd"))</td>
+                                    }
+                                    @if (p.ClockStart.HasValue)
+                                    {
+                                        <td>@Math.Floor(((DateTime.Now - @p.ClockStart).Value / 7).TotalDays)</td>
+                                    }
+                                    @if (p.ClockDaysAtTCI.HasValue)
+                                    {
+                                        <td>@p.ClockDaysAtTCI</td>
+                                    }
+                                    else
+                                    {
+                                        <td>N/A</td>
+                                    }
+                                    <td>@p.Comments</td>
+                                    @if (p.isChecked)
+                                    {
+                                        <td>Yes</td>
+                                    }
+                                    else
+                                    {
+                                        <td>No</td>
+                                    }
+                                    @if (p.UpdatedDate.HasValue)
+                                    {
+                                        <td>@p.UpdatedDate.Value.ToString("dd/MM/yyyy") by @p.UpdatedBy</td>
+                                    }
+                                    else
+                                    {
+                                        <td>N/A</td>
+                                    }
+                                </tr>
+                            }
+                        }
+                    </tbody>
+                </table>
+            </div>
+
+        </div>
+    </div>
+
+    @if (Model.pageNumbers.Count() > 1)
     {
         <div class="row">
             <ul class="d-flex flex-row list-unstyled">
                 <li><a asp-page="\Index" asp-route-pNo=1 asp-route-pathwayFilter=@Model.pathwaySelected asp-route-consultantFilter=@Model.consultantSelected asp-route-gcFilter=@Model.GCSelected asp-route-priorityFilter=@Model.prioritySelected asp-route-isChecked=@Model.isCheckedSelected asp-route-commentsearch=@Model.commentSearch>First</a>&nbsp;&nbsp;&nbsp;</li>
-                @if(Model.currentPageNo != 1)
+                @if (Model.currentPageNo != 1)
                 {
                     <li><a asp-page="\Index" asp-route-pNo=@Model.previousPage asp-route-pathwayFilter=@Model.pathwaySelected asp-route-consultantFilter=@Model.consultantSelected asp-route-gcFilter=@Model.GCSelected asp-route-priorityFilter=@Model.prioritySelected asp-route-isChecked=@Model.isCheckedSelected asp-route-commentsearch=@Model.commentSearch>Back</a> &nbsp;&nbsp;&nbsp;</li>
                 }
@@ -588,17 +578,15 @@
 
 
 
-    function SetUrgentCheckBox()
-    {
-        //because it cannot simply pass the state of the checkbox to the C#, for some reason!!!        
+    function SetUrgentCheckBox() {
+        //because it cannot simply pass the state of the checkbox to the C#, for some reason!!!
         document.getElementById("txtpriorityFilter").value = document.getElementById("chkUrgent").checked;
     }
 
-    function ClearFilters()
-    {
+    function ClearFilters() {
         //document.getElementById("txtpriorityFilter").value = document.getElementById("chkUrgent").checked;
         document.getElementById("chkChecked").checked = false
-        document.getElementById("txtIsChecked").value = false;        
+        document.getElementById("txtIsChecked").value = false;
         document.getElementById("ddlConsultant").value = "";
         document.getElementById("ddlGC").value = "";
         document.getElementById("txtComments").value = "";
@@ -608,13 +596,11 @@
         document.getElementById("txtCGU").value = "";
     }
 
-    function SetCheckedCheckBox() 
-    {        
+    function SetCheckedCheckBox() {
         document.getElementById("txtIsChecked").value = document.getElementById("chkChecked").checked;
     }
 
-    function SetCheckBoxes()
-    {        
+    function SetCheckBoxes() {
         //SetUrgentCheckBox();
         SetCheckedCheckBox();
     }
