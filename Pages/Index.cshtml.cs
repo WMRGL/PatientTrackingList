@@ -264,29 +264,7 @@ namespace PatientTrackingList.Pages
                     triagePathway = triagePathwayFilter;
                 }
 
-                //pagination
-                int pp = pageOfPTL.Count() / pageSize;
-
-                for (int i = 1; i <= pp + 1; i++)
-                {
-                    pageNumbers.Add(i);
-                }
-
-                pageOfPTL = pageOfPTL.Skip((pNo.GetValueOrDefault() - 1) * pageSize)
-                        .Take(pageSize)
-                        .ToList();
-
-                if (pNo == null)
-                {
-                    currentPageNo = 1;
-                }
-                else
-                {
-                    currentPageNo = pNo.GetValueOrDefault();
-                }
-
-                nextPage = currentPageNo + 1;
-                previousPage = currentPageNo - 1;
+                
             }
             catch (Exception ex)
             {
