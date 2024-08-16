@@ -5,9 +5,12 @@
 }
 
 <div>
-    <h1 class="text-center">PTL-X - The New Patient Tracking List</h1>
-    <br />
-    <br />
+    <h1 class="text-center mb-4">PTL-X - The New Patient Tracking List</h1>
+    <div class="row mb-2 mb-xl-3">
+        <div class="col-auto ms-auto text-end mt-n1">
+            <a class="btn btn-primary btn-lg" asp-area="" asp-page="/Download" asp-route-consultantFilter=@Model.consultantSelected asp-route-gcFilter=@Model.GCSelected asp-route-pathwayFilter=@Model.pathwaySelected asp-route-username=@Model.User.Identity.Name asp-route-type="ptl">Export Data</a>
+        </div>
+    </div>
     @if (!Model.isLive)
     {
         <div class="alert alert-danger alert-dismissible" role="alert">
@@ -23,26 +26,48 @@
     }
 
     <div class="row">
-        <dt class="col-md-2">Total Active Referrals:</dt><dd class="col-md-2">@Model.listTotal</dd>
-        <dt class="col-md-2">From this year:</dt><dd class="col-md-1">@Model.currentYearTotal</dd>
-        <dt class="col-md-2">From last year:</dt><dd class="col-md-1">@Model.prevYearTotal</dd>
-        <dt class="col-md-1">Older:</dt><dd class="col-md-1">@Model.olderTotal</dd>
-        <dt class="col-md-2">Currently Over 18 Weeks:</dt><dd class="col-md-2">@Model.breachingTotal</dd>
-        <dd class="col-md-8">(18 week clock start date: @Model.EighteenWeekDate.ToString("dd/MM/yyyy"))</dd>
-        <dt class="col-md-2">Appointment due:</dt><dd class="col-md-2">@Model.apptDueTotal</dd>
-        <dt class="col-md-2">Unappointed:</dt><dd class="col-md-2">@Model.unapptTotal</dd>
+        <div class="col-sm-6 col-xl-3">
+            <div class="card">
+                <div class="card-body">
+
+                    <h5 class="mt-1 mb-3"><strong>Total Active Referrals:  </strong>@Model.listTotal</h5>
+                    <h5 class="mt-1 mb-3"><strong>Currently Over 18 Weeks:  </strong>@Model.breachingTotal</h5>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-6 col-xl-3">
+            <div class="card">
+                <div class="card-body">
+
+                    <h5 class="mt-1 mb-3"><strong>Appointment due: </strong>@Model.apptDueTotal</h5>
+                    <h5 class="mt-1 mb-3"><strong>Unappointed: </strong>@Model.unapptTotal</h5>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-6 col-xl-3">
+            <div class="card">
+                <div class="card-body">
+
+                    <h5 class="mt-1 mb-3"><strong>From this year: </strong>@Model.currentYearTotal</h5>
+                    <h5 class="mt-1 mb-3"><strong>From last year: </strong>@Model.prevYearTotal</h5>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-6 col-xl-3">
+            <div class="card">
+                <div class="card-body">
+
+                    <h5 class="mt-1 mb-3"><strong>Older: </strong>@Model.olderTotal</h5>
+                    <p class="mt-1 mb-3">(<strong>18 week clock start date:</strong>  @Model.EighteenWeekDate.ToString("dd/MM/yyyy"))</p>
+                </div>
+            </div>
+        </div>
     </div>
-    <br />
 
     @*<div class="row">
     <dt class="col-md-2">Last updated:</dt><dd class="col-md-2">@Model.LastUpdatedDate.ToString("dd/MM/yyyy")</dd>
     </div>*@
     <br />
-    <div class="row mb-2 mb-xl-3">
-        <div class="col-auto ms-auto text-end mt-n1">
-            <a class="btn btn-primary btn-lg" asp-area="" asp-page="/Download" asp-route-consultantFilter=@Model.consultantSelected asp-route-gcFilter=@Model.GCSelected asp-route-pathwayFilter=@Model.pathwaySelected asp-route-username=@Model.User.Identity.Name asp-route-type="ptl">Export Data</a>
-        </div>
-    </div>
 
     <div class="col-md-12">
         <div class="card">
@@ -130,239 +155,244 @@
         </div>
     </div>
 
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="card">
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-bordered display" id="defaultTable">
+                            <thead>
+                                <tr>
+                                    <th>CGU Number</th>
+                                    <th>Name</th>
+                                    <th>Ref Date</th>
+                                    <th>Clock Start</th>
+                                    <th>Reason</th>
+                                    <th>Urgency</th>
+                                    <th>TCI Date</th>
+                                    <th>Clock Ticking (Days)</th>
+                                    <th>Clock Ticking (Weeks)</th>
+                                    <th>Clock Days at TCI</th>
+                                    <th>Triage Pathway</th>
+                                    <th>Comments</th>
+                                    <th>Checked</th>
+                                    <th>Last Updated</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var p in Model.pageOfPTL)
+                                {
+                                    @if (@p.ClockStart < Model.FiftyTwoWeekDate)
+                                    {
+                                        <tr>
+                                            <td><a type="button" class="btn btn-secondary" asp-area="" asp-page="/ReferralDetails" asp-route-id=@p.ID target="_blank">@p.CGUNo</a></td>
+                                            <td class="text-danger">@p.PatientName</td>
+                                            @if (p.ReferralDate.HasValue)
+                                            {
+                                                <td class="text-danger">@p.ReferralDate.Value.ToString("dd/MM/yyyy")</td>
+                                            }
+                                            else
+                                            {
+                                                <td class="text-danger">N/A</td>
+                                            }
+                                            @if (@p.ClockStart.HasValue)
+                                            {
+                                                <td class="text-danger">@p.ClockStart.Value.ToString("dd/MM/yyyy")</td>
+                                            }
+                                            else
+                                            {
+                                                <td class="text-danger">N/A</td>
+                                            }
+                                            <td class="text-danger">@p.ReferralReason</td>
+                                            <td class="text-danger">@p.Class</td>
+                                            @if (@p.TCIDate.HasValue)
+                                            {
+                                                <td class="text-danger">@p.TCIDate.Value.ToString("dd/MM/yyyy")</td>
+                                            }
+                                            else
+                                            {
+                                                <td class="text-danger">N/A</td>
+                                            }
+                                            @if (p.ClockStart.HasValue)
+                                            {
+                                                <td class="text-danger">@((DateTime.Now - @p.ClockStart).Value.ToString("dd"))</td>
+                                            }
+                                            @if (p.ClockStart.HasValue)
+                                            {
+                                                <td class="text-danger">@Math.Floor(((DateTime.Now - @p.ClockStart).Value / 7).TotalDays)</td>
+                                            }
 
-    <div class="card">
-        <div class="card-body">
-            <table class="table table-responsive table-bordered  display" id="defaultTable">
-                <thead>
-                    <tr>
-                        <th>CGU Number</th>
-                        <th>Name</th>
-                        <th>Ref Date</th>
-                        <th>Clock Start</th>
-                        <th>Reason</th>
-                        <th>Urgency</th>
-                        <th>TCI Date</th>
-                        <th>Clock Ticking (Days)</th>
-                        <th>Clock Ticking (Weeks)</th>
-                        <th>Clock Days at TCI</th>
-                        <th>Triage Pathway</th>
-                        <th>Comments</th>
-                        <th>Checked</th>
-                        <th>Last Updated</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach (var p in Model.pageOfPTL)
-                    {
-                        @if (@p.ClockStart < Model.FiftyTwoWeekDate)
-                        {
-                            <tr>
-                                <td><a type="button" class="btn btn-secondary" asp-area="" asp-page="/ReferralDetails" asp-route-id=@p.ID target="_blank">@p.CGUNo</a></td>
-                                <td class="text-danger">@p.PatientName</td>
-                                @if (p.ReferralDate.HasValue)
-                                {
-                                    <td class="text-danger">@p.ReferralDate.Value.ToString("dd/MM/yyyy")</td>
+                                            @if (p.ClockDaysAtTCI.HasValue)
+                                            {
+                                                <td class="text-danger">@p.ClockDaysAtTCI</td>
+                                            }
+                                            else
+                                            {
+                                                <td class="text-danger">N/A</td>
+                                            }
+                                            <td class="text-danger">@p.TriagePathway</td>
+                                            <td class="text-danger">@p.Comments</td>
+                                            @if (p.isChecked)
+                                            {
+                                                <td class="text-danger">Yes</td>
+                                            }
+                                            else
+                                            {
+                                                <td class="text-danger">No</td>
+                                            }
+                                            @if (p.UpdatedDate.HasValue)
+                                            {
+                                                <td class="text-danger">@p.UpdatedDate.Value.ToString("dd/MM/yyyy") by @p.UpdatedBy</td>
+                                            }
+                                            else
+                                            {
+                                                <td class="text-danger">N/A</td>
+                                            }
+                                        </tr>
+                                    }
+                                    else if (@p.ClockStart < Model.EighteenWeekDate)
+                                    {
+                                        <tr>
+                                            <td><a type="button" class="btn btn-secondary" asp-area="" asp-page="/ReferralDetails" asp-route-id=@p.ID target="_blank">@p.CGUNo</a></td>
+                                            <td class="text-warning">@p.PatientName</td>
+                                            @if (p.ReferralDate.HasValue)
+                                            {
+                                                <td class="text-warning">@p.ReferralDate.Value.ToString("dd/MM/yyyy")</td>
+                                            }
+                                            else
+                                            {
+                                                <td class="text-warning">N/A</td>
+                                            }
+                                            @if (@p.ClockStart.HasValue)
+                                            {
+                                                <td class="text-warning">@p.ClockStart.Value.ToString("dd/MM/yyyy")</td>
+                                            }
+                                            else
+                                            {
+                                                <td class="text-warning">N/A</td>
+                                            }
+                                            <td class="text-warning">@p.ReferralReason</td>
+                                            <td class="text-warning">@p.Class</td>
+                                            @if (@p.TCIDate.HasValue)
+                                            {
+                                                <td class="text-warning">@p.TCIDate.Value.ToString("dd/MM/yyyy")</td>
+                                            }
+                                            else
+                                            {
+                                                <td class="text-warning">N/A</td>
+                                            }
+                                            @if (p.ClockStart.HasValue)
+                                            {
+                                                <td class="text-warning">@((DateTime.Now - @p.ClockStart).Value.ToString("dd"))</td>
+                                            }
+                                            @if (p.ClockStart.HasValue)
+                                            {
+                                                <td class="text-warning">@Math.Floor(((DateTime.Now - @p.ClockStart).Value / 7).TotalDays)</td>
+                                            }
+                                            @if (p.ClockDaysAtTCI.HasValue)
+                                            {
+                                                <td class="text-warning">@p.ClockDaysAtTCI</td>
+                                            }
+                                            else
+                                            {
+                                                <td class="text-warning">N/A</td>
+                                            }
+                                            <td class="text-warning">@p.TriagePathway</td>
+                                            <td class="text-warning">@p.Comments</td>
+                                            @if (p.isChecked)
+                                            {
+                                                <td class="text-warning">Yes</td>
+                                            }
+                                            else
+                                            {
+                                                <td class="text-warning">No</td>
+                                            }
+                                            @if (p.UpdatedDate.HasValue)
+                                            {
+                                                <td class="text-warning">@p.UpdatedDate.Value.ToString("dd/MM/yyyy") by @p.UpdatedBy</td>
+                                            }
+                                            else
+                                            {
+                                                <td class="text-warning">N/A</td>
+                                            }
+                                        </tr>
+                                    }
+                                    else
+                                    {
+                                        <tr>
+                                            <td><a type="button" class="btn btn-secondary" asp-area="" asp-page="/ReferralDetails" asp-route-id=@p.ID target="_blank">@p.CGUNo</a></td>
+                                            <td>@p.PatientName</td>
+                                            @if (p.ReferralDate.HasValue)
+                                            {
+                                                <td>@p.ReferralDate.Value.ToString("dd/MM/yyyy")</td>
+                                            }
+                                            else
+                                            {
+                                                <td>N/A</td>
+                                            }
+                                            @if (@p.ClockStart.HasValue)
+                                            {
+                                                <td>@p.ClockStart.Value.ToString("dd/MM/yyyy")</td>
+                                            }
+                                            else
+                                            {
+                                                <td>N/A</td>
+                                            }
+                                            <td>@p.ReferralReason</td>
+                                            <td>@p.Class</td>
+                                            @if (@p.TCIDate.HasValue)
+                                            {
+                                                <td>@p.TCIDate.Value.ToString("dd/MM/yyyy")</td>
+                                            }
+                                            else
+                                            {
+                                                <td>N/A</td>
+                                            }
+                                            @if (p.ClockStart.HasValue)
+                                            {
+                                                <td>@((DateTime.Now - @p.ClockStart).Value.ToString("dd"))</td>
+                                            }
+                                            @if (p.ClockStart.HasValue)
+                                            {
+                                                <td>@Math.Floor(((DateTime.Now - @p.ClockStart).Value / 7).TotalDays)</td>
+                                            }
+                                            @if (p.ClockDaysAtTCI.HasValue)
+                                            {
+                                                <td>@p.ClockDaysAtTCI</td>
+                                            }
+                                            else
+                                            {
+                                                <td>N/A</td>
+                                            }
+                                            <td>@p.TriagePathway</td>
+                                            <td>@p.Comments</td>
+                                            @if (p.isChecked)
+                                            {
+                                                <td>Yes</td>
+                                            }
+                                            else
+                                            {
+                                                <td>No</td>
+                                            }
+                                            @if (p.UpdatedDate.HasValue)
+                                            {
+                                                <td>@p.UpdatedDate.Value.ToString("dd/MM/yyyy") by @p.UpdatedBy</td>
+                                            }
+                                            else
+                                            {
+                                                <td>N/A</td>
+                                            }
+                                        </tr>
+                                    }
                                 }
-                                else
-                                {
-                                    <td class="text-danger">N/A</td>
-                                }
-                                @if (@p.ClockStart.HasValue)
-                                {
-                                    <td class="text-danger">@p.ClockStart.Value.ToString("dd/MM/yyyy")</td>
-                                }
-                                else
-                                {
-                                    <td class="text-danger">N/A</td>
-                                }
-                                <td class="text-danger">@p.ReferralReason</td>
-                                <td class="text-danger">@p.Class</td>
-                                @if (@p.TCIDate.HasValue)
-                                {
-                                    <td class="text-danger">@p.TCIDate.Value.ToString("dd/MM/yyyy")</td>
-                                }
-                                else
-                                {
-                                    <td class="text-danger">N/A</td>
-                                }
-                                @if (p.ClockStart.HasValue)
-                                {
-                                    <td class="text-danger">@((DateTime.Now - @p.ClockStart).Value.ToString("dd"))</td>
-                                }
-                                @if (p.ClockStart.HasValue)
-                                {
-                                    <td class="text-danger">@Math.Floor(((DateTime.Now - @p.ClockStart).Value / 7).TotalDays)</td>
-                                }
-
-                                @if (p.ClockDaysAtTCI.HasValue)
-                                {
-                                    <td class="text-danger">@p.ClockDaysAtTCI</td>
-                                }
-                                else
-                                {
-                                    <td class="text-danger">N/A</td>
-                                }
-                                <td class="text-danger">@p.TriagePathway</td>
-                                <td class="text-danger">@p.Comments</td>
-                                @if (p.isChecked)
-                                {
-                                    <td class="text-danger">Yes</td>
-                                }
-                                else
-                                {
-                                    <td class="text-danger">No</td>
-                                }
-                                @if (p.UpdatedDate.HasValue)
-                                {
-                                    <td class="text-danger">@p.UpdatedDate.Value.ToString("dd/MM/yyyy") by @p.UpdatedBy</td>
-                                }
-                                else
-                                {
-                                    <td class="text-danger">N/A</td>
-                                }
-                            </tr>
-                        }
-                        else if (@p.ClockStart < Model.EighteenWeekDate)
-                        {
-                            <tr>
-                                <td><a type="button" class="btn btn-secondary" asp-area="" asp-page="/ReferralDetails" asp-route-id=@p.ID target="_blank">@p.CGUNo</a></td>
-                                <td class="text-warning">@p.PatientName</td>
-                                @if (p.ReferralDate.HasValue)
-                                {
-                                    <td class="text-warning">@p.ReferralDate.Value.ToString("dd/MM/yyyy")</td>
-                                }
-                                else
-                                {
-                                    <td class="text-warning">N/A</td>
-                                }
-                                @if (@p.ClockStart.HasValue)
-                                {
-                                    <td class="text-warning">@p.ClockStart.Value.ToString("dd/MM/yyyy")</td>
-                                }
-                                else
-                                {
-                                    <td class="text-warning">N/A</td>
-                                }
-                                <td class="text-warning">@p.ReferralReason</td>
-                                <td class="text-warning">@p.Class</td>
-                                @if (@p.TCIDate.HasValue)
-                                {
-                                    <td class="text-warning">@p.TCIDate.Value.ToString("dd/MM/yyyy")</td>
-                                }
-                                else
-                                {
-                                    <td class="text-warning">N/A</td>
-                                }
-                                @if (p.ClockStart.HasValue)
-                                {
-                                    <td class="text-warning">@((DateTime.Now - @p.ClockStart).Value.ToString("dd"))</td>
-                                }
-                                @if (p.ClockStart.HasValue)
-                                {
-                                    <td class="text-warning">@Math.Floor(((DateTime.Now - @p.ClockStart).Value / 7).TotalDays)</td>
-                                }
-                                @if (p.ClockDaysAtTCI.HasValue)
-                                {
-                                    <td class="text-warning">@p.ClockDaysAtTCI</td>
-                                }
-                                else
-                                {
-                                    <td class="text-warning">N/A</td>
-                                }
-                                <td class="text-warning">@p.TriagePathway</td>
-                                <td class="text-warning">@p.Comments</td>
-                                @if (p.isChecked)
-                                {
-                                    <td class="text-warning">Yes</td>
-                                }
-                                else
-                                {
-                                    <td class="text-warning">No</td>
-                                }
-                                @if (p.UpdatedDate.HasValue)
-                                {
-                                    <td class="text-warning">@p.UpdatedDate.Value.ToString("dd/MM/yyyy") by @p.UpdatedBy</td>
-                                }
-                                else
-                                {
-                                    <td class="text-warning">N/A</td>
-                                }
-                            </tr>
-                        }
-                        else
-                        {
-                            <tr>
-                                <td><a type="button" class="btn btn-secondary" asp-area="" asp-page="/ReferralDetails" asp-route-id=@p.ID target="_blank">@p.CGUNo</a></td>
-                                <td>@p.PatientName</td>
-                                @if (p.ReferralDate.HasValue)
-                                {
-                                    <td>@p.ReferralDate.Value.ToString("dd/MM/yyyy")</td>
-                                }
-                                else
-                                {
-                                    <td>N/A</td>
-                                }
-                                @if (@p.ClockStart.HasValue)
-                                {
-                                    <td>@p.ClockStart.Value.ToString("dd/MM/yyyy")</td>
-                                }
-                                else
-                                {
-                                    <td>N/A</td>
-                                }
-                                <td>@p.ReferralReason</td>
-                                <td>@p.Class</td>
-                                @if (p.TCIDate.HasValue)
-                                {
-                                    <td>@p.TCIDate.Value.ToString("dd/MM/yyyy")</td>
-                                }
-                                else
-                                {
-                                    <td>N/A</td>
-                                }
-                                @if (p.ClockStart.HasValue)
-                                {
-                                    <td>@((DateTime.Now - @p.ClockStart).Value.ToString("dd"))</td>
-                                }
-                                @if (p.ClockStart.HasValue)
-                                {
-                                    <td>@Math.Floor(((DateTime.Now - @p.ClockStart).Value / 7).TotalDays)</td>
-                                }
-                                @if (p.ClockDaysAtTCI.HasValue)
-                                {
-                                    <td>@p.ClockDaysAtTCI</td>
-                                }
-                                else
-                                {
-                                    <td>N/A</td>
-                                }
-                                <td>@p.TriagePathway</td>
-                                <td>@p.Comments</td>
-                                @if (p.isChecked)
-                                {
-                                    <td>Yes</td>
-                                }
-                                else
-                                {
-                                    <td>No</td>
-                                }
-                                @if (p.UpdatedDate.HasValue)
-                                {
-                                    <td>@p.UpdatedDate.Value.ToString("dd/MM/yyyy") by @p.UpdatedBy</td>
-                                }
-                                else
-                                {
-                                    <td>N/A</td>
-                                }
-                            </tr>
-                        }
-                    }
-
-                </tbody>
-            </table>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
+
 </div>
 
 <script>
@@ -398,6 +428,6 @@
         SetCheckedCheckBox();
     }
 
-   
+
 
 </script>
