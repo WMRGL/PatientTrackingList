@@ -36,8 +36,9 @@ namespace PatientTrackingList.DataServices
             table.Columns.Add("Clock Ticking (Weeks)", typeof(int));
             table.Columns.Add("Clock Days At TCI", typeof(string));
             table.Columns.Add("Comments", typeof(string));
-            table.Columns.Add("Checked", typeof(string));
-            table.Columns.Add("Last Updated", typeof (string));
+            table.Columns.Add("Checked", typeof(string)); 
+            table.Columns.Add("Triage Pathway", typeof(string));
+            table.Columns.Add("Last Updated", typeof(string));
             table.Columns.Add("User", typeof(string));
 
             foreach (var ptl in ptlToExport) 
@@ -71,6 +72,7 @@ namespace PatientTrackingList.DataServices
                     tcidays, 
                     ptl.Comments, 
                     ptl.isChecked,
+                    ptl.TriagePathway,
                     ptl.UpdatedDate,
                     ptl.UpdatedBy
                     );
@@ -193,7 +195,7 @@ namespace PatientTrackingList.DataServices
         [HttpGet("download")]
         //public async Task<IActionResult> DownloadFile(string filePath)
         public async Task<IActionResult> DownloadFile(string type, string username, string consultantFilter, string gcFilter, string pathwayFilter, 
-            string clinicianFilter, string clinicFilter, string statusFilter, string dateTo, string dateFrom)
+            string clinicianFilter, string clinicFilter, string statusFilter, string dateTo, string dateFrom, string triagePathwayFilter)
         {
             if (type == "ptl")
             {
@@ -213,6 +215,11 @@ namespace PatientTrackingList.DataServices
                 if (gcFilter != null && gcFilter != "")
                 {
                     ptlToExport = ptlToExport.Where(p => p.ReferralGC == gcFilter).ToList();
+                }
+
+                if (triagePathwayFilter != null && triagePathwayFilter != "")
+                {
+                    ptlToExport = ptlToExport.Where(p => p.TriagePathway == triagePathwayFilter).ToList();
                 }
 
                 ExportPTL(ptlToExport, username);
