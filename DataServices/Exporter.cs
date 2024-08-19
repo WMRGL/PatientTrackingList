@@ -37,6 +37,8 @@ namespace PatientTrackingList.DataServices
             table.Columns.Add("Clock Days At TCI", typeof(string));
             table.Columns.Add("Comments", typeof(string));
             table.Columns.Add("Checked", typeof(string));
+            table.Columns.Add("Last Updated", typeof (string));
+            table.Columns.Add("User", typeof(string));
 
             foreach (var ptl in ptlToExport) 
             {
@@ -68,7 +70,10 @@ namespace PatientTrackingList.DataServices
                     ctweeks, 
                     tcidays, 
                     ptl.Comments, 
-                    ptl.isChecked);
+                    ptl.isChecked,
+                    ptl.UpdatedDate,
+                    ptl.UpdatedBy
+                    );
             }
 
             //return table;
