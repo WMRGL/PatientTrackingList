@@ -40,5 +40,6 @@ namespace PatientTrackingList.Models
         public bool isChecked { get; set; }
         public DateTime? UpdatedDate { get; set; }
         public string? UpdatedBy { get; set; }
+        public string? TriagePathway { get; set; }
     }
 }

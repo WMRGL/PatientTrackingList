@@ -57,11 +57,16 @@ namespace PatientTrackingList.Pages
         public string notificationMessage;
         public bool isLive;
         public string Message;
+        public string triagePathway;
+        public string allTriage;
+        public List<string> UniqueTriagePathways { get; set; }
+
+
 
         [Authorize]
         public void OnGet(int? pNo, string? sortOrder = "", bool? isDesc=false, string? sNameSearch = null, 
             string? sCGUSearch = null, string? priorityFilter = null, bool? isChecked=false, string? pathwayFilter=null, 
-            string? consultantFilter=null, string? gcFilter=null, string? commentsearch = null)
+            string? consultantFilter=null, string? gcFilter=null, string? commentsearch = null, string? triagePathwayFilter = null)
         {
             try
             {
@@ -92,6 +97,7 @@ namespace PatientTrackingList.Pages
                 PreviousYear = DateTime.Parse($"{(DateTime.Now.Year - 1)}-01-01");
                 EighteenWeekDate = DateTime.Now.AddDays(-18 * 7);
                 FiftyTwoWeekDate = DateTime.Now.AddDays(-365);
+                
 
                 //for sorting (ascending and descending on each column)
 
@@ -189,6 +195,12 @@ namespace PatientTrackingList.Pages
                 breachingTotal = pageOfPTL.Where(i => i.ClockStart < EighteenWeekDate).Count();
                 apptDueTotal = pageOfPTL.Where(i => i.TCIDate != null).Count();
                 unapptTotal = pageOfPTL.Where(i => i.TCIDate == null).Count();
+                var uniqueTriagePathways = pageOfPTL
+                .Where(p => p.TriagePathway != null && p.TriagePathway != "None") 
+                .Select(p => p.TriagePathway)
+                .Distinct(StringComparer.OrdinalIgnoreCase)
+                .ToList();
+                UniqueTriagePathways = uniqueTriagePathways;
 
                 //for filtering/searching
                 if (sNameSearch != null)
@@ -244,30 +256,15 @@ namespace PatientTrackingList.Pages
                     _sql.SqlWriteUsageAudit(staffCode, $"Comments={commentsearch}", "Index");
                     commentSearch = commentsearch;
                 }
-
-                //pagination
-                int pp = pageOfPTL.Count() / pageSize;
-
-                for (int i = 1; i <= pp + 1; i++)
-                {
-                    pageNumbers.Add(i);
+            
+               if (triagePathwayFilter != null && triagePathwayFilter != "")
+               {
+                    pageOfPTL = pageOfPTL.Where(p => p.TriagePathway == triagePathwayFilter).ToList();
+                    _sql.SqlWriteUsageAudit(staffCode, $"TriagePathway={triagePathwayFilter}", "Index");
+                    triagePathway = triagePathwayFilter;
                 }
 
-                pageOfPTL = pageOfPTL.Skip((pNo.GetValueOrDefault() - 1) * pageSize)
-                        .Take(pageSize)
-                        .ToList();
-
-                if (pNo == null)
-                {
-                    currentPageNo = 1;
-                }
-                else
-                {
-                    currentPageNo = pNo.GetValueOrDefault();
-                }
-
-                nextPage = currentPageNo + 1;
-                previousPage = currentPageNo - 1;
+                
             }
             catch (Exception ex)
             {
@@ -277,7 +274,7 @@ namespace PatientTrackingList.Pages
 
         public void OnPost(int? pNo, string? sortOrder = "", bool? isDesc=false, string? sNameSearch=null, 
             string? sCGUSearch=null, string? priorityFilter = null, bool? isChecked=false, string? pathwayFilter=null, 
-            string? consultantFilter=null, string? gcFilter=null, string? commentsearch=null)
+            string? consultantFilter=null, string? gcFilter=null, string? commentsearch=null, string? triagePathwayFilter = null)
         {
             try
             {
@@ -294,7 +291,7 @@ namespace PatientTrackingList.Pages
 
                 Response.Redirect($"Index?pNo={pNo}&sortOrder={sortOrder}&isDesc={isDesc}&sNameSearch={sNameSearch}&sCGUSearch={sCGUSearch}" +
                     $"&priorityFilter={priorityFilter}&isChecked={isChecked}&pathwayFilter={pathwayFilter}&consultantFilter={consultantFilter}&gcFilter={gcFilter}" +
-                    $"&commentsearch={commentsearch}");
+                    $"&commentsearch={commentsearch}&triagePathwayFilter={triagePathwayFilter}");
             }
             catch (Exception ex)
             {
