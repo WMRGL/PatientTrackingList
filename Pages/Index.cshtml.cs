@@ -18,14 +18,14 @@ namespace PatientTrackingList.Pages
         {
             _context = context;
             _config = config;
-            pageNumbers = new List<int>();
+            //pageNumbers = new List<int>();
             _ptlData = new PTLData(_context);
             _staffData = new StaffData(_context);
             _notificationData = new NotificationData(_context);
             _sql = new SqlServices(_config);
         }
         public IEnumerable<PTL> PTL { get; set; }
-        public List<int> pageNumbers;
+        //public List<int> pageNumbers;
         public List<StaffMembers> consultantList { get; set; }
         public List<StaffMembers> GCList { get; set; }
         public List<PTL> pageOfPTL { get; set; }
@@ -34,11 +34,11 @@ namespace PatientTrackingList.Pages
         public DateTime EighteenWeekDate;
         public DateTime FiftyTwoWeekDate;
         public DateTime LastUpdatedDate;
-        public bool isSortDesc;
+        //public bool isSortDesc;
         
-        public int currentPageNo;
-        public int nextPage;
-        public int previousPage;
+        //public int currentPageNo;
+        //public int nextPage;
+        //public int previousPage;
         
         public int listTotal;
         public int currentYearTotal;
@@ -64,7 +64,7 @@ namespace PatientTrackingList.Pages
 
 
         [Authorize]
-        public void OnGet(int? pNo, string? sortOrder = "", bool? isDesc=false, string? sNameSearch = null, 
+        public void OnGet(string? sNameSearch = null, 
             string? sCGUSearch = null, string? priorityFilter = null, bool? isChecked=false, string? pathwayFilter=null, 
             string? consultantFilter=null, string? gcFilter=null, string? commentsearch = null, string? triagePathwayFilter = null)
         {
@@ -84,14 +84,12 @@ namespace PatientTrackingList.Pages
                     _sql.SqlWriteUsageAudit(staffCode, "", "Index");
                 }
 
-                int pageSize = 20;
+                //int pageSize = 20;
 
                 PTL = _ptlData.GetPTLList();
 
                 consultantList = _staffData.GetStaffTypeList("Consultant");
                 GCList = _staffData.GetStaffTypeList("GC");
-
-                isSortDesc = isDesc.GetValueOrDefault();
 
                 CurrentYear = DateTime.Parse($"{DateTime.Now.Year}-01-01");
                 PreviousYear = DateTime.Parse($"{(DateTime.Now.Year - 1)}-01-01");
@@ -99,9 +97,9 @@ namespace PatientTrackingList.Pages
                 FiftyTwoWeekDate = DateTime.Now.AddDays(-365);
                 
 
-                //for sorting (ascending and descending on each column)
+                //for sorting (ascending and descending on each column) - removed as no longer needed
 
-                switch (sortOrder)
+                /*switch (sortOrder)
                 {
                     case "ref_date":
                         if (isSortDesc)
@@ -183,10 +181,10 @@ namespace PatientTrackingList.Pages
                             PTL = PTL.OrderBy(p => p.ClockStart);
                         }
                         break;
-                }
+                }*/
 
-                pageOfPTL = PTL.ToList(); //converting to list here makes it much faster!
-
+                pageOfPTL = PTL.OrderBy(p => p.ClockStart).ToList(); //converting to list here makes it much faster!
+                
                 //variables for totals on main page
                 listTotal = pageOfPTL.Count();
                 currentYearTotal = pageOfPTL.Where(i => i.ReferralDate > CurrentYear).Count();
@@ -272,24 +270,20 @@ namespace PatientTrackingList.Pages
             }
         }
 
-        public void OnPost(int? pNo, string? sortOrder = "", bool? isDesc=false, string? sNameSearch=null, 
+        public void OnPost(string? sNameSearch=null, 
             string? sCGUSearch=null, string? priorityFilter = null, bool? isChecked=false, string? pathwayFilter=null, 
             string? consultantFilter=null, string? gcFilter=null, string? commentsearch=null, string? triagePathwayFilter = null)
         {
             try
             {
-                int pageSize = 20;
-
                 PTL = _ptlData.GetPTLList();
 
                 consultantList = _staffData.GetStaffTypeList("Consultant");
                 GCList = _staffData.GetStaffTypeList("GC");
 
-                pageOfPTL = PTL.Skip((pNo.GetValueOrDefault() + 1) * pageSize)
-                        .Take(pageSize)
-                        .ToList();
+                pageOfPTL = PTL.OrderBy(p => p.ClockStart).ToList();
 
-                Response.Redirect($"Index?pNo={pNo}&sortOrder={sortOrder}&isDesc={isDesc}&sNameSearch={sNameSearch}&sCGUSearch={sCGUSearch}" +
+                Response.Redirect($"Index?sNameSearch={sNameSearch}&sCGUSearch={sCGUSearch}" +
                     $"&priorityFilter={priorityFilter}&isChecked={isChecked}&pathwayFilter={pathwayFilter}&consultantFilter={consultantFilter}&gcFilter={gcFilter}" +
                     $"&commentsearch={commentsearch}&triagePathwayFilter={triagePathwayFilter}");
             }

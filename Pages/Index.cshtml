@@ -79,7 +79,7 @@
             </div>
             <div class="card-body">
                 <form id="frmMenu" method="post">
-                    <button type="reset" class="btn btn-dark mb-3">Reset Filters</button>
+                    <button type="button" id="btnReset" class="btn btn-dark mb-3">Reset Filters</button>
                     <div class="row">
                         <div class="mb-3 col-md-4">
                             <label class="form-label" for="txtName">Name:</label>
@@ -103,6 +103,7 @@
                         <div class="mb-3 col-md-4">
                             <label class="form-label" for="inputAddress">Show  Only Unchecked:</label>
                             <input class="form-check-input" type="checkbox" id="chkChecked" value="false" onclick="SetCheckedCheckBox()" asp-for=@Model.isCheckedSelected>
+                            <input id="txtIsChecked" hidden="true" />
                         </div>
                         <div class="mb-3 col-md-4">
                             <label class="form-label" for="inputAddress">Referral Pathway:</label>
@@ -139,8 +140,8 @@
                             <input type="text" class="form-control" id="txtComments" name="commentsearch" type="text" asp-for=@Model.commentSearch>
                         </div>
                         <div class="mb-3 col-md-4">
-                            <label class="form-label" for="inputState">Triage Pathway:</label>
-                            <select id="inputState" class="form-select" asp-for=@Model.triagePathway name="triagePathwayFilter">
+                            <label class="form-label" for="ddlTriagePathway">Triage Pathway:</label>
+                            <select id="ddlTriagePathway" class="form-select" asp-for=@Model.triagePathway name="triagePathwayFilter">
                                 <option value="" defaultValue>Select...</option>
                                 @if (Model.UniqueTriagePathways != null && Model.UniqueTriagePathways.Any())
                                 {
@@ -401,17 +402,19 @@
 <script>
 
     window.onload = SetCheckBoxes;
+    document.getElementById("btnReset").addEventListener("click", ClearFilters);
 
 
-
-    function SetUrgentCheckBox() {
+    function SetUrgentCheckBox() 
+    {
         //because it cannot simply pass the state of the checkbox to the C#, for some reason!!!
         document.getElementById("txtpriorityFilter").value = document.getElementById("chkUrgent").checked;
     }
 
-    function ClearFilters() {
+    function ClearFilters() 
+    {        
         //document.getElementById("txtpriorityFilter").value = document.getElementById("chkUrgent").checked;
-        document.getElementById("chkChecked").checked = false
+        document.getElementById("chkChecked").checked = false        
         document.getElementById("txtIsChecked").value = false;
         document.getElementById("ddlConsultant").value = "";
         document.getElementById("ddlGC").value = "";
@@ -420,13 +423,16 @@
         document.getElementById("ddlPriority").value = "";
         document.getElementById("txtName").value = "";
         document.getElementById("txtCGU").value = "";
+        document.getElementById("ddlTriagePathway").value = "";
     }
 
-    function SetCheckedCheckBox() {
+    function SetCheckedCheckBox() 
+    {
         document.getElementById("txtIsChecked").value = document.getElementById("chkChecked").checked;
     }
 
-    function SetCheckBoxes() {
+    function SetCheckBoxes() 
+    {
         //SetUrgentCheckBox();
         SetCheckedCheckBox();
     }
