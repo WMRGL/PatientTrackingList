@@ -1,44 +1,57 @@
 ﻿@page
 @model LoginModel
 @{
-    ViewData["Title"] = "Home page";
+    ViewData["Title"] = "Login page";
 }
-<br />
-<br />
-<h2 class="text-center">User Login</h2>
-<br />
-<br />
-<div class="row mb-5 g-5">
-    <div class="col-md-4"></div>
-    <div class="col-md-4">
-        @if (TempData["UserLoginFailed"] != null)
-        {
-            <p class="alert alert-danger">@TempData["UserLoginFailed"]</p>
-        }
 
-        <form id="frmLogin">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <div class="form-group">
-                <label asp-for="UserDetails.EMPLOYEE_NUMBER" class="control-label"></label>
-                <input name="username" asp-for="UserDetails.EMPLOYEE_NUMBER" class="form-control" />
-                <span asp-validation-for="UserDetails.EMPLOYEE_NUMBER" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="UserDetails.PASSWORD" class="control-label"></label>
-                <input name="sPassword" type="password" asp-for="UserDetails.PASSWORD" class="form-control" />
-                <span asp-validation-for="UserDetails.PASSWORD" class="text-danger"></span>
-            </div>
-            <br /><br />
-            <div class="form-group">
-                <button id="btnSubmit">Login</button>
-            </div>
-        </form>
-    </div>
-    <div class="col-md-4"></div>
+<style>
+.hidden {
+  display: none;
+}
+.p-5 {
+	padding: 0 !important;
+}
+</style>
+
+
+<div class="container d-flex flex-column">
+	<div class="row vh-100">
+		<div class="col-sm-10 col-md-8 col-lg-6 col-xl-5 mx-auto d-table h-100">
+			<div class="d-table-cell align-middle">
+				<div class="card">
+					<div class="card-body">
+						<div class="m-sm-3">
+							<div class="d-grid gap-2 mb-3 text-center">
+								<h1 class="h2">Welcome back!</h1>
+								<p class="lead">
+									Sign in to your account to continue
+								</p>
+							</div>
+							<form id="frmLogin">
+								<div class="mb-3">
+									<label asp-for="UserDetails.EMPLOYEE_NUMBER" class="form-label"></label>
+									<input name="username" asp-for="UserDetails.EMPLOYEE_NUMBER" class="form-control form-control-lgl" />
+									<span asp-validation-for="UserDetails.EMPLOYEE_NUMBER" class="text-danger"></span>
+								</div>
+								<div class="mb-3">
+									<label asp-for="UserDetails.PASSWORD" class="form-label"></label>
+                                    <input name="sPassword" type="password" asp-for="UserDetails.PASSWORD" class="form-control form-control-lg" />
+									<span asp-validation-for="UserDetails.PASSWORD" class="text-danger"></span>
+								</div>
+								<div class="d-grid gap-2 mt-3">
+                                    <button class="btn btn-lg btn-primary" id="btnSubmit" type="submit">Sign in</button>
+								</div>
+							</form>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
 </div>
 
 <script>
-    document.getElementById("btnSubmit").addEventListener("click", DoSubmit);
+    document.getElementById("btnSubmit").addEventListener("click", DoSubmit);	
 
     function DoSubmit() 
     {

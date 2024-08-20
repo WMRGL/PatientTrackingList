@@ -38,7 +38,7 @@ namespace PatientTrackingList.Pages
                 else
                 {
 
-                    TempData["UserLoginFailed"] = "Login failed. Please try again.";
+                    TempData["error"] = "Login failed. Please try again.";
                     //return View();
                 }
             }
