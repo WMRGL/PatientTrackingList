@@ -18,7 +18,6 @@ namespace PatientTrackingList.Pages
             _context = context;
             _config = config;
             _clinicSlotData = new ClinicSlotData(_context);
-            pageNumbers = new List<int>();            
             Clinicians = new List<string>();
             Clinics = new List<string>();
             Stati = new List<string>();
@@ -31,11 +30,7 @@ namespace PatientTrackingList.Pages
         public List<string> Clinicians { get; set; }
         public List<string> Clinics { get; set; }
         public List<string> Stati { get; set; }
-        public List<int> pageNumbers;
-
-        public int currentPageNo;
-        public int nextPage;
-        public int previousPage;
+                
         public int listTotal;
         public string clincianSelected;
         public string clinicSelected;
@@ -109,34 +104,13 @@ namespace PatientTrackingList.Pages
 
             //paginator
             //List <ClinicSlots> pageOfSlot = new List<ClinicSlots>();
-            pageOfSlot = ClinicSlots.ToList();
+            pageOfSlot = ClinicSlots.OrderBy(s => s.SlotDate).ToList();
 
             openSlots = pageOfSlot.Where(s => s.SlotStatus == "Open").Count();
             usedSlots = pageOfSlot.Where(s => s.SlotStatus == "Booked").Count();
             unavailableSlots = pageOfSlot.Where(s => s.SlotStatus != "Booked" && s.SlotStatus != "Open").Count();
 
-            int pp = pageOfSlot.Count() / pageSize;
-
-            for (int i = 1; i <= pp; i++)
-            {
-                pageNumbers.Add(i);
-            }
-
-            pageOfSlot = pageOfSlot.Skip((pNo.GetValueOrDefault() - 1) * pageSize)
-                    .Take(pageSize)
-                    .ToList();            
             
-            if (pNo == null)
-            {
-                currentPageNo = 1;
-            }
-            else
-            {
-                currentPageNo = pNo.GetValueOrDefault();
-            }
-
-            nextPage = currentPageNo + 1;
-            previousPage = currentPageNo - 1;
             listTotal = ClinicSlots.Count();
         }
 

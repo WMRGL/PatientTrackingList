@@ -27,5 +27,5 @@ body {
 
 .redalert{
     background-color:red;
-    color:whitesmoke;
+    color:whitesmoke !important;
 }
