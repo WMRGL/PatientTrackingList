@@ -51,7 +51,7 @@ namespace PatientTrackingList.Pages
                 _sql.SqlWriteUsageAudit(staffCode, "", "Waiting List");
             }
 
-            int pageSize = 20;            
+                 
 
             WaitingList = _waitingListData.GetWaitingList();
 
@@ -79,29 +79,7 @@ namespace PatientTrackingList.Pages
             //paginator
             //List < WaitingList > pageOfWL = new List<WaitingList>();
             pageOfWL = WaitingList.ToList();
-            
-            int pp = pageOfWL.Count() / pageSize;
-
-            for (int i = 1; i <= pp; i++)
-            {
-                pageNumbers.Add(i);
-            }
-
-            pageOfWL = pageOfWL.Skip((pNo.GetValueOrDefault() - 1) * pageSize)
-                    .Take(pageSize)
-                    .ToList();          
-                        
-            if (pNo == null)
-            {
-                currentPageNo = 1;
-            }
-            else
-            {
-                currentPageNo = pNo.GetValueOrDefault();
-            }
-
-            nextPage = currentPageNo + 1;
-            previousPage = currentPageNo - 1;
+          
 
             listTotal = WaitingList.Count();
         }
