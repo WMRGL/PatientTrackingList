@@ -42,7 +42,7 @@ namespace PatientTrackingList.Pages
         public int usedSlots;
         public int unavailableSlots;
 
-        public void OnGet(int? pNo, string? clinician, string? clinic, DateTime? fromDate, DateTime? toDate, string? status)
+        public void OnGet(string? clinician, string? clinic, DateTime? fromDate, DateTime? toDate, string? status)
         {
             string staffCode = "";
             if (User.Identity.Name is null)
@@ -101,32 +101,25 @@ namespace PatientTrackingList.Pages
                 ClinicSlots = ClinicSlots.Where(w => w.SlotStatus == status);
                 statusSelected = status;
             }
-
-            //paginator
-            //List <ClinicSlots> pageOfSlot = new List<ClinicSlots>();
+            
             pageOfSlot = ClinicSlots.OrderBy(s => s.SlotDate).ToList();
 
             openSlots = pageOfSlot.Where(s => s.SlotStatus == "Open").Count();
             usedSlots = pageOfSlot.Where(s => s.SlotStatus == "Booked").Count();
             unavailableSlots = pageOfSlot.Where(s => s.SlotStatus != "Booked" && s.SlotStatus != "Open").Count();
-
-            
+                        
             listTotal = ClinicSlots.Count();
         }
 
-        public void OnPost(int? pNo, string? clinician, string? clinic, DateTime? fromDate, DateTime? toDate, string? status)
-        {
-            int pageSize = 20;
+        public void OnPost(string? clinician, string? clinic, DateTime? fromDate, DateTime? toDate, string? status)
+        {            
             ClinicSlots = _clinicSlotData.GetClinicSlotsList();
-
-            pageOfSlot = ClinicSlots.Skip((pNo.GetValueOrDefault() + 1) * pageSize)
-                    .Take(pageSize)
-                    .ToList();
+            pageOfSlot = ClinicSlots.OrderBy(s => s.SlotDate).ToList();
 
             Clinicians = ClinicSlots.Select(c => c.ClinicianID).Distinct().OrderBy(c => c).ToList();
             Clinics = ClinicSlots.Select(c => c.ClinicID).Distinct().OrderBy(c => c).ToList();
 
-            Response.Redirect($"CapacityUtilisation?pNo={pNo}&clinician={clinician}&clinic={clinic}&fromDate={fromDate.Value.ToString("yyyy-MM-dd")}&toDate={toDate.Value.ToString("yyyy-MM-dd")}&status={status}");
+            Response.Redirect($"CapacityUtilisation?clinician={clinician}&clinic={clinic}&fromDate={fromDate.Value.ToString("yyyy-MM-dd")}&toDate={toDate.Value.ToString("yyyy-MM-dd")}&status={status}");
         }
     }
 }
