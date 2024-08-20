@@ -4,16 +4,15 @@
     ViewData["Title"] = "Login page";
 }
 
-<div class="row mb-5 g-5">
-    <div class="col-md-4"></div>
-    <div class="col-md-4">
-        @if (TempData["UserLoginFailed"] != null)
-        {
-            <p class="alert alert-danger">@TempData["UserLoginFailed"]</p>
-        }
-    </div>
-    <div class="col-md-4"></div>
-</div>
+<style>
+.hidden {
+  display: none;
+}
+.p-5 {
+	padding: 0 !important;
+}
+</style>
+
 
 <div class="container d-flex flex-column">
 	<div class="row vh-100">
@@ -52,7 +51,7 @@
 </div>
 
 <script>
-    document.getElementById("btnSubmit").addEventListener("click", DoSubmit);
+    document.getElementById("btnSubmit").addEventListener("click", DoSubmit);	
 
     function DoSubmit() 
     {
