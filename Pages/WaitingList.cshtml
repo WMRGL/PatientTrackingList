@@ -4,132 +4,102 @@
     ViewData["Title"] = "Waiting List";
 }
 
+<div class="">
+    <div class="row mb-2 mb-xl-3">
+        <div class="col-auto d-none d-sm-block">
+            <h3><strong>Clinicians Waiting List - Total:</strong> @Model.listTotal</h3>
+        </div>
 
-<div class="container">
-
-    <h2>Clinicians Waiting List - Total: @Model.listTotal</h2>
-    <br /><br />
-
-    <div class="row mb-5">
-        <div class="col-md-2">
-            <a class="btn btn-secondary" asp-area="" asp-page="/Download" asp-route-clinicianFilter=@Model.clincianSelected asp-route-clinicFilter=@Model.clinicSelected asp-route-username=@Model.User.Identity.Name asp-route-type="waitinglist">Export Data</a>
+        <div class="col-auto ms-auto text-end mt-n1">
+            <a class="btn btn-primary" asp-area="" asp-page="/Download"
+               asp-route-clinicianFilter=@Model.clincianSelected asp-route-clinicFilter=@Model.clinicSelected
+               asp-route-username=@Model.User.Identity.Name asp-route-type="waitinglist">Export Data</a>
         </div>
     </div>
 
-    <form id="frmWLSearch" method="post">
-        <div class="row">        
-            <div class="col-md-1">
-                <label>Clinicians:</label>
-            </div>
-            <div class="col-md-2">
-                <select class="w-100" name="clinician" asp-for=@Model.clincianSelected>
-                    <option value="" selected></option>
-                    @foreach(var c in Model.Clinicians)
-                    {
-                        <option value=@c>@c</option>
-                    }
-                </select>
-            </div>
-            <div class="col-md-8"></div>
-        </div>
-        <br />
-        <div class="row">
-            <div class="col-md-1">
-                <label>Clinics:</label>
-            </div>
-            <div class="col-md-2">
-                <select class="w-100" name="clinic" asp-for="@Model.clinicSelected">
-                    <option value="" selected></option>
-                    @foreach (var c in Model.Clinics)
-                    {
-                        <option value=@c>@c</option>
-                    }
-                </select>
-            </div>
-            <div class="col-md-7"></div>
-            <div class="col-md-2">
-                <input type="submit" class="btn btn-secondary" />
-            </div>
-        </div>
-    </form>
-    <br /><br />
+    <div class="row">
+        <div class="col-xl-12 col-xxl-12">
+            <div class="card flex-fill w-100">
+                <div class="card-body pt-2 pb-3">
+                    <form id="frmWLSearch" method="post">
+                        <div class="row pt-3">
+                            <div class="mb-3 col-md-6">
+                                <label class="form-label">Clinicians</label>
+                                <select class="form-select" name="clinician" asp-for=@Model.clincianSelected>
+                                    <option value="" selected></option>
+                                    @foreach (var c in Model.Clinicians)
+                                    {
+                                        <option value=@c>@c</option>
+                                    }
+                                </select>
+                            </div>
+                            <div class="mb-3 col-md-6">
+                                <label class="form-label">Clinics:</label>
+                                <select class="form-select" name="clinic" asp-for="@Model.clinicSelected">
+                                    <option value="" selected></option>
+                                    @foreach (var c in Model.Clinics)
+                                    {
+                                        <option value=@c>@c</option>
+                                    }
+                                </select>
+                            </div>
+                        </div>
 
-    <table class="table table-bordered">
-        <thead>
-            <tr>
-                <th class="align-top">CGU Number</th>
-                <th>Patient</th>
-                <th>Clinician</th>
-                <th>Clinic</th>
-                <th>Date Added</th>
-                <th>Instructions</th>
-                <th>Comments</th>
-                <th>Priority</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var wl in Model.WaitingList)
-            {
-                @if (wl.Priority == "Urgent")
-                {
-                    <tr class="redalert">
-                        <td>@wl.CGU_No</td>
-                        <td>@wl.FIRSTNAME @wl.LASTNAME</td>
-                        <td>@wl.ClinicianName</td>
-                        <td>@wl.ClinicName</td>
-                        <td>@wl.AddedDate.Value.ToString("dd/MM/yyyy")</td>
-                        <td>@wl.Instructions</td>
-                        <td>@wl.Comment</td>
-                        <td>@wl.Priority</td>
-                    </tr>
-                }
-                else
-                {
+                        <button type="submit" class="btn btn-primary">Submit</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="card-body">
+            <table class="table table-bordered  table-hover" id="defaultTable">
+                <thead>
                     <tr>
-                        <td>@wl.CGU_No</td>
-                        <td>@wl.FIRSTNAME @wl.LASTNAME</td>
-                        <td>@wl.ClinicianName</td>
-                        <td>@wl.ClinicName</td>
-                        <td>@wl.AddedDate.Value.ToString("dd/MM/yyyy")</td>
-                        <td>@wl.Instructions</td>
-                        <td>@wl.Comment</td>
-                        <td>@wl.Priority</td>
+                        <th>CGU Number</th>
+                        <th>Patient</th>
+                        <th>Clinician</th>
+                        <th>Clinic</th>
+                        <th>Date Added</th>
+                        <th>Instructions</th>
+                        <th>Comments</th>
+                        <th>Priority</th>
                     </tr>
-                }
-            }
-        </tbody>
-    </table>
-
-    @if(Model.pageNumbers.Count() > 1)
-    {
-        <div class="row">
-            <ul class="d-flex flex-row list-unstyled">
-                <li><a asp-page="\WaitingList" asp-route-pNo=1 asp-route-clinician=@Model.clincianSelected asp-route-clinic=@Model.clinicSelected>First</a>&nbsp;&nbsp;&nbsp;</li>
-                @if(Model.currentPageNo != 1)
-                {
-                    <li><a asp-page="\WaitingList" asp-route-pNo=@Model.previousPage asp-route-clinician=@Model.clincianSelected asp-route-clinic=@Model.clinicSelected>Back</a> &nbsp;&nbsp;&nbsp;</li>
-                }
-                @foreach (var i in Model.pageNumbers)
-                {
-                    @if (i >= Model.currentPageNo - 20 && i <= Model.currentPageNo + 20)
+                </thead>
+                <tbody>
+                    @foreach (var wl in Model.WaitingList)
                     {
-                        @if (i == Model.currentPageNo)
+                        @if (wl.Priority == "Urgent")
                         {
-                            <li>@i &nbsp;&nbsp;&nbsp;</li>
+                            <tr class="table-danger text-white">
+                                <td>@wl.CGU_No</td>
+                                <td>@wl.FIRSTNAME @wl.LASTNAME</td>
+                                <td>@wl.ClinicianName</td>
+                                <td>@wl.ClinicName</td>
+                                <td>@wl.AddedDate.Value.ToString("dd/MM/yyyy")</td>
+                                <td>@wl.Instructions</td>
+                                <td>@wl.Comment</td>
+                                <td>@wl.Priority</td>
+                            </tr>
                         }
                         else
                         {
-                            <li><a asp-page="\WaitingList" asp-route-pNo=@i asp-route-clinician=@Model.clincianSelected asp-route-clinic=@Model.clinicSelected>@i</a> &nbsp;&nbsp;&nbsp;</li>
+                            <tr>
+                                <td>@wl.CGU_No</td>
+                                <td>@wl.FIRSTNAME @wl.LASTNAME</td>
+                                <td>@wl.ClinicianName</td>
+                                <td>@wl.ClinicName</td>
+                                <td>@wl.AddedDate.Value.ToString("dd/MM/yyyy")</td>
+                                <td>@wl.Instructions</td>
+                                <td>@wl.Comment</td>
+                                <td>@wl.Priority</td>
+                            </tr>
                         }
                     }
-                }
-                @if (Model.currentPageNo != Model.pageNumbers.Count())
-                {
-                    <li><a asp-page="\WaitingList" asp-route-pNo=@Model.nextPage asp-route-clinician=@Model.clincianSelected asp-route-clinic=@Model.clinicSelected>Next</a>&nbsp;&nbsp;&nbsp;</li>
-                }
-                <li><a asp-page="\WaitingList" asp-route-pNo=@Model.pageNumbers.Count() asp-route-clinician=@Model.clincianSelected asp-route-clinic=@Model.clinicSelected>Last</a></li>
-            </ul>
+                </tbody>
+            </table>
         </div>
-    }
+    </div>
 
 </div>
