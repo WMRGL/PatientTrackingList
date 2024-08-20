@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using PatientTrackingList.Data;
 using PatientTrackingList.Models;
 using PatientTrackingList.DataServices;
+using System.Web;
 
 namespace PatientTrackingList.Pages
 {
@@ -38,9 +39,16 @@ namespace PatientTrackingList.Pages
         public DateTime FiftyTwoWeekDate;
         public string Message;
         public bool isSuccess;
+        public string consultSelected;
+        public string gcSelected;
+        public string pathSelected;
+        public string triPathway;
+        public string priorFilter;
 
         [Authorize]
-        public void OnGet(int id, string? message = "", bool? success = false)
+        public void OnGet(int id, string? message = "", bool? success = false, string? sNameSearch = null,
+            string? sCGUSearch = null, string? priorityFilter = null, bool? isChecked = false, string? pathwayFilter = null,
+            string? consultantFilter = null, string? gcFilter = null, string? commentsearch = null, string? triagePathwayFilter = null)
         {
             try
             {
@@ -66,6 +74,13 @@ namespace PatientTrackingList.Pages
 
                 EighteenWeekDate = RefDet.ClockStart.GetValueOrDefault().AddDays(18 * 7);
                 FiftyTwoWeekDate = RefDet.ClockStart.GetValueOrDefault().AddDays(365);
+
+                consultSelected = consultantFilter;
+                triPathway = triagePathwayFilter;
+                gcSelected = gcFilter;
+                pathSelected = pathwayFilter;
+                priorFilter = priorityFilter;
+
             }
             catch (Exception ex)
             {
@@ -73,7 +88,9 @@ namespace PatientTrackingList.Pages
             }
         }
 
-        public void OnPost(int id, string? comments="", bool? isChecked=false)
+        public void OnPost(int id, string? comments="", bool? isChecked=false, string? sNameSearch = null,
+            string? sCGUSearch = null, string? priorityFilter = null, string? pathwayFilter = null,
+            string? consultantFilter = null, string? gcFilter = null, string? commentsearch = null, string? triagePathwayFilter = null)
         {
             try
             {                
@@ -86,6 +103,11 @@ namespace PatientTrackingList.Pages
 
                 EighteenWeekDate = RefDet.ClockStart.GetValueOrDefault().AddDays(18 * 7);
                 FiftyTwoWeekDate = RefDet.ClockStart.GetValueOrDefault().AddDays(365);
+                consultSelected = HttpUtility.UrlEncode(consultantFilter);
+                triPathway = HttpUtility.UrlEncode(triagePathwayFilter);
+                gcSelected = HttpUtility.UrlEncode(gcFilter);
+                pathSelected = HttpUtility.UrlEncode(pathwayFilter);
+                priorFilter = HttpUtility.UrlEncode(priorityFilter);
 
                 int iChecked = 0; //because SQL needs it to be a binary value
                 
@@ -97,8 +119,8 @@ namespace PatientTrackingList.Pages
                                                 
                 isSuccess = true;
                 string message = "Saved.";
-                
-                Response.Redirect($"ReferralDetails?id={id.ToString()}&message={message}&success={isSuccess}");
+                Response.Redirect($"ReferralDetails?id={id.ToString()}&message={message}&success={isSuccess}&consultantFilter={consultSelected}" +
+                    $"&triagePathwayFilter={triPathway}&gcFilter={gcSelected}&pathwayFilter={pathSelected}&priorityFilter={priorFilter}");
             }
             catch (Exception ex)
             {
