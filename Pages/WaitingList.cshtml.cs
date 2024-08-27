@@ -19,7 +19,6 @@ namespace PatientTrackingList.Pages
             _context = context;
             _config = config;
             _waitingListData = new WaitingListData(_context);
-            pageNumbers = new List<int>();
             Clinicians = new List<string>();
             Clinics = new List<string>();
             _sql = new SqlServices(_config);
@@ -29,16 +28,12 @@ namespace PatientTrackingList.Pages
         public List<WaitingList> pageOfWL { get; set; }
         public List<string> Clinicians { get; set; }
         public List<string> Clinics { get; set; }
-        public List<int> pageNumbers;
 
-        public int currentPageNo;
-        public int nextPage;
-        public int previousPage;
         public int listTotal;
         public string clincianSelected;
         public string clinicSelected;
 
-        public void OnGet(int? pNo, string? clinician, string? clinic)
+        public void OnGet(string? clinician, string? clinic)
         {
             string staffCode = "";
             if (User.Identity.Name is null)
@@ -84,7 +79,7 @@ namespace PatientTrackingList.Pages
             listTotal = WaitingList.Count();
         }
 
-        public void OnPost(int? pNo, string? clinician, string? clinic)
+        public void OnPost(string? clinician, string? clinic)
         {
             WaitingList = _waitingListData.GetWaitingList();
 
@@ -93,7 +88,7 @@ namespace PatientTrackingList.Pages
             Clinics = WaitingList.Select(c => c.ClinicID).Distinct().OrderBy(c => c).ToList();
             //WL = WaitingList.ToList();
 
-            Response.Redirect($"WaitingList?pNo={pNo}&clinician={clinician}&clinic={clinic}");
+            Response.Redirect($"clinician={clinician}&clinic={clinic}");
         }
     }
 }
