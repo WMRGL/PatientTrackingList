@@ -1,11 +1,12 @@
-﻿using PatientTrackingList.Data;
+﻿using Microsoft.EntityFrameworkCore;
+using PatientTrackingList.Data;
 using PatientTrackingList.Models;
 
 namespace PatientTrackingList.DataServices
 {
-    interface ITrueWaitingListData
+    public interface ITrueWaitingListData
     {
-        public IEnumerable<TrueWaitingList> GetTrueWaitingList();
+        IQueryable<TrueWaitingList> GetTrueWaitingList();
     }
 
     public class TrueWaitingListData : ITrueWaitingListData
@@ -17,17 +18,16 @@ namespace PatientTrackingList.DataServices
             _context = context;
         }
 
-        public IEnumerable<TrueWaitingList> GetTrueWaitingList()
+        public IQueryable<TrueWaitingList> GetTrueWaitingList()
         {
-            IEnumerable<TrueWaitingList> waitingList = from w in _context.TrueWaitingLists
-                                                       where w.Complete == "Active" && w.RefDate != null && w.ClockStartDate != null && w.Status_Admin != "Complete"
-                                                       && w.PATHWAY != null
-                                                   select w;
-
-            return waitingList;
+            return _context.TrueWaitingLists
+                .Where(w => w.Complete == "Active"
+                         && w.RefDate != null
+                         && w.ClockStartDate != null
+                         && w.Status_Admin != "Complete"
+                         && w.PATHWAY != null)
+                .AsQueryable();
         }
-
-
     }
 }
 

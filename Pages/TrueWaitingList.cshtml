@@ -3,10 +3,9 @@
 @{
 }
 
-<p>@Model.Total</p>
 <div class="card">
     <div class="card-body">
-        <table class="table table-bordered table-hover" id="defaultTable">
+        <table class="table table-bordered table-hover" >
             <thead>
                 <tr>
                     <th>CGU Number</th>
@@ -20,7 +19,7 @@
                 </tr>
             </thead>
             <tbody>
-                @foreach (var c in Model.TrueWaitingList)
+                @foreach (var c in Model.TrueWaitingLists)
                 {
                     <tr>
                         <td>@c.CGU_No</td>
@@ -37,3 +36,24 @@
         </table>
     </div>
 </div>
+
+
+@{
+    var prevDisabled = !Model.TrueWaitingLists.HasPreviousPage ? "disabled" : "";
+    var nextDisabled = !Model.TrueWaitingLists.HasNextPage ? "disabled" : "";
+}
+
+<a asp-page="./TrueWaitingList"
+   asp-route-sortOrder="@Model.CurrentSort"
+   asp-route-pageIndex="@(Model.TrueWaitingLists.PageIndex - 1)"
+   asp-route-currentFilter="@Model.CurrentFilter"
+   class="btn btn-primary @prevDisabled">
+    Previous
+</a>
+<a asp-page="./TrueWaitingList"
+   asp-route-sortOrder="@Model.CurrentSort"
+   asp-route-pageIndex="@(Model.TrueWaitingLists.PageIndex + 1)"
+   asp-route-currentFilter="@Model.CurrentFilter"
+   class="btn btn-primary @nextDisabled">
+    Next
+</a>
