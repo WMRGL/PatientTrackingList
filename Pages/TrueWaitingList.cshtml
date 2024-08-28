@@ -1,0 +1,39 @@
+﻿@page
+@model TrueWaitingListModel;
+@{
+}
+
+<p>@Model.Total</p>
+<div class="card">
+    <div class="card-body">
+        <table class="table table-bordered table-hover" id="defaultTable">
+            <thead>
+                <tr>
+                    <th>CGU Number</th>
+                    <th>Firstname</th>
+                    <th>Lastname</th>
+                    <th>Referral Date</th>
+                    <th>Clock Start Date</th>
+                    <th>Clock Stop Date</th>
+                    <th>Status Admin</th>
+                    <th>Pathway</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var c in Model.TrueWaitingList)
+                {
+                    <tr>
+                        <td>@c.CGU_No</td>
+                        <td>@c.Firstname</td>
+                        <td>@c.Lastname</td>
+                        <td>@c.RefDate</td>
+                        <td>@c.ClockStartDate</td>
+                        <td>@c.ClockStopDate</td>
+                        <td>@c.Status_Admin</td>
+                        <td>@c.PATHWAY</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>

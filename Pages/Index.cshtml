@@ -8,10 +8,10 @@
     <h1 class="text-center mb-4">PTL-X - The New Patient Tracking List</h1>
     <div class="row mb-2 mb-xl-3">
         <div class="col-auto ms-auto text-end mt-n1">
-            <a class="btn btn-primary btn-lg" asp-area="" 
-            asp-page="/Download" asp-route-consultantFilter=@Model.consultantSelected 
-            asp-route-gcFilter=@Model.GCSelected asp-route-pathwayFilter=@Model.pathwaySelected 
-            asp-route-username=@Model.User.Identity.Name asp-route-type="ptl" asp-route-triagePathwayFilter="@Model.triagePathway">Export Data</a>
+            <a class="btn btn-primary btn-lg" asp-area=""
+               asp-page="/Download" asp-route-consultantFilter=@Model.consultantSelected
+               asp-route-gcFilter=@Model.GCSelected asp-route-pathwayFilter=@Model.pathwaySelected
+               asp-route-username=@Model.User.Identity.Name asp-route-type="ptl" asp-route-triagePathwayFilter="@Model.triagePathway">Export Data</a>
         </div>
     </div>
     @if (!Model.isLive)
@@ -81,7 +81,7 @@
     <dt class="col-md-2">Last updated:</dt><dd class="col-md-2">@Model.LastUpdatedDate.ToString("dd/MM/yyyy")</dd>
     </div>*@
     <br />
-
+    <div class="row">
     <div class="col-md-12">
         <div class="card">
             <div class="card-header">
@@ -168,6 +168,7 @@
             </div>
         </div>
     </div>
+</div>
 
     <div class="row">
         <div class="col-lg-12">
@@ -200,8 +201,8 @@
                                     {
                                         <tr>
                                             <td>
-                                                <a type="button" class="btn btn-secondary" asp-area="" asp-page="/ReferralDetails" asp-route-id=@p.ID 
-                                                asp-route-consultantFilter=@Model.consultantSelected asp-route-gcFilter=@Model.GCSelected asp-route-pathwayFilter=@Model.pathwaySelected
+                                                <a type="button" class="btn btn-secondary" asp-area="" asp-page="/ReferralDetails" asp-route-id=@p.ID
+                                                   asp-route-consultantFilter=@Model.consultantSelected asp-route-gcFilter=@Model.GCSelected asp-route-pathwayFilter=@Model.pathwaySelected
                                                    asp-route-triagePathwayFilter="@Model.triagePathway" asp-route-priorityFilter=@Model.prioritySelected>@p.CGUNo</a>
                                             </td>
                                             <td class="text-danger">@p.PatientName</td>
@@ -425,16 +426,14 @@
     document.getElementById("btnReset").addEventListener("click", ClearFilters);
 
 
-    function SetUrgentCheckBox() 
-    {
+    function SetUrgentCheckBox() {
         //because it cannot simply pass the state of the checkbox to the C#, for some reason!!!
         document.getElementById("txtpriorityFilter").value = document.getElementById("chkUrgent").checked;
     }
 
-    function ClearFilters() 
-    {        
+    function ClearFilters() {
         //document.getElementById("txtpriorityFilter").value = document.getElementById("chkUrgent").checked;
-        document.getElementById("chkChecked").checked = false        
+        document.getElementById("chkChecked").checked = false
         document.getElementById("txtIsChecked").value = false;
         document.getElementById("ddlConsultant").value = "";
         document.getElementById("ddlGC").value = "";
@@ -446,13 +445,11 @@
         document.getElementById("ddlTriagePathway").value = "";
     }
 
-    function SetCheckedCheckBox() 
-    {
+    function SetCheckedCheckBox() {
         document.getElementById("txtIsChecked").value = document.getElementById("chkChecked").checked;
     }
 
-    function SetCheckBoxes() 
-    {
+    function SetCheckBoxes() {
         //SetUrgentCheckBox();
         SetCheckedCheckBox();
     }
