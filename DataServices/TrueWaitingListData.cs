@@ -20,12 +20,14 @@ namespace PatientTrackingList.DataServices
 
         public IQueryable<TrueWaitingList> GetTrueWaitingList()
         {
-            return _context.TrueWaitingLists
+			return _context.TrueWaitingLists
                 .Where(w => w.Complete == "Active"
                          && w.RefDate != null
                          && w.ClockStartDate != null
                          && w.Status_Admin != "Complete"
-                         && w.PATHWAY != null)
+                         && w.PATHWAY != null
+                         && w.RefDate >= DateTime.Now.AddYears( - 2)
+                         )
                 .AsQueryable();
         }
     }

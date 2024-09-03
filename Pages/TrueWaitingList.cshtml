@@ -3,9 +3,54 @@
 @{
 }
 
+
+<h4>Total: @Model.Total</h4>
+<div class="card">
+    <div class="card-header">
+        <h5 class="card-title">Filter</h5>
+    </div>
+    <div class="card-body">
+        <form method="get" action="">
+            <div class="row">
+                <div class="mb-3 col-md-6">
+                    <label class="form-label" for="cgu_number">CGU Number</label>
+                    <input type="text" class="form-control" id="cgu_number" name="sCGU_No" placeholder="CGU Number">
+                </div>
+                <div class="mb-3 col-md-6">
+                    <label class="form-label" for="name">Name</label>
+                    <input type="text" class="form-control" name="sName" id="name" placeholder="Name">
+                </div>
+            </div>
+            <div class="row">
+                <div class="mb-3 col-md-6">
+                    <label class="form-label" for="referral_date">Referral Date</label> 
+                    <input type="date" class="form-control flatpickr-datetime flatpickr-input" name="sReferralDate" id="referral_date" placeholder="Select date..">
+                </div>
+                <div class="mb-3 col-md-6">
+                    <label class="form-label">Range Calendar</label>
+                    <input type="text" class="form-control flatpickr-range flatpickr-input" name="sRangeDate" placeholder="Select start and end date..">
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="mb-3 col-md-12">
+                    <label class="form-label" for="yearPicker">Year</label>
+                    <select id="yearPicker" name="syearPicker" class="form-control">
+                        <option selected="">...</option>
+                    </select>
+                </div>
+               
+                
+            </div>
+           
+            <button type="submit" class="btn btn-primary">Submit</button>
+        </form>
+    </div>
+</div>
+
 <div class="card">
     <div class="card-body">
-        <table class="table table-bordered table-hover" >
+        <table class="table table-bordered table-hover">
             <thead>
                 <tr>
                     <th>CGU Number</th>
@@ -25,9 +70,17 @@
                         <td>@c.CGU_No</td>
                         <td>@c.Firstname</td>
                         <td>@c.Lastname</td>
-                        <td>@c.RefDate</td>
-                        <td>@c.ClockStartDate</td>
-                        <td>@c.ClockStopDate</td>
+                        <td>@c.RefDate.Value.ToString("dd/MM/yyyy")</td>
+                        <td>@c.ClockStartDate.Value.ToString("dd/MM/yyyy")</td>
+                        @if (@c.ClockStopDate != null)
+                        {
+                            <td>@c.ClockStopDate.Value.ToString("dd/MM/yyyy")</td>
+                        }
+                        else
+                        {
+                            <td></td>
+                        }
+
                         <td>@c.Status_Admin</td>
                         <td>@c.PATHWAY</td>
                     </tr>
@@ -46,14 +99,12 @@
 <a asp-page="./TrueWaitingList"
    asp-route-sortOrder="@Model.CurrentSort"
    asp-route-pageIndex="@(Model.TrueWaitingLists.PageIndex - 1)"
-   asp-route-currentFilter="@Model.CurrentFilter"
    class="btn btn-primary @prevDisabled">
     Previous
 </a>
 <a asp-page="./TrueWaitingList"
    asp-route-sortOrder="@Model.CurrentSort"
    asp-route-pageIndex="@(Model.TrueWaitingLists.PageIndex + 1)"
-   asp-route-currentFilter="@Model.CurrentFilter"
    class="btn btn-primary @nextDisabled">
     Next
 </a>

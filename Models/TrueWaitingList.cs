@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace PatientTrackingList.Models
@@ -7,6 +8,8 @@ namespace PatientTrackingList.Models
     [Table("ViewPatientReferralDetails", Schema = "dbo")]
     public class TrueWaitingList
     {
+        [Key]
+        public int refid { get; set; }
         public int MPI { get; set; }
         public string CGU_No { get; set; }
         public string? Firstname { get; set; }
