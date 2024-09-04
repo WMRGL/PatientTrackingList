@@ -61,28 +61,46 @@ namespace PatientTrackingList.Pages
             NameSort = String.IsNullOrEmpty(sortOrder) ? "name_desc" : "";
             DateSort = sortOrder == "Date" ? "date_desc" : "Date";
             var trueWaitingListQuery = _trueWaitingListData.GetTrueWaitingList();
+            var trueWaitingListQueryAll = _trueWaitingListData.GetTrueWaitingList(true);
 
             if (sCGU_No != null)
             {
                 trueWaitingListQuery = trueWaitingListQuery.Where(p => p.CGU_No.Contains(sCGU_No));
                 _sql.SqlWriteUsageAudit(staffCode, $"CGU_No={sCGU_No}", "TrueWaitingList");
+
+                if (!trueWaitingListQuery.Any())
+                {
+                    trueWaitingListQuery = trueWaitingListQueryAll.Where(p => p.CGU_No.Contains(sCGU_No));
+                    _sql.SqlWriteUsageAudit(staffCode, $"CGU_No={sCGU_No}", "TrueWaitingList");
+                }
             }
 
             if (sName != null)
             {
                 trueWaitingListQuery = trueWaitingListQuery.Where(p => p.Firstname.Contains(sName) || p.Lastname.Contains(sName));
                 _sql.SqlWriteUsageAudit(staffCode, $"Name={sName}", "TrueWaitingList");
-            }
 
-            if (!string.IsNullOrEmpty(sReferralDate))
+                if (!trueWaitingListQuery.Any())
+                {
+                    trueWaitingListQuery = trueWaitingListQueryAll.Where(p => p.Firstname.Contains(sName) || p.Lastname.Contains(sName));
+                    _sql.SqlWriteUsageAudit(staffCode, $"Name={sName}", "TrueWaitingList");
+                }
+            }
+           
+            if (sReferralDate != null)
             {
                 DateTime referralDate = DateTime.Parse(sReferralDate);
                 trueWaitingListQuery = trueWaitingListQuery.Where(p => p.RefDate.HasValue && p.RefDate.Value.Date == referralDate.Date);
                 _sql.SqlWriteUsageAudit(staffCode, $"ReferralDate={sReferralDate}", "TrueWaitingList");
 
+                if (!trueWaitingListQuery.Any())
+                {
+                    trueWaitingListQuery = trueWaitingListQuery.Where(p => p.RefDate.HasValue && p.RefDate.Value.Date == referralDate.Date);
+                    _sql.SqlWriteUsageAudit(staffCode, $"ReferralDate={sReferralDate}", "TrueWaitingList");
+                }
             }
 
-            if (!string.IsNullOrEmpty(sRangeDate))
+            if (sRangeDate != null)
             {
                 string[] parts = sRangeDate.Split(" to ");
                 string startDateString = parts[0];
@@ -93,15 +111,29 @@ namespace PatientTrackingList.Pages
 
                 trueWaitingListQuery = trueWaitingListQuery.Where(p => p.RefDate.HasValue && p.RefDate.Value >= startDate && p.RefDate.Value <= endDate);
                 _sql.SqlWriteUsageAudit(staffCode, $"ReferralDate={startDateString} {endDateString}", "TrueWaitingList");
+
+                if (!trueWaitingListQuery.Any())
+                {
+                    trueWaitingListQuery = trueWaitingListQueryAll.Where(p => p.RefDate.HasValue && p.RefDate.Value >= startDate && p.RefDate.Value <= endDate);
+                    _sql.SqlWriteUsageAudit(staffCode, $"ReferralDate={startDateString} {endDateString}", "TrueWaitingList");
+                }
+
             }
 
-            if (!string.IsNullOrEmpty(syearPicker))
+            if (syearPicker != null)
             {
+
                 int year = int.Parse(syearPicker);
                 DateTime dateTime = new DateTime(year, 1, 1);
 
                 trueWaitingListQuery = trueWaitingListQuery.Where(p => p.RefDate.HasValue && p.RefDate.Value.Year == dateTime.Year);
                 _sql.SqlWriteUsageAudit(staffCode, $"ReferralDate={dateTime.Year}", "TrueWaitingList");
+
+                if (!trueWaitingListQuery.Any())
+                {
+                    trueWaitingListQuery = trueWaitingListQueryAll.Where(p => p.RefDate.HasValue && p.RefDate.Value.Year == dateTime.Year);
+                    _sql.SqlWriteUsageAudit(staffCode, $"ReferralDate={dateTime.Year}", "TrueWaitingList");
+                }
 
             }
 
