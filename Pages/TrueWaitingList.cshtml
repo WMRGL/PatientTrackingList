@@ -98,13 +98,15 @@
 
 <a asp-page="./TrueWaitingList"
    asp-route-sortOrder="@Model.CurrentSort"
-   asp-route-pageIndex="@(Model.TrueWaitingLists.PageIndex - 1)"
+   asp-route-pageIndex="@(Model.TrueWaitingLists.PageIndex - 1)" asp-route-sCGU_No="@Model.searchCGU_No" asp-route-sName ="@Model.searchName" 
+   asp-route-sReferralDate="@Model.searchReferralDate" asp-route-sRangeDate ="@Model.searchRangeDate" asp-route-syearPicker="@Model.searchYearPicker"
    class="btn btn-primary @prevDisabled">
     Previous
 </a>
 <a asp-page="./TrueWaitingList"
-   asp-route-sortOrder="@Model.CurrentSort"
-   asp-route-pageIndex="@(Model.TrueWaitingLists.PageIndex + 1)"
+   asp-route-sortOrder="@Model.CurrentSort" 
+   asp-route-pageIndex="@(Model.TrueWaitingLists.PageIndex + 1)" asp-route-sCGU_No="@Model.searchCGU_No" asp-route-sName="@Model.searchName"
+   asp-route-sReferralDate="@Model.searchReferralDate" asp-route-sRangeDate="@Model.searchRangeDate" asp-route-syearPicker="@Model.searchYearPicker"
    class="btn btn-primary @nextDisabled">
     Next
 </a>

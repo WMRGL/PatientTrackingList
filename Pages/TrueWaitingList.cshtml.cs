@@ -40,6 +40,12 @@ namespace PatientTrackingList.Pages
         public string CurrentSort { get; set; }
         public string notificationMessage;
         public bool isLive;
+        public string searchCGU_No;
+        public string searchName;
+        public string searchReferralDate;
+        public string searchRangeDate;
+        public string searchYearPicker;
+
 
         public async Task OnGetAsync(string sortOrder, int? pageIndex, string? sCGU_No, string? sName, string? sReferralDate, string? sRangeDate, string? syearPicker)
         {
@@ -73,6 +79,7 @@ namespace PatientTrackingList.Pages
                     trueWaitingListQuery = trueWaitingListQueryAll.Where(p => p.CGU_No.Contains(sCGU_No));
                     _sql.SqlWriteUsageAudit(staffCode, $"CGU_No={sCGU_No}", "TrueWaitingList");
                 }
+                searchCGU_No = sCGU_No;
             }
 
             if (sName != null)
@@ -85,6 +92,7 @@ namespace PatientTrackingList.Pages
                     trueWaitingListQuery = trueWaitingListQueryAll.Where(p => p.Firstname.Contains(sName) || p.Lastname.Contains(sName));
                     _sql.SqlWriteUsageAudit(staffCode, $"Name={sName}", "TrueWaitingList");
                 }
+                searchName = sName;
             }
            
             if (sReferralDate != null)
@@ -98,6 +106,7 @@ namespace PatientTrackingList.Pages
                     trueWaitingListQuery = trueWaitingListQuery.Where(p => p.RefDate.HasValue && p.RefDate.Value.Date == referralDate.Date);
                     _sql.SqlWriteUsageAudit(staffCode, $"ReferralDate={sReferralDate}", "TrueWaitingList");
                 }
+                searchReferralDate = sReferralDate;
             }
 
             if (sRangeDate != null)
@@ -117,7 +126,7 @@ namespace PatientTrackingList.Pages
                     trueWaitingListQuery = trueWaitingListQueryAll.Where(p => p.RefDate.HasValue && p.RefDate.Value >= startDate && p.RefDate.Value <= endDate);
                     _sql.SqlWriteUsageAudit(staffCode, $"ReferralDate={startDateString} {endDateString}", "TrueWaitingList");
                 }
-
+                searchRangeDate = sRangeDate;
             }
 
             if (syearPicker != null)
@@ -134,7 +143,7 @@ namespace PatientTrackingList.Pages
                     trueWaitingListQuery = trueWaitingListQueryAll.Where(p => p.RefDate.HasValue && p.RefDate.Value.Year == dateTime.Year);
                     _sql.SqlWriteUsageAudit(staffCode, $"ReferralDate={dateTime.Year}", "TrueWaitingList");
                 }
-
+                searchYearPicker = syearPicker;
             }
 
 
