@@ -49,9 +49,10 @@ namespace PatientTrackingList.Pages
         public string searchYearPicker;
         public string searchConsultant;
         public string searchGC;
+        public bool isSortDesc;
 
         public async Task OnGetAsync(string sortOrder, int? pageIndex, string? sCGU_No, string? sName, string? sReferralDate, string? sRangeDate, string? syearPicker,
-            string? sConsultants, string? sGC
+            string? sConsultants, string? sGC, bool? isDesc = false
             )
         {
             string staffCode = "";
@@ -68,11 +69,9 @@ namespace PatientTrackingList.Pages
                 _sql.SqlWriteUsageAudit(staffCode, "", "Index");
             }
 
-            CurrentSort = sortOrder;
-            NameSort = String.IsNullOrEmpty(sortOrder) ? "name_desc" : "";
-            DateSort = sortOrder == "Date" ? "date_desc" : "Date";
             var trueWaitingListQuery = _trueWaitingListData.GetTrueWaitingList();
             var trueWaitingListQueryAll = _trueWaitingListData.GetTrueWaitingList(true);
+            isSortDesc = isDesc.GetValueOrDefault();
 
             consultantList = _staffData.GetStaffTypeList("Consultant");
             GCList = _staffData.GetStaffTypeList("GC");
@@ -181,6 +180,62 @@ namespace PatientTrackingList.Pages
                     _sql.SqlWriteUsageAudit(staffCode, $"GC={sGC}", "TrueWaitingList");
                 }
                 searchGC = sGC;
+            }
+
+
+            switch (sortOrder)
+            {
+                case "ref_date":
+                    if (isSortDesc)
+                    {
+                        trueWaitingListQuery = trueWaitingListQuery.OrderByDescending(p => p.RefDate);
+                    }
+                    else
+                    {
+                        trueWaitingListQuery = trueWaitingListQuery.OrderBy(p => p.RefDate);
+                    }
+                break;
+                
+                case "clock_start_date":
+                    if (isSortDesc)
+                    {
+                        trueWaitingListQuery = trueWaitingListQuery.OrderByDescending(p => p.ClockStartDate);
+                    }
+                    else
+                    {
+                        trueWaitingListQuery = trueWaitingListQuery.OrderBy(p => p.ClockStartDate);
+                    }
+                break;
+                case "clock_stop_date":
+                    if (isSortDesc)
+                    {
+                        trueWaitingListQuery = trueWaitingListQuery.OrderByDescending(p => p.ClockStopDate);
+                    }
+                    else
+                    {
+                        trueWaitingListQuery = trueWaitingListQuery.OrderBy(p => p.ClockStopDate);
+                    }
+                break;
+                case "status_admin":
+                    if (isSortDesc)
+                    {
+                        trueWaitingListQuery = trueWaitingListQuery.OrderByDescending(p => p.Status_Admin);
+                    }
+                    else
+                    {
+                        trueWaitingListQuery = trueWaitingListQuery.OrderBy(p => p.Status_Admin);
+                    }
+                break;
+                case "pathway":
+                    if (isSortDesc)
+                    {
+                        trueWaitingListQuery = trueWaitingListQuery.OrderByDescending(p => p.PATHWAY);
+                    }
+                    else
+                    {
+                        trueWaitingListQuery = trueWaitingListQuery.OrderBy(p => p.PATHWAY);
+                    }
+                break;
             }
 
             var pageSize = 20;
