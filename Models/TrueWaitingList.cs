@@ -20,5 +20,7 @@ namespace PatientTrackingList.Models
         public DateTime? ClockStopDate { get; set; }
         public string? Status_Admin {  get; set; }
         public string?PATHWAY { get; set; }
+        public string?GC { get; set; }
+        public string? LeadClinician { get; set; }
     }
 }

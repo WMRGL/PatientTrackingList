@@ -23,7 +23,7 @@
             </div>
             <div class="row">
                 <div class="mb-3 col-md-6">
-                    <label class="form-label" for="referral_date">Referral Date</label> 
+                    <label class="form-label" for="referral_date">Referral Date</label>
                     <input type="date" class="form-control flatpickr-datetime flatpickr-input" name="sReferralDate" id="referral_date" placeholder="Select date..">
                 </div>
                 <div class="mb-3 col-md-6">
@@ -31,18 +31,41 @@
                     <input type="text" class="form-control flatpickr-range flatpickr-input" name="sRangeDate" placeholder="Select start and end date..">
                 </div>
             </div>
+            <div class="row">
+                <div class="mb-3 col-md-6">
+                    <label class="form-label" for="consultants">Consultants</label>
+                    <select id="consultants" name="sConsultants" class="form-select">
+                        <option value="">Select Consultant...</option>
+                        @foreach (var item in Model.consultantList)
+                        {
+                            <option value=@item.NAME>@item.NAME</option>
+                        }
+
+                    </select>
+                </div>
+                <div class="mb-3 col-md-6">
+                    <label class="form-label">GC</label>
+                    <select class="form-select" name="sGC" >
+                        <option value="">Select GC...</option>
+                        @foreach (var item in Model.GCList)
+                        {
+                            <option value="@item.NAME">@item.NAME</option>
+                        }
+                    </select>
+                </div>
+            </div>
 
             <div class="row">
                 <div class="mb-3 col-md-12">
                     <label class="form-label" for="yearPicker">Year</label>
                     <select id="yearPicker" name="syearPicker" class="form-control">
-                        <option value="">...</option>
+                        <option value="">Select year ...</option>
                     </select>
                 </div>
-               
-                
+
+
             </div>
-           
+
             <button type="submit" class="btn btn-primary">Submit</button>
         </form>
     </div>
@@ -98,13 +121,13 @@
 
 <a asp-page="./TrueWaitingList"
    asp-route-sortOrder="@Model.CurrentSort"
-   asp-route-pageIndex="@(Model.TrueWaitingLists.PageIndex - 1)" asp-route-sCGU_No="@Model.searchCGU_No" asp-route-sName ="@Model.searchName" 
-   asp-route-sReferralDate="@Model.searchReferralDate" asp-route-sRangeDate ="@Model.searchRangeDate" asp-route-syearPicker="@Model.searchYearPicker"
+   asp-route-pageIndex="@(Model.TrueWaitingLists.PageIndex - 1)" asp-route-sCGU_No="@Model.searchCGU_No" asp-route-sName="@Model.searchName"
+   asp-route-sReferralDate="@Model.searchReferralDate" asp-route-sRangeDate="@Model.searchRangeDate" asp-route-syearPicker="@Model.searchYearPicker"
    class="btn btn-primary @prevDisabled">
     Previous
 </a>
 <a asp-page="./TrueWaitingList"
-   asp-route-sortOrder="@Model.CurrentSort" 
+   asp-route-sortOrder="@Model.CurrentSort"
    asp-route-pageIndex="@(Model.TrueWaitingLists.PageIndex + 1)" asp-route-sCGU_No="@Model.searchCGU_No" asp-route-sName="@Model.searchName"
    asp-route-sReferralDate="@Model.searchReferralDate" asp-route-sRangeDate="@Model.searchRangeDate" asp-route-syearPicker="@Model.searchYearPicker"
    class="btn btn-primary @nextDisabled">

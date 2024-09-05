@@ -33,6 +33,8 @@ namespace PatientTrackingList.Pages
         }
 
         public IEnumerable<TrueWaitingList> TrueWaitingList {get; set;}
+        public List<StaffMembers> consultantList { get; set; }
+        public List<StaffMembers> GCList { get; set; }
         public int Total;
         public PaginatedList<TrueWaitingList> TrueWaitingLists { get; set; }
         public string NameSort { get; set; }
@@ -45,9 +47,12 @@ namespace PatientTrackingList.Pages
         public string searchReferralDate;
         public string searchRangeDate;
         public string searchYearPicker;
+        public string searchConsultant;
+        public string searchGC;
 
-
-        public async Task OnGetAsync(string sortOrder, int? pageIndex, string? sCGU_No, string? sName, string? sReferralDate, string? sRangeDate, string? syearPicker)
+        public async Task OnGetAsync(string sortOrder, int? pageIndex, string? sCGU_No, string? sName, string? sReferralDate, string? sRangeDate, string? syearPicker,
+            string? sConsultants, string? sGC
+            )
         {
             string staffCode = "";
             if (User.Identity.Name is null)
@@ -68,6 +73,9 @@ namespace PatientTrackingList.Pages
             DateSort = sortOrder == "Date" ? "date_desc" : "Date";
             var trueWaitingListQuery = _trueWaitingListData.GetTrueWaitingList();
             var trueWaitingListQueryAll = _trueWaitingListData.GetTrueWaitingList(true);
+
+            consultantList = _staffData.GetStaffTypeList("Consultant");
+            GCList = _staffData.GetStaffTypeList("GC");
 
             if (sCGU_No != null)
             {
@@ -146,6 +154,34 @@ namespace PatientTrackingList.Pages
                 searchYearPicker = syearPicker;
             }
 
+            if (sConsultants != null)
+            {
+
+
+                trueWaitingListQuery = trueWaitingListQuery.Where(p => p.LeadClinician == sConsultants);
+                _sql.SqlWriteUsageAudit(staffCode, $"Consultant={sConsultants}", "TrueWaitingList");
+
+                if (!trueWaitingListQuery.Any())
+                {
+                    trueWaitingListQuery = trueWaitingListQueryAll.Where((p => p.LeadClinician == sConsultants));
+                    _sql.SqlWriteUsageAudit(staffCode, $"Consultant={sConsultants}", "TrueWaitingList");
+                }
+                searchConsultant = sConsultants;
+            }
+
+            if (sGC != null)
+            {
+
+                trueWaitingListQuery = trueWaitingListQuery.Where(p => p.GC == sGC);
+                _sql.SqlWriteUsageAudit(staffCode, $"GC={sGC}", "TrueWaitingList");
+
+                if (!trueWaitingListQuery.Any())
+                {
+                    trueWaitingListQuery = trueWaitingListQueryAll.Where((p => p.GC == sGC));
+                    _sql.SqlWriteUsageAudit(staffCode, $"GC={sGC}", "TrueWaitingList");
+                }
+                searchGC = sGC;
+            }
 
             var pageSize = 20;
             Total = trueWaitingListQuery.Count();
