@@ -28,9 +28,10 @@ namespace PatientTrackingList.DataServices
             var query = _context.TrueWaitingLists
             .Where(w => w.Complete == "Active"
                 && w.RefDate != null
-                && w.ClockStartDate != null
-                && w.Status_Admin != "Complete"
-                && w.PATHWAY != null);
+                //&& w.ClockStartDate != null
+                //&& w.Status_Admin != "Complete"
+                //&& w.PATHWAY != null
+                );
 
             if (!includeAll.GetValueOrDefault())
             {

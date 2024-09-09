@@ -50,6 +50,9 @@ namespace PatientTrackingList.Pages
         public string searchConsultant;
         public string searchGC;
         public bool isSortDesc;
+        public int currentPageNo;
+        public int nextPage;
+        public int previousPage;
 
         public async Task OnGetAsync(string sortOrder, int? pageIndex, string? sCGU_No, string? sName, string? sReferralDate, string? sRangeDate, string? syearPicker,
             string? sConsultants, string? sGC, bool? isDesc = false
@@ -238,6 +241,17 @@ namespace PatientTrackingList.Pages
                 break;
             }
 
+            if (pageIndex == 0 || pageIndex == null)
+            {
+                currentPageNo = 1;
+            }
+            else
+            {
+                currentPageNo = pageIndex.GetValueOrDefault();
+            }
+
+            nextPage = currentPageNo + 1;
+            previousPage = currentPageNo - 1; 
             var pageSize = 20;
             Total = trueWaitingListQuery.Count();
             TrueWaitingLists = await PaginatedList<TrueWaitingList>.CreateAsync(

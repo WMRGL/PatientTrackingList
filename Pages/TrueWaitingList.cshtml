@@ -67,10 +67,9 @@
 
             <div class="row">
                 <div class="mb-3 col-md-12">
-                    <label class="form-label" for="yearPicker">Year</label>
-                    <select id="yearPicker" name="syearPicker" class="form-control">
-                        <option value="">Select year ...</option>
-                    </select>
+                    <label class="form-label" for="yearPicker">Year (Referral Date)</label>
+                    <input type="number" class="form-control" name="syearPicker" min="1990" id="">
+
                 </div>
 
 
@@ -93,15 +92,16 @@
                     <th>Firstname</th>
                     <th>Lastname</th>
                     <th>
-                        Referral Date 
-                        <a asp-page="\TrueWaitingList"  asp-route-sortOrder="ref_date" asp-route-isDesc=false>
+                        Referral Date
+                        <a asp-page="\TrueWaitingList" asp-route-sortOrder="ref_date" asp-route-isDesc=false>
                             <i class="fa-solid fa-sort-up fa-xl"></i>
                         </a>
                         <a asp-page="\TrueWaitingList" asp-route-sortOrder="ref_date" asp-route-isDesc=true>
                             <i class="fa-solid fa-sort-down fa-xl sort-down"></i>
                         </a>
                     </th>
-                    <th>Clock Start Date
+                    <th>
+                        Clock Start Date
                         <a asp-page="\TrueWaitingList" asp-route-sortOrder="clock_start_date" asp-route-isDesc=false>
                             <i class="fa-solid fa-sort-up fa-xl"></i>
                         </a>
@@ -127,7 +127,8 @@
                             <i class="fa-solid fa-sort-down fa-xl sort-down"></i>
                         </a>
                     </th>
-                    <th>Pathway
+                    <th>
+                        Pathway
                         <a asp-page="\TrueWaitingList" asp-route-sortOrder="pathway" asp-route-isDesc=false>
                             <i class="fa-solid fa-sort-up fa-xl sort-up"></i>
                         </a>
@@ -135,31 +136,53 @@
                             <i class="fa-solid fa-sort-down fa-xl sort-down"></i>
                         </a>
                     </th>
+                    <th>ICP Data</th>
                 </tr>
             </thead>
             <tbody>
-                @foreach (var c in Model.TrueWaitingLists)
+                @foreach (var item in Model.TrueWaitingLists)
                 {
                     <tr>
-                        <td>@c.CGU_No</td>
-                        <td>@c.Firstname</td>
-                        <td>@c.Lastname</td>
-                        <td>@c.RefDate.Value.ToString("dd/MM/yyyy")</td>
-                        <td>@c.ClockStartDate.Value.ToString("dd/MM/yyyy")</td>
-                        @if (@c.ClockStopDate != null)
+                        <td>@item.CGU_No</td>
+                        <td>@item.Firstname</td>
+                        <td>@item.Lastname</td>
+                        <td>@item.RefDate.Value.ToString("dd/MM/yyyy")</td>
+                        @if (@item.ClockStartDate != null)
                         {
-                            <td>@c.ClockStopDate.Value.ToString("dd/MM/yyyy")</td>
+                            <td>@item.ClockStartDate.Value.ToString("dd/MM/yyyy")</td>
+                        }
+                        else
+                        {
+                            <td></td>
+                        }
+                        @if (@item.ClockStopDate != null)
+                        {
+                            <td>@item.ClockStopDate.Value.ToString("dd/MM/yyyy")</td>
                         }
                         else
                         {
                             <td></td>
                         }
 
-                        <td>@c.Status_Admin</td>
-                        <td>@c.PATHWAY</td>
+                        <td>@item.Status_Admin</td>
+                        <td>@item.PATHWAY</td>
+                        <td><a href="" class="btn btn-outline-primary">View ICP Data</a></td>
                     </tr>
                 }
             </tbody>
+            <tfoot>
+                <tr>
+                    <th>CGU Number</th>
+                    <th>Firstname</th>
+                    <th>Lastname</th>
+                    <th>Referral Date</th>
+                    <th>Clock Start Date</th>
+                    <th>Clock Stop Date</th>
+                    <th>Status Admin</th>
+                    <th>Pathway</th>
+                    <th>ICP Data</th>
+                </tr>
+            </tfoot>
         </table>
     </div>
 </div>
@@ -170,19 +193,74 @@
     var nextDisabled = !Model.TrueWaitingLists.HasNextPage ? "disabled" : "";
 }
 
-<a asp-page="./TrueWaitingList"
-   asp-route-sortOrder="@Model.CurrentSort"
-   asp-route-pageIndex="@(Model.TrueWaitingLists.PageIndex - 1)" asp-route-sCGU_No="@Model.searchCGU_No" asp-route-sName="@Model.searchName"
-   asp-route-sReferralDate="@Model.searchReferralDate" asp-route-sRangeDate="@Model.searchRangeDate" asp-route-syearPicker="@Model.searchYearPicker"
-   asp-route-sConsultants="@Model.searchConsultant" asp-route-sGC="@Model.searchGC"
-   class="btn btn-primary @prevDisabled">
-    Previous
-</a>
-<a asp-page="./TrueWaitingList"
-   asp-route-sortOrder="@Model.CurrentSort"
-   asp-route-pageIndex="@(Model.TrueWaitingLists.PageIndex + 1)" asp-route-sCGU_No="@Model.searchCGU_No" asp-route-sName="@Model.searchName"
-   asp-route-sReferralDate="@Model.searchReferralDate" asp-route-sRangeDate="@Model.searchRangeDate" asp-route-syearPicker="@Model.searchYearPicker"
-   asp-route-sConsultants="@Model.searchConsultant" asp-route-sGC="@Model.searchGC"
-   class="btn btn-primary @nextDisabled">
-    Next
-</a>
+<div class="dataTables_paginate paging_simple_numbers" id="datatables-reponsive_paginate">
+    <ul class="pagination">
+        <li class="paginate_button page-item  @prevDisabled" id="datatables-reponsive_previous">
+            <a asp-page="./TrueWaitingList" aria-controls="datatables-reponsive" class="page-link"
+               asp-route-sortOrder="@Model.CurrentSort"
+               asp-route-pageIndex="1"
+               asp-route-sCGU_No="@Model.searchCGU_No"
+               asp-route-sName="@Model.searchName"
+               asp-route-sReferralDate="@Model.searchReferralDate"
+               asp-route-sRangeDate="@Model.searchRangeDate"
+               asp-route-syearPicker="@Model.searchYearPicker"
+               asp-route-sConsultants="@Model.searchConsultant"
+               asp-route-sGC="@Model.searchGC">First</a>
+        </li>
+        <li class="paginate_button page-item previous @prevDisabled" id="datatables-reponsive_previous">
+            <a aria-controls="datatables-reponsive" asp-page="./TrueWaitingList" class="page-link"
+               asp-route-sortOrder="@Model.CurrentSort"
+               asp-route-pageIndex="1"
+               asp-route-sCGU_No="@Model.searchCGU_No"
+               asp-route-sName="@Model.searchName"
+               asp-route-sReferralDate="@Model.searchReferralDate"
+               asp-route-sRangeDate="@Model.searchRangeDate"
+               asp-route-syearPicker="@Model.searchYearPicker"
+               asp-route-sConsultants="@Model.searchConsultant"
+               asp-route-sGC="@Model.searchGC">Previous</a>
+        </li>
+        @for (int i = Math.Max(Model.TrueWaitingLists.PageIndex - 5, 1); i <= Math.Min(Model.TrueWaitingLists.PageIndex + 5, Model.TrueWaitingLists.TotalPages); i++)
+        {
+            <li class="paginate_button page-item  @(i == Model.TrueWaitingLists.PageIndex ? "active" : "")">
+                <a aria-controls="datatables-reponsive" aria-role="link" class="page-link"
+                   asp-page="./TrueWaitingList"
+                   asp-route-sortOrder="@Model.CurrentSort"
+                   asp-route-pageIndex="@i"
+                   asp-route-sCGU_No="@Model.searchCGU_No"
+                   asp-route-sName="@Model.searchName"
+                   asp-route-sReferralDate="@Model.searchReferralDate"
+                   asp-route-sRangeDate="@Model.searchRangeDate"
+                   asp-route-syearPicker="@Model.searchYearPicker"
+                   asp-route-sConsultants="@Model.searchConsultant"
+                   asp-route-sGC="@Model.searchGC">@i</a>
+            </li>
+        }
+
+        <li class="paginate_button page-item @nextDisabled">
+            <a aria-controls="datatables-reponsive" class="page-link"
+               asp-page="./TrueWaitingList"
+               asp-route-sortOrder="@Model.CurrentSort"
+               asp-route-pageIndex="@(Model.TrueWaitingLists.PageIndex + 1)"
+               asp-route-sCGU_No="@Model.searchCGU_No"
+               asp-route-sName="@Model.searchName"
+               asp-route-sReferralDate="@Model.searchReferralDate"
+               asp-route-sRangeDate="@Model.searchRangeDate"
+               asp-route-syearPicker="@Model.searchYearPicker"
+               asp-route-sConsultants="@Model.searchConsultant"
+               asp-route-sGC="@Model.searchGC">Next</a>
+        </li>
+        <li class="paginate_button page-item @nextDisabled" id="datatables-reponsive_next">
+            <a aria-controls="datatables-reponsive" aria-role="link" class="page-link"
+               asp-page="./TrueWaitingList"
+               asp-route-sortOrder="@Model.CurrentSort"
+               asp-route-pageIndex="@Model.TrueWaitingLists.TotalPages"
+               asp-route-sCGU_No="@Model.searchCGU_No"
+               asp-route-sName="@Model.searchName"
+               asp-route-sReferralDate="@Model.searchReferralDate"
+               asp-route-sRangeDate="@Model.searchRangeDate"
+               asp-route-syearPicker="@Model.searchYearPicker"
+               asp-route-sConsultants="@Model.searchConsultant"
+               asp-route-sGC="@Model.searchGC">Last</a>
+        </li>
+    </ul>
+</div>
