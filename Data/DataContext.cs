@@ -15,6 +15,7 @@ namespace PatientTrackingList.Data
         public DbSet<StaffMembers> StaffMembers { get; set; }
         public DbSet<ClinicSlots> ClinicSlots { get; set; }
         public DbSet<Notifications> Notifications { get; set; }
+        public DbSet<TrueWaitingList> TrueWaitingLists { get; set; }
         public bool isDesc { get; set; }
     }
 }
