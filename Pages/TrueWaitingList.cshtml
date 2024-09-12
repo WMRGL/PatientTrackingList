@@ -91,6 +91,7 @@
 
                     <th>Firstname</th>
                     <th>Lastname</th>
+                    <th>RefId</th>
                     <th>
                         Referral Date
                         <a asp-page="\TrueWaitingList" asp-route-sortOrder="ref_date" asp-route-isDesc=false>
@@ -146,6 +147,7 @@
                         <td>@item.CGU_No</td>
                         <td>@item.Firstname</td>
                         <td>@item.Lastname</td>
+                        <td>@item.refid</td>
                         <td>@item.RefDate.Value.ToString("dd/MM/yyyy")</td>
                         @if (@item.ClockStartDate != null)
                         {
@@ -166,7 +168,7 @@
 
                         <td>@item.Status_Admin</td>
                         <td>@item.PATHWAY</td>
-                        <td><a href="" class="btn btn-outline-primary">View ICP Data</a></td>
+                        <td><a asp-page="Icp" class="btn btn-outline-primary" >View ICP Data</a></td>
                     </tr>
                 }
             </tbody>
@@ -175,6 +177,7 @@
                     <th>CGU Number</th>
                     <th>Firstname</th>
                     <th>Lastname</th>
+                    <th>RefId</th>
                     <th>Referral Date</th>
                     <th>Clock Start Date</th>
                     <th>Clock Stop Date</th>

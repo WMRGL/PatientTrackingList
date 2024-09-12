@@ -1,0 +1,23 @@
+﻿@page
+@model PatientTrackingList.Pages.IcpModel
+@{
+}
+
+<p> 
+    @if (Model.IcpCancerDetail != null)
+    {
+        <p>Cancer</p>
+        @Model.IcpCancerDetail.ActRefInfo
+       
+    }
+
+    else if (Model.IcpGeneralDetail != null)
+    {
+        <p>General</p>
+        @Model.IcpGeneralDetail.TreatPathBy
+    }
+    else
+    {
+        <p>Referrall has not been triaged</p>
+    }
+</p>
