@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using PatientTrackingList.Data;
 using PatientTrackingList.DataServices;
 using PatientTrackingList.Models;
+using System;
 using System.ComponentModel;
 using System.Configuration;
 
@@ -30,14 +31,32 @@ namespace PatientTrackingList.Pages
             Configuration = configuration;
         }
 
-        public  Icp IcpDetail { get; set; }
+        public Icp IcpDetail { get; set; }
         public IcpCancer IcpCancerDetail { get; set; }
         public IcpGeneral IcpGeneralDetail { get; set; }
         public string notificationMessage;
         public bool isLive;
+        public string patientName;
+        public string address;
+        public string referralType;
+        public string? referringClicnician;
+        public string? nhsNo;
+        public string? consultant;
+        public string? gc;
+        public string? adminContact;
+        public string? pathway;
+        public string? referralClass;
+        public string? indication;
+        public string? indicationNotes;
+        public DateTime? breachDate;
+        public DateTime? referralDate;
+        public DateTime? dob;
 
 
-        public void OnGet()
+        public void OnGet(int? sReferralId, string? sName, string? sAddress, string? sRefType, DateTime? sRefDate, string? sRefClicnician, DateTime? sDob,
+            string? sNhsNo, string? sConsultant, string? sGc, string? sAdminContact, string? sPathway, string? sRefClass, string? sIndication, DateTime? sBreachDate,
+            string? sIndicationNotes
+            )
         {
             string staffCode = "";
             if (User.Identity.Name is null)
@@ -53,23 +72,47 @@ namespace PatientTrackingList.Pages
                 _sql.SqlWriteUsageAudit(staffCode, "", "Index");
             }
 
-            
-            IcpDetail = _icpData.GetIcp(9202398);
-
-            var IcpId = IcpDetail.ICPID;
-
-            if (IcpId != null)
+            if (sName != null || sAddress != null || sRefType != null || sRefDate != null || sRefClicnician != null || sDob != null || sNhsNo != null
+                || sConsultant != null || sGc != null || sAdminContact != null || sPathway != null || sRefClass !=null || sIndication != null || sBreachDate != null
+                || sIndicationNotes != null
+                )
             {
-                IcpCancerDetail = _icpData.GetIcpCancer(IcpId);
-
+                patientName = sName;
+                address = sAddress;
+                referralDate = sRefDate;
+                referralType = sRefType;
+                referringClicnician = sRefClicnician;
+                dob = sDob;
+                nhsNo = sNhsNo;
+                consultant = sConsultant;
+                gc = sGc;
+                adminContact = sAdminContact;
+                pathway = sPathway;
+                referralClass = sRefClass;
+                indication = sIndication;
+                breachDate = sBreachDate;
+                indicationNotes = sIndicationNotes;
             }
 
-            if (IcpCancerDetail == null)
+            if (sReferralId != null)
             {
-                IcpGeneralDetail = _icpData.GetIcpGeneral(IcpId);
+
+                IcpDetail = _icpData.GetIcp(sReferralId);
+
+                var IcpId = IcpDetail.ICPID;
+
+                if (IcpId != null)
+                {
+                    IcpCancerDetail = _icpData.GetIcpCancer(IcpId);
+
+                }
+
+                if (IcpCancerDetail == null)
+                {
+                    IcpGeneralDetail = _icpData.GetIcpGeneral(IcpId);
+                }
+
             }
-
-
         }
     }
 }

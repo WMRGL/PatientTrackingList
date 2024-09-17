@@ -9,5 +9,6 @@ namespace PatientTrackingList.Models
         [Key] 
         public int? ICPID {  get; set; }
         public string? ActRefInfo {  get; set; } 
+
     }
 }

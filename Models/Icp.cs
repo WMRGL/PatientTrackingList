@@ -9,7 +9,7 @@ namespace PatientTrackingList.Models
     public class Icp
     {
         [Key]
-        public int REFID { get; set; }
-        public int ICPID { get; set; }
+        public int? REFID { get; set; }
+        public int? ICPID { get; set; }
     }
 }

@@ -14,7 +14,6 @@ namespace PatientTrackingList.DataServices
     public class IcpData : IIcpData
     {
         private readonly DataContext _context;
-        private readonly IConfiguration _config;
 
 
         public IcpData(DataContext context)

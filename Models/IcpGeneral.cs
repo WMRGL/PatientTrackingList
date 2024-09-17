@@ -10,5 +10,7 @@ namespace PatientTrackingList.Models
         public int? ICPID { get; set; }
         public int? TreatPath { get; set; }
         public string? TreatPathBy {  get; set; }
-    }
+		public string? TriageNotes { get; set; }
+
+	}
 }
