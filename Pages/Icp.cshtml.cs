@@ -104,12 +104,13 @@ namespace PatientTrackingList.Pages
                 if (IcpId != null)
                 {
                     IcpCancerDetail = _icpData.GetIcpCancer(IcpId);
-
+                    _sql.SqlWriteUsageAudit(staffCode, $"ReferralId={sReferralId}", "ICP");
                 }
 
                 if (IcpCancerDetail == null)
                 {
                     IcpGeneralDetail = _icpData.GetIcpGeneral(IcpId);
+                    _sql.SqlWriteUsageAudit(staffCode, $"ReferralId={sReferralId}", "ICP");
                 }
 
             }

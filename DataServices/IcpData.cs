@@ -40,7 +40,6 @@ namespace PatientTrackingList.DataServices
         {
     
             IcpGeneral icpGeneralDetail = _context.IcpGenerals.FirstOrDefault(g => g.ICPID == refid);
-            Console.WriteLine(icpGeneralDetail);
             return icpGeneralDetail;
         }
     }
