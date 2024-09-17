@@ -1,0 +1,363 @@
+﻿@page
+@model PatientTrackingList.Pages.IcpModel
+@{
+}
+
+
+<div class="row mb-2 mb-xl-3">
+    <div class="col-auto d-none d-sm-block">
+        <h3><strong>ICP</strong> Data</h3>
+    </div>
+
+    <div class="col-auto ms-auto text-end mt-n1">
+        <a href="#" class="btn btn-primary" onclick="window.close();">Go Back</a>
+    </div>
+</div>
+<div class="row">
+    <div class="col-12 col-lg-8 col-xxl-9 d-flex">
+        <div class="card flex-fill">
+            <div class="card-header">
+                <h5 class="card-title mb-0">Patiets Details:</h5>
+            </div>
+            <div class="card-body">
+                <table class="table table-borderless my-0">
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th class="d-none d-xxl-table-cell">Address</th>
+                            <th class="d-none d-xl-table-cell">Date of Birth:</th>
+                            <th>NHS No</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>
+                                <div class="d-flex">
+
+                                    <div class="flex-grow-1 ">
+                                        <div class="text-muted">
+                                            @Model.patientName
+                                        </div>
+                                    </div>
+                                </div>
+                            </td>
+                            <td class="d-none d-xxl-table-cell">
+                                <div class="text-muted">
+                                    @Model.address
+                                </div>
+                            </td>
+                            <td class="d-none d-xl-table-cell">
+                                <div class="text-muted">
+                                    @Model.dob?.ToString("dd/MM/yyyy")
+                                </div>
+
+                            </td>
+                            <td>
+                                <div class="d-flex flex-column w-100">
+                                    <div class="text-muted">
+                                        @Model.nhsNo
+                                    </div>
+                                </div>
+                            </td>
+
+                        </tr>
+
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    <div class="col-12 col-lg-4 col-xxl-3 d-flex">
+        <div class="card flex-fill">
+            <div class="card-header">
+                <h5 class="card-title mb-0">Referral</h5>
+            </div>
+            <div class="card-body d-flex w-100">
+                <table class="table table-borderless my-0">
+                    <thead>
+                        <tr>
+                            <th>Referral Type:</th>
+                            <th class="d-none d-xl-table-cell">Rerral Date:</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>
+                                <div class="d-flex flex-column w-100">
+                                    <div class="text-muted">
+                                        @Model.referralType
+                                    </div>
+                                </div>
+                            </td>
+                            <td class="d-none d-xl-table-cell">
+                                <div class="text-muted">
+                                    @Model.referralDate?.ToString("dd/MM/yyyy")
+                                </div>
+                            </td>
+                        </tr>
+
+                    </tbody>
+                </table>
+
+            </div>
+        </div>
+    </div>
+</div>
+@if (Model.IcpCancerDetail != null)
+{
+    <div class="row">
+        <div class="col-12 col-lg-8 col-xxl-9 d-flex">
+            <div class="card flex-fill">
+                <div class="card-header">
+                    <h5 class="card-title mb-0">Referral Details:</h5>
+                </div>
+
+                <div class="card-body">
+                    <table class="table table-borderless my-0">
+                        <tbody>
+                            <tr>
+                                <td>
+                                    <div class="d-flex">
+                                        <div class="flex-shrink-0">
+                                        </div>
+                                        <div class="flex-grow-1 ms-3">
+                                            <strong>Pathway</strong>
+                                            <div class="text-muted">
+                                                @Model.pathway
+                                            </div>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td class="d-none d-xxl-table-cell">
+                                    <strong>Referral Type</strong>
+                                    <div class="text-muted">
+                                        @Model.referralType
+                                    </div>
+                                </td>
+                                <td class="d-none d-xl-table-cell">
+                                    <strong>Referral Class</strong>
+                                    <div class="text-muted">
+                                        @Model.referralClass
+                                    </div>
+                                </td>
+
+                            </tr>
+                            <tr>
+                                <td class="d-none d-xl-table-cell">
+                                    <div class="d-flex">
+                                        <div class="flex-grow-1 ms-3">
+                                            <strong>Breach Date</strong>
+                                            <div class="text-muted">
+                                                @Model.breachDate?.ToString("dd/MM/yyyy")
+                                            </div>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td class="d-none d-xl-table-cell">
+                                    <strong>Indication</strong>
+                                    <div class="text-muted">
+                                        @Model.indication
+                                    </div>
+                                </td>
+                                <td class="d-none d-xxl-table-cell">
+                                    <strong>Indication Notes</strong>
+                                    <div class="text-muted">
+                                        <p>@Model.indicationNotes</p>
+                                    </div>
+                                </td>
+                            </tr>
+
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        @*Side table*@
+        <div class="col-12 col-lg-4 col-xxl-3 d-flex">
+            <div class="card flex-fill">
+                <div class="card-header">
+                    <h5 class="card-title mb-0">Staff:</h5>
+                </div>
+                <div class="card-body d-flex w-100">
+                    <table class="table table-borderless my-0">
+                        <tbody>
+                            <tr>
+                                <th>Consultant:</th>
+                                <td>
+                                    <div class="">
+                                        <div class="text-muted">
+                                            @Model.consultant
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+
+                                <th class="">GC:</th>
+                                <td class="d-none d-xl-table-cell">
+                                    <div class="text-muted">
+                                        @Model.gc
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <th>Admin contact</th>
+                                <td>
+                                    <div class="">
+                                        <div class="text-muted">
+                                            @Model.consultant
+                                        </div>
+                                    </div>
+                                </td>
+
+                            </tr>
+
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        @*Side table end*@
+    </div>
+}
+
+else if (Model.IcpGeneralDetail != null)
+{
+    <div class="row">
+        <div class="col-12 col-lg-8 col-xxl-9 d-flex">
+            <div class="card flex-fill">
+                <div class="card-header">
+                    <h5 class="card-title mb-0">Referral Details:</h5>
+                </div>
+
+                <div class="card-body">
+                    <table class="table table-borderless my-0">
+                        <tbody>
+                            <tr>
+                                <td>
+                                    <div class="d-flex">
+                                        <div class="flex-shrink-0">
+                                        </div>
+                                        <div class="flex-grow-1 ms-3">
+                                            <strong>Pathway</strong>
+                                            <div class="text-muted">
+                                                @Model.pathway
+                                            </div>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td class="d-none d-xxl-table-cell">
+                                    <strong>Referral Type</strong>
+                                    <div class="text-muted">
+                                        @Model.referralType
+                                    </div>
+                                </td>
+                                <td class="d-none d-xl-table-cell">
+                                    <strong>Referral Class</strong>
+                                    <div class="text-muted">
+                                        @Model.referralClass
+                                    </div>
+                                </td>
+
+                            </tr>
+                            <tr>
+                                <td class="d-none d-xl-table-cell">
+                                    <div class="d-flex">
+                                        <div class="flex-grow-1 ms-3">
+                                            <strong>Breach Date</strong>
+                                            <div class="text-muted">
+                                                @Model.breachDate?.ToString("dd/MM/yyyy")
+                                            </div>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td class="d-none d-xl-table-cell">
+                                    <strong>Indication</strong>
+                                    <div class="text-muted">
+                                        @Model.indication
+                                    </div>
+                                </td>
+                                <td class="d-none d-xxl-table-cell">
+                                    <strong>Indication Notes</strong>
+                                    <div class="text-muted">
+                                        <p>@Model.indicationNotes</p>
+                                    </div>
+                                </td>
+                            </tr>
+
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        @*Side table*@
+        <div class="col-12 col-lg-4 col-xxl-3 d-flex">
+            <div class="card flex-fill">
+                <div class="card-header">
+                    <h5 class="card-title mb-0">Staff:</h5>
+                </div>
+                <div class="card-body d-flex w-100">
+                    <table class="table table-borderless my-0">
+                        <tbody>
+                            <tr>
+                                <th>Consultant:</th>
+                                <td>
+                                    <div class="">
+                                        <div class="text-muted">
+                                            @Model.consultant
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+
+                                <th class="">GC:</th>
+                                <td class="d-none d-xl-table-cell">
+                                    <div class="text-muted">
+                                        @Model.gc
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <th>Admin contact</th>
+                                <td>
+                                    <div class="">
+                                        <div class="text-muted">
+                                            @Model.consultant
+                                        </div>
+                                    </div>
+                                </td>
+
+                            </tr>
+
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        @*Side table end*@
+    </div>
+}
+else
+{
+    <p></p>
+    <div class="card">
+
+        <div class="card-body mt-3">
+            <div class="mb-3">
+
+                <div class="alert alert-danger alert-dismissible" role="alert">
+                    <div class="alert-icon">
+                        <i class="far fa-fw fa-bell"></i>
+                    </div>
+                    <div class="alert-message">
+                        <strong>Referral</strong>  has not been triaged
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+
+

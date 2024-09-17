@@ -14,6 +14,8 @@ namespace PatientTrackingList.Models
         public string CGU_No { get; set; }
         public string? Firstname { get; set; }
         public string? Lastname { get; set; }
+        public DateTime? dob { get; set; }
+        public string? NHSNo { get; set; }
         public string? Complete { get; set; }
         public DateTime? RefDate { get; set; }
         public DateTime? ClockStartDate { get; set; }
@@ -22,5 +24,18 @@ namespace PatientTrackingList.Models
         public string?PATHWAY { get; set; }
         public string?GC { get; set; }
         public string? LeadClinician { get; set; }
+        public string? RefType { get; set; }
+        public string? ReferringClinician { get; set; }
+        public string? ADDRESS1 { get; set; }
+        public string? address2 { get; set; }
+        public string? address3 { get; set; }
+        public string? address4 { get; set; }
+        public string? postcode { get; set; }
+        public string? AdminContact { get; set; }
+        public string? RefClass { get; set; }
+        public string? INDICATION { get; set; }
+        public string? REASON_FOR_REFERRAL { get; set; }
+        public DateTime? BreachDate { get; set; }
+
     }
 }
