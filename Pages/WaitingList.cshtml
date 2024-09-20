@@ -77,7 +77,14 @@
                                 <td>@wl.FIRSTNAME @wl.LASTNAME</td>
                                 <td>@wl.ClinicianName</td>
                                 <td>@wl.ClinicName</td>
-                                <td>@wl.AddedDate.Value.ToString("dd/MM/yyyy")</td>
+                                @if (@wl.AddedDate != null)
+                                {
+                                    <td>@wl.AddedDate.Value.ToString("dd/MM/yyyy")</td>
+                                }
+                                else
+                                {
+                                    <td></td>
+                                }
                                 <td>@wl.Instructions</td>
                                 <td>@wl.Comment</td>
                                 <td>@wl.Priority</td>
@@ -90,7 +97,15 @@
                                 <td>@wl.FIRSTNAME @wl.LASTNAME</td>
                                 <td>@wl.ClinicianName</td>
                                 <td>@wl.ClinicName</td>
-                                <td>@wl.AddedDate.Value.ToString("dd/MM/yyyy")</td>
+                                @if (wl.AddedDate != null)
+                                {
+                                    <td>@wl.AddedDate.Value.ToString("dd/MM/yyyy")</td>
+                                }
+                                else
+                                {
+                                    <td></td>
+                                }
+
                                 <td>@wl.Instructions</td>
                                 <td>@wl.Comment</td>
                                 <td>@wl.Priority</td>

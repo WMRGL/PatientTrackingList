@@ -1,11 +1,7 @@
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using PatientTrackingList.Data;
 using PatientTrackingList.DataServices;
 using PatientTrackingList.Models;
-using System;
-using System.ComponentModel;
-using System.Configuration;
 
 namespace PatientTrackingList.Pages
 {
@@ -39,7 +35,7 @@ namespace PatientTrackingList.Pages
         public string patientName;
         public string address;
         public string referralType;
-        public string? referringClicnician;
+        public string? referringClinician;
         public string? nhsNo;
         public string? consultant;
         public string? gc;
@@ -53,7 +49,7 @@ namespace PatientTrackingList.Pages
         public DateTime? dob;
 
 
-        public void OnGet(int? sReferralId, string? sName, string? sAddress, string? sRefType, DateTime? sRefDate, string? sRefClicnician, DateTime? sDob,
+        public void OnGet(int? sReferralId, string? sName, string? sAddress, string? sRefType, DateTime? sRefDate, string? sRefClinician, DateTime? sDob,
             string? sNhsNo, string? sConsultant, string? sGc, string? sAdminContact, string? sPathway, string? sRefClass, string? sIndication, DateTime? sBreachDate,
             string? sIndicationNotes
             )
@@ -72,8 +68,8 @@ namespace PatientTrackingList.Pages
                 _sql.SqlWriteUsageAudit(staffCode, "", "Index");
             }
 
-            if (sName != null || sAddress != null || sRefType != null || sRefDate != null || sRefClicnician != null || sDob != null || sNhsNo != null
-                || sConsultant != null || sGc != null || sAdminContact != null || sPathway != null || sRefClass !=null || sIndication != null || sBreachDate != null
+            if (sName != null || sAddress != null || sRefType != null || sRefDate != null || sRefClinician != null || sDob != null || sNhsNo != null
+                || sConsultant != null || sGc != null || sAdminContact != null || sPathway != null || sRefClass != null || sIndication != null || sBreachDate != null
                 || sIndicationNotes != null
                 )
             {
@@ -81,7 +77,7 @@ namespace PatientTrackingList.Pages
                 address = sAddress;
                 referralDate = sRefDate;
                 referralType = sRefType;
-                referringClicnician = sRefClicnician;
+                referringClinician = sRefClinician;
                 dob = sDob;
                 nhsNo = sNhsNo;
                 consultant = sConsultant;
