@@ -14,6 +14,8 @@ namespace PatientTrackingList.Pages
         private readonly IIcpData _icpData;
         private readonly IConfiguration Configuration;
         private readonly INotificationData _notificationData;
+        private readonly IClinicalOutcomesData _clincalOutcomesData;
+        private readonly ICancellationReasonData _cancellationReasonData;
 
 
         public IcpModel(DataContext context, IConfiguration config, IConfiguration configuration)
@@ -24,12 +26,16 @@ namespace PatientTrackingList.Pages
             _staffData = new StaffData(_context);
             _icpData = new IcpData(_context);
             _notificationData = new NotificationData(_context);
+            _clincalOutcomesData = new ClicnicalOutcomesData(_context);
+            _cancellationReasonData = new CancellationReasonData(_context);
             Configuration = configuration;
         }
 
         public Icp IcpDetail { get; set; }
         public IcpCancer IcpCancerDetail { get; set; }
         public IcpGeneral IcpGeneralDetail { get; set; }
+        public IEnumerable<ClinicalOutcome> clinicalOutcomes { get; set; }
+        public IEnumerable<CancellationReason> cancellationReasons { get; set; }
         public string notificationMessage;
         public bool isLive;
         public string patientName;
@@ -110,6 +116,9 @@ namespace PatientTrackingList.Pages
                 }
 
             }
+
+            clinicalOutcomes = _clincalOutcomesData.GetClinicalOutcomesList();
+            cancellationReasons = _cancellationReasonData.GetCancellationReasonsList();
         }
     }
 }

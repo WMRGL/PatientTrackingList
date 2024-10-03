@@ -150,7 +150,7 @@
                             <input type="text" class="form-control" id="txtComments" name="commentsearch" type="text" asp-for=@Model.commentSearch>
                         </div>
                         <div class="mb-3 col-md-4">
-                            <label class="form-label" for="ddlTriagePathway">Triage Pathway:</label>
+                            <label class="form-label" for="ddlTriagePathway">Triage Pathway (General only):</label>
                             <select id="ddlTriagePathway" class="form-select" asp-for=@Model.triagePathway name="triagePathwayFilter">
                                 <option value="" defaultValue>Select...</option>
                                 @if (Model.UniqueTriagePathways != null && Model.UniqueTriagePathways.Any())

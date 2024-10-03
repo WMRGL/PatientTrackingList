@@ -19,6 +19,8 @@ namespace PatientTrackingList.Data
         public DbSet<Icp> Icps { get; set; }
         public DbSet<IcpCancer> IcpCancers { get; set; }
         public DbSet<IcpGeneral> IcpGenerals { get; set; }
+        public DbSet<ClinicalOutcome> ClinicalOutcomes { get; set; }
+        public DbSet<CancellationReason> CancellationReasons { get; set; }
         public bool isDesc { get; set; }
     }
 }
