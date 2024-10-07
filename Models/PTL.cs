@@ -41,5 +41,6 @@ namespace PatientTrackingList.Models
         public DateTime? UpdatedDate { get; set; }
         public string? UpdatedBy { get; set; }
         public string? TriagePathway { get; set; }
+        public string? Status_Admin { get; set; }
     }
 }

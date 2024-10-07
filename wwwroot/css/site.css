@@ -29,3 +29,7 @@ body {
     background-color:red;
     color:whitesmoke !important;
 }
+
+.no-form {
+    display: none;
+}

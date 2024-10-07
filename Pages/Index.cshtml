@@ -11,7 +11,8 @@
             <a class="btn btn-primary btn-lg" asp-area=""
                asp-page="/Download" asp-route-consultantFilter=@Model.consultantSelected
                asp-route-gcFilter=@Model.GCSelected asp-route-pathwayFilter=@Model.pathwaySelected
-               asp-route-username=@Model.User.Identity.Name asp-route-type="ptl" asp-route-triagePathwayFilter="@Model.triagePathway">Export Data</a>
+               asp-route-username=@Model.User.Identity.Name asp-route-type="ptl" asp-route-triagePathwayFilter="@Model.triagePathway" 
+               asp-route-statusAdmin="@Model.adminStatus">Export Data</a>
         </div>
     </div>
     @if (!Model.isLive)
@@ -150,7 +151,7 @@
                             <input type="text" class="form-control" id="txtComments" name="commentsearch" type="text" asp-for=@Model.commentSearch>
                         </div>
                         <div class="mb-3 col-md-4">
-                            <label class="form-label" for="ddlTriagePathway">Triage Pathway:</label>
+                            <label class="form-label" for="ddlTriagePathway">Triage Pathway (General only):</label>
                             <select id="ddlTriagePathway" class="form-select" asp-for=@Model.triagePathway name="triagePathwayFilter">
                                 <option value="" defaultValue>Select...</option>
                                 @if (Model.UniqueTriagePathways != null && Model.UniqueTriagePathways.Any())
@@ -160,6 +161,21 @@
                                         <option value="@triagePathway">@triagePathway</option>
                                     }
                                 }
+                            </select>
+                        </div>
+                    </div>
+                    <div class="row">
+                  
+                        <div class="mb-3">
+                                <label class="form-label" for="ddladminStatus">Admin Status:</label>
+                                <select id="ddladminStatus" class="form-select" asp-for=@Model.adminStatus name="statusAdmin">
+                                <option value="" defaultValue>Select...</option>
+                               
+                                    @foreach (var item in Model.listStatusAdmin)
+                                    {
+                                        <option value="@item.Status_Admin">@item.Status_Admin</option>
+                                    }
+                                
                             </select>
                         </div>
                     </div>
