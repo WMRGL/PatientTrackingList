@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using PatientTrackingList.Data;
 using PatientTrackingList.Models;
 using PatientTrackingList.DataServices;
+using Microsoft.Extensions.Diagnostics.HealthChecks;
 
 namespace PatientTrackingList.Pages
 {
@@ -13,6 +14,7 @@ namespace PatientTrackingList.Pages
         private readonly IStaffData _staffData;
         private readonly INotificationData _notificationData;
         private readonly ISqlServices _sql;
+        private readonly IListStatusAdminData _statusAdminData;
         private readonly DataContext _context;        
         public IndexModel(DataContext context, IConfiguration config)
         {
@@ -22,6 +24,7 @@ namespace PatientTrackingList.Pages
             _ptlData = new PTLData(_context);
             _staffData = new StaffData(_context);
             _notificationData = new NotificationData(_context);
+            _statusAdminData = new ListStatusAdminData(_context);
             _sql = new SqlServices(_config);
         }
         public IEnumerable<PTL> PTL { get; set; }
@@ -29,6 +32,7 @@ namespace PatientTrackingList.Pages
         public List<StaffMembers> consultantList { get; set; }
         public List<StaffMembers> GCList { get; set; }
         public List<PTL> pageOfPTL { get; set; }
+        public IEnumerable<ListStatusAdmin> listStatusAdmin { get; set; }
         public DateTime CurrentYear;
         public DateTime PreviousYear;
         public DateTime EighteenWeekDate;
@@ -59,6 +63,7 @@ namespace PatientTrackingList.Pages
         public string Message;
         public string triagePathway;
         public string allTriage;
+        public string adminStatus;
         public List<string> UniqueTriagePathways { get; set; }
 
 
@@ -66,7 +71,7 @@ namespace PatientTrackingList.Pages
         [Authorize]
         public void OnGet(string? sNameSearch = null, 
             string? sCGUSearch = null, string? priorityFilter = null, bool? isChecked=false, string? pathwayFilter=null, 
-            string? consultantFilter=null, string? gcFilter=null, string? commentsearch = null, string? triagePathwayFilter = null)
+            string? consultantFilter=null, string? gcFilter=null, string? commentsearch = null, string? triagePathwayFilter = null, string? statusAdmin=null)
         {
             try
             {
@@ -199,6 +204,7 @@ namespace PatientTrackingList.Pages
                 .Distinct(StringComparer.OrdinalIgnoreCase)
                 .ToList();
                 UniqueTriagePathways = uniqueTriagePathways;
+                listStatusAdmin = _statusAdminData.GetStatusAdminList();
 
                 //for filtering/searching
                 if (sNameSearch != null)
@@ -262,7 +268,14 @@ namespace PatientTrackingList.Pages
                     triagePathway = triagePathwayFilter;
                 }
 
-                
+                if (statusAdmin != null && statusAdmin != "")
+                {
+                    pageOfPTL = pageOfPTL.Where(p => p.Status_Admin == statusAdmin).ToList();
+                    _sql.SqlWriteUsageAudit(staffCode, $"Status_Admin={statusAdmin}", "Index");
+                    adminStatus = statusAdmin;
+                }
+
+
             }
             catch (Exception ex)
             {
@@ -272,7 +285,7 @@ namespace PatientTrackingList.Pages
 
         public void OnPost(string? sNameSearch=null, 
             string? sCGUSearch=null, string? priorityFilter = null, bool? isChecked=false, string? pathwayFilter=null, 
-            string? consultantFilter=null, string? gcFilter=null, string? commentsearch=null, string? triagePathwayFilter = null)
+            string? consultantFilter=null, string? gcFilter=null, string? commentsearch=null, string? triagePathwayFilter = null, string? statusAdmin = null)
         {
             try
             {
@@ -282,10 +295,11 @@ namespace PatientTrackingList.Pages
                 GCList = _staffData.GetStaffTypeList("GC");
 
                 pageOfPTL = PTL.OrderBy(p => p.ClockStart).ToList();
+                listStatusAdmin = _statusAdminData.GetStatusAdminList();
 
                 Response.Redirect($"Index?sNameSearch={sNameSearch}&sCGUSearch={sCGUSearch}" +
                     $"&priorityFilter={priorityFilter}&isChecked={isChecked}&pathwayFilter={pathwayFilter}&consultantFilter={consultantFilter}&gcFilter={gcFilter}" +
-                    $"&commentsearch={commentsearch}&triagePathwayFilter={triagePathwayFilter}");
+                    $"&commentsearch={commentsearch}&triagePathwayFilter={triagePathwayFilter}&statusAdmin={statusAdmin}");
             }
             catch (Exception ex)
             {
