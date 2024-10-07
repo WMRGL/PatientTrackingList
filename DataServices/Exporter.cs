@@ -40,6 +40,7 @@ namespace PatientTrackingList.DataServices
             table.Columns.Add("Triage Pathway", typeof(string));
             table.Columns.Add("Last Updated", typeof(string));
             table.Columns.Add("User", typeof(string));
+            table.Columns.Add("Status Admin", typeof(string));
 
             foreach (var ptl in ptlToExport) 
             {
@@ -74,7 +75,8 @@ namespace PatientTrackingList.DataServices
                     ptl.isChecked,
                     ptl.TriagePathway,
                     ptl.UpdatedDate,
-                    ptl.UpdatedBy
+                    ptl.UpdatedBy,
+                    ptl.Status_Admin
                     );
             }
 
@@ -195,10 +197,14 @@ namespace PatientTrackingList.DataServices
         [HttpGet("download")]
         //public async Task<IActionResult> DownloadFile(string filePath)
         public async Task<IActionResult> DownloadFile(string type, string username, string consultantFilter, string gcFilter, string pathwayFilter, 
-            string clinicianFilter, string clinicFilter, string statusFilter, string dateTo, string dateFrom, string triagePathwayFilter)
+            string clinicianFilter, string clinicFilter, string statusFilter, string dateTo, string dateFrom, string triagePathwayFilter, 
+            string statusAdmin
+            )
         {
             if (type == "ptl")
             {
+                Console.WriteLine("hello");
+                Console.WriteLine(statusAdmin);
                 List<PTL> ptlToExport = new List<PTL>();
                 ptlToExport = _ptlData.GetPTLList().ToList();
 
@@ -220,6 +226,11 @@ namespace PatientTrackingList.DataServices
                 if (triagePathwayFilter != null && triagePathwayFilter != "")
                 {
                     ptlToExport = ptlToExport.Where(p => p.TriagePathway == triagePathwayFilter).ToList();
+                }
+                
+                if (statusAdmin != null && statusAdmin != "")
+                {
+                    ptlToExport = ptlToExport.Where(p => p.Status_Admin == statusAdmin).ToList();
                 }
 
                 ExportPTL(ptlToExport, username);

@@ -11,7 +11,8 @@
             <a class="btn btn-primary btn-lg" asp-area=""
                asp-page="/Download" asp-route-consultantFilter=@Model.consultantSelected
                asp-route-gcFilter=@Model.GCSelected asp-route-pathwayFilter=@Model.pathwaySelected
-               asp-route-username=@Model.User.Identity.Name asp-route-type="ptl" asp-route-triagePathwayFilter="@Model.triagePathway">Export Data</a>
+               asp-route-username=@Model.User.Identity.Name asp-route-type="ptl" asp-route-triagePathwayFilter="@Model.triagePathway" 
+               asp-route-statusAdmin="@Model.adminStatus">Export Data</a>
         </div>
     </div>
     @if (!Model.isLive)
@@ -160,6 +161,21 @@
                                         <option value="@triagePathway">@triagePathway</option>
                                     }
                                 }
+                            </select>
+                        </div>
+                    </div>
+                    <div class="row">
+                  
+                        <div class="mb-3">
+                                <label class="form-label" for="ddladminStatus">Admin Status:</label>
+                                <select id="ddladminStatus" class="form-select" asp-for=@Model.adminStatus name="statusAdmin">
+                                <option value="" defaultValue>Select...</option>
+                               
+                                    @foreach (var item in Model.listStatusAdmin)
+                                    {
+                                        <option value="@item.Status_Admin">@item.Status_Admin</option>
+                                    }
+                                
                             </select>
                         </div>
                     </div>

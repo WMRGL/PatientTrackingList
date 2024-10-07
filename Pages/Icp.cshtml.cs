@@ -119,6 +119,8 @@ namespace PatientTrackingList.Pages
 
             clinicalOutcomes = _clincalOutcomesData.GetClinicalOutcomesList();
             cancellationReasons = _cancellationReasonData.GetCancellationReasonsList();
+
+            // what other activity like similiar appt to this appt on icp data
         }
     }
 }
