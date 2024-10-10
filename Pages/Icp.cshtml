@@ -359,57 +359,24 @@ else
     </div>
 }
 
-@*
+@if (Model.cancellationReasons != null)
+{
+    
+
 <div class="col-md-12">
     <div class="card">
         <div class="card-header">
-            <h5 class="card-title">Clinic Outcome</h5>
+            <h5 class="card-title">Appointment Attendance</h5>
         </div>
         <div class="card-body">
-            <form method="post" action="">
-                <div class="row">
-                    <div class="mb-3 col-md-6">
-                        <label class="form-label">Clinical Outcome</label>
-                        <select class="form-select" name="clincalOutcome" id="clicnicalOutcome">
-                            <option value="">Select Reason...</option>
-                            @foreach (var item in Model.clinicalOutcomes)
-                            {
-                                <option value="@item.CLINIC_OUTCOME">@item.CLINIC_OUTCOME</option>
-                            }
-                        </select>
-                    </div>
-                    <div class="mb-3 col-md-6 no-form" id="hiddenFormField">
-                        <label class="form-label" for="inputPassword4">Select Cancellation Reason</label>
-                        <select class="form-select" name="clincalOutcome" >
-                            <option value="">Select Reason...</option>
-                            @foreach (var item in Model.cancellationReasons)
-                            {
-                                <option value="@item.Reason">@item.Reason</option>
-                            }
-                        </select>
-                    </div>
-                </div>
 
-                <button type="submit" class="btn btn-primary mt-1">Submit</button>
-            </form>
+          <p>
+                    @Model.cancellationReasons.Attendance
+          </p> 
+
+            
         </div>
     </div>
 </div>
 
-
-<script>
-    const clinicalOutcome = document.getElementById('clicnicalOutcome');
-    const cancelReason = document.getElementById('hiddenFormField'); 
-
-    clinicalOutcome.addEventListener("change", (event) => {
-      if (event.target.value === "Cancelled by professional") {
-        cancelReason.classList.remove("no-form"); 
-        console.log(cancelReason.value)
-
-      } else {
-          cancelReason.classList.add("no-form");
-          cancelReason.value = ""
-      }
-    });
-</script>
-*@
+}

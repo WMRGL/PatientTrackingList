@@ -5,11 +5,12 @@ using System.ComponentModel.DataAnnotations.Schema;
 namespace PatientTrackingList.Models
 {
     
-    [Table("ListCancellationReason", Schema = "dbo")]
+    [Table("ViewPatientAppointmentDetails", Schema = "dbo")]
     public class CancellationReason
     {
         [Key]
-        public int Id { get; set; }
-        public string? Reason { get; set; }
+        public string CGU_No { get; set; }
+        public int ReferralRefID { get; set; }
+        public string? Attendance { get; set; }
     }
 }

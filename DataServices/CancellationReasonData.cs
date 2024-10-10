@@ -6,7 +6,7 @@ namespace PatientTrackingList.DataServices
 {
     interface ICancellationReasonData
     {
-        public IEnumerable<CancellationReason> GetCancellationReasonsList();
+        public CancellationReason GetCancellationReason(string? cguno);
 
     }
     public class CancellationReasonData : ICancellationReasonData
@@ -19,10 +19,10 @@ namespace PatientTrackingList.DataServices
             _context = context;
         }
 
-        public IEnumerable<CancellationReason> GetCancellationReasonsList()
+        public CancellationReason GetCancellationReason(string? cguno)
         {
-            IEnumerable<CancellationReason> cancellationReasons = _context.CancellationReasons.AsNoTracking();
-            return cancellationReasons;
+            CancellationReason cancelReason = _context.CancellationReasons.FirstOrDefault(w => w.CGU_No == cguno);
+            return cancelReason;
         }
     }
 }
