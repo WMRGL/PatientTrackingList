@@ -30,6 +30,14 @@
 				<table class="table table-borderless my-0">
 					<tbody>
 						<tr>
+							<td>
+								<div class="d-none d-xl-table-cell">
+									<strong>CGU Number</strong>
+									<div class="text-muted">
+										@Model.appointments.CGU_No
+									</div>
+								</div>
+							</td>
 							<td class="d-none d-xl-table-cell">
 								<strong>Title</strong>
 								<div class="text-muted">
@@ -49,14 +57,6 @@
                                     <strong>Family Name</strong>
                                     <div class="text-muted">
                                         @Model.appointments.FamilyName
-                                    </div>
-                                </div>
-							</td>
-							<td>
-								<div class="d-none d-xl-table-cell">
-                                    <strong>Family Number</strong>
-                                    <div class="text-muted">
-                                        @Model.appointments.FamilyNumber
                                     </div>
                                 </div>
 							</td>
@@ -148,10 +148,11 @@
 								<div class="text-muted">
 									@Model.appointments.BOOKED_TIME?.ToShortTimeString()
 								</div>
-							</td><td class="d-none d-xl-table-cell">
-								<strong>Indication Notes</strong>
+							</td>
+							<td class="d-none d-xl-table-cell">
+								@* <strong>Indication Notes</strong>*@
 								<div class="text-muted">
-									@Model.appointments.IndicationNotes
+									@*@Model.appointments.IndicationNotes*@
 								</div>
 							</td>
 
