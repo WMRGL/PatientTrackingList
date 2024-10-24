@@ -36,6 +36,8 @@ namespace PatientTrackingList.Models
         public string? INDICATION { get; set; }
         public string? REASON_FOR_REFERRAL { get; set; }
         public string? ReferringFacility { get; set; }
+        public string? CancellationReason { get; set; }
+        public string? CLINICNO { get; set; }
         public DateTime? BreachDate { get; set; }
 
     }
