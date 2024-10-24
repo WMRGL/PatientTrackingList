@@ -15,7 +15,7 @@ namespace PatientTrackingList.Pages
         private readonly IConfiguration Configuration;
         private readonly INotificationData _notificationData;
         private readonly IClinicalOutcomesData _clincalOutcomesData;
-        private readonly ICancellationReasonData _cancellationReasonData;
+        private readonly IAppointmentData _appointmentData;
 
 
         public IcpModel(DataContext context, IConfiguration config, IConfiguration configuration)
@@ -27,15 +27,15 @@ namespace PatientTrackingList.Pages
             _icpData = new IcpData(_context);
             _notificationData = new NotificationData(_context);
             _clincalOutcomesData = new ClicnicalOutcomesData(_context);
-            _cancellationReasonData = new CancellationReasonData(_context);
+            _appointmentData = new AppointmentData(_context);
             Configuration = configuration;
         }
 
         public Icp IcpDetail { get; set; }
         public IcpCancer IcpCancerDetail { get; set; }
         public IcpGeneral IcpGeneralDetail { get; set; }
-        public IEnumerable<ClinicalOutcome> clinicalOutcomes { get; set; }
-        public IEnumerable<CancellationReason> cancellationReasons { get; set; }
+        //public IEnumerable<ClinicalOutcome> ClinicalOutcomes { get; set; }
+        public Appointment appointments { get; set; }
         public string notificationMessage;
         public bool isLive;
         public string patientName;
@@ -55,9 +55,9 @@ namespace PatientTrackingList.Pages
         public DateTime? dob;
 
 
-        public void OnGet(int? sReferralId, string? sName, string? sAddress, string? sRefType, DateTime? sRefDate, string? sRefClinician, DateTime? sDob,
+        public void OnGet(string? scgudb, int? sReferralId, string? sName, string? sAddress, string? sRefType, DateTime? sRefDate, string? sRefClinician, DateTime? sDob,
             string? sNhsNo, string? sConsultant, string? sGc, string? sAdminContact, string? sPathway, string? sRefClass, string? sIndication, DateTime? sBreachDate,
-            string? sIndicationNotes
+            string? sIndicationNotes, string? sClinicno
             )
         {
             string staffCode = "";
@@ -101,26 +101,27 @@ namespace PatientTrackingList.Pages
 
                 IcpDetail = _icpData.GetIcp(sReferralId);
 
-                var IcpId = IcpDetail.ICPID;
-
-                if (IcpId != null)
+                if (IcpDetail != null)
                 {
-                    IcpCancerDetail = _icpData.GetIcpCancer(IcpId);
-                    _sql.SqlWriteUsageAudit(staffCode, $"ReferralId={sReferralId}", "ICP");
-                }
+                    var IcpId = IcpDetail.ICPID;
 
-                if (IcpCancerDetail == null)
-                {
-                    IcpGeneralDetail = _icpData.GetIcpGeneral(IcpId);
-                    _sql.SqlWriteUsageAudit(staffCode, $"ReferralId={sReferralId}", "ICP");
+
+                    if (IcpId != null)
+                    {
+                        IcpCancerDetail = _icpData.GetIcpCancer(IcpId);
+                        _sql.SqlWriteUsageAudit(staffCode, $"ReferralId={sReferralId}", "ICP");
+                    }
+
+                    if (IcpCancerDetail == null)
+                    {
+                        IcpGeneralDetail = _icpData.GetIcpGeneral(IcpId);
+                        _sql.SqlWriteUsageAudit(staffCode, $"ReferralId={sReferralId}", "ICP");
+                    }
                 }
 
             }
 
-            clinicalOutcomes = _clincalOutcomesData.GetClinicalOutcomesList();
-            cancellationReasons = _cancellationReasonData.GetCancellationReasonsList();
-
-            // what other activity like similiar appt to this appt on icp data
+     
         }
     }
 }

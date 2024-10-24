@@ -32,15 +32,18 @@ namespace PatientTrackingList.DataServices
             table.Columns.Add("Reason", typeof(string));
             table.Columns.Add("Urgency", typeof(string));
             table.Columns.Add("TCI Date", typeof(string));
-            table.Columns.Add("Clock Ticking (Days)", typeof(int));
+            //table.Columns.Add("Clock Ticking (Days)", typeof(int));
             table.Columns.Add("Clock Ticking (Weeks)", typeof(int));
-            table.Columns.Add("Clock Days At TCI", typeof(string));
+            //table.Columns.Add("Clock Days At TCI", typeof(string));
             table.Columns.Add("Comments", typeof(string));
             table.Columns.Add("Checked", typeof(string)); 
             table.Columns.Add("Triage Pathway", typeof(string));
             table.Columns.Add("Last Updated", typeof(string));
             table.Columns.Add("User", typeof(string));
             table.Columns.Add("Status Admin", typeof(string));
+            table.Columns.Add("GC Name", typeof(string));
+            table.Columns.Add("Consultant Name", typeof(string));
+
 
             foreach (var ptl in ptlToExport) 
             {
@@ -68,15 +71,18 @@ namespace PatientTrackingList.DataServices
                     ptl.ReferralReason, 
                     ptl.Class, 
                     tcidate,
-                    ctdays, 
+                    //ctdays, 
                     ctweeks, 
-                    tcidays, 
+                    //tcidays, 
                     ptl.Comments, 
                     ptl.isChecked,
                     ptl.TriagePathway,
                     ptl.UpdatedDate,
                     ptl.UpdatedBy,
-                    ptl.Status_Admin
+                    ptl.Status_Admin,
+                    ptl.ReferralGC,
+                    ptl.ReferralConsultant
+
                     );
             }
 
