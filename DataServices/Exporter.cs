@@ -16,9 +16,11 @@ namespace PatientTrackingList.DataServices
         public string dlFilePath;
         private readonly DataContext _context;
         private readonly ClinicalContext _clinContext;
-        private readonly PTLData _ptlData;
+        private readonly IPTLData _ptlData;
         private readonly IWaitingListData _waitingListData;
-        private readonly ClinicSlotData _clinicSlotData;
+        private readonly IClinicSlotData _clinicSlotData;
+        private readonly ITotalTriageData _triageData;
+        private readonly IAppointmentData _appointmentData;
 
         public Exporter(DataContext context, ClinicalContext clinContext)
         {
@@ -27,6 +29,8 @@ namespace PatientTrackingList.DataServices
             _ptlData = new PTLData(_context);
             _waitingListData = new WaitingListData(_clinContext);
             _clinicSlotData = new ClinicSlotData(_context);
+            _triageData = new TotalTriageData(_clinContext);
+            _appointmentData = new AppointmentData(_clinContext);
         }
         public void ExportPTL(List<PTL> ptlToExport, string username)
         {
@@ -124,7 +128,7 @@ namespace PatientTrackingList.DataServices
                 string tcidate = "N/A";
                                 
                 table.Rows.Add(wl.CGU_No,
-                    wl.FIRSTNAME + " " + wl.LASTNAME,
+                    $"{wl.FIRSTNAME} {wl.LASTNAME}",
                     wl.ClinicianName,
                     wl.ClinicName,
                     wl.Comment,
@@ -165,6 +169,90 @@ namespace PatientTrackingList.DataServices
             //return table;
             ToCSV(table, username, "capacityutil");
         }
+
+        public void ExportTriages(List<TriageTotal> triageToExport, string username)
+        {
+            DataTable table = new DataTable();
+
+            table.Columns.Add("CGU Number", typeof(string));
+            table.Columns.Add("Name", typeof(string));
+            table.Columns.Add("Triage Complete", typeof(string));
+            table.Columns.Add("Triaged Date", typeof(string));
+            table.Columns.Add("Triaged By", typeof(string));
+            table.Columns.Add("Waiting List", typeof(string));
+
+
+
+            foreach (var cs in triageToExport)
+            {
+                string triageComplete = "No"; 
+                string triagedDate = "";
+                string triagedBy = "";
+                string waitingList = "";
+
+                if(cs.Triaged == true)
+                {
+                    triageComplete = "Yes";
+                }
+
+                if(cs.TriagedDate.HasValue) { triagedDate = cs.TriagedDate.Value.ToString("dd/MM/yyyy"); }
+
+                if(cs.TriagedBy != null) { triagedBy = cs.TriagedBy; }
+
+                if(cs.WaitingListClinic != null) { waitingList = $"{cs.WaitingListClinicianName} ({cs.WaitingListClinicName})"; }
+
+                table.Rows.Add(cs.CGU_No,
+                    $"{cs.FIRSTNAME} {cs.LASTNAME}",
+                    triageComplete,
+                    triagedDate,
+                    triagedBy,
+                    waitingList
+                    );
+            }
+
+            //return table;
+            ToCSV(table, username, "totaltriages");
+        }
+
+        public void ExportAppts(List<Appointment> apptsToExport, string username)
+        {
+            DataTable table = new DataTable();
+
+            table.Columns.Add("CGU Number", typeof(string));
+            table.Columns.Add("Name", typeof(string));
+            table.Columns.Add("Type", typeof(string));
+            table.Columns.Add("Seen By", typeof(string));
+            table.Columns.Add("Location", typeof(string));
+            table.Columns.Add("Outcome", typeof(string));
+            table.Columns.Add("Outcome Entered Date", typeof(string));
+
+
+
+            foreach (var cs in apptsToExport)
+            {
+                string seenBy = "";
+                string outcome = "";
+                string outcomeEnteredDate = "";
+                
+                if(cs.SeenByClinician != null) { seenBy = cs.SeenByClinician; }
+                if (cs.Attendance != "NOT RECORDED") { outcome = cs.Attendance; }
+                if (cs.OUTCOME_ENTERED != null) { outcomeEnteredDate = cs.OUTCOME_ENTERED.Value.ToString("dd/MM/yyyy"); }
+
+
+                table.Rows.Add(cs.CGU_No,
+                    $"{cs.FIRSTNAME} {cs.LASTNAME}",
+                    cs.AppType,
+                    seenBy,
+                    cs.Clinic,
+                    outcome,
+                    outcomeEnteredDate
+                    );
+            }
+
+            //return table;
+            ToCSV(table, username, "totalappts");
+        }
+
 
         public void ToCSV(DataTable table, string username, string type)
         {
@@ -220,6 +308,9 @@ namespace PatientTrackingList.DataServices
             string statusAdmin, string clinicVenue
             )
         {
+            DateTime dfrom = DateTime.Parse(dateFrom);
+            DateTime dTo = DateTime.Parse(dateTo);
+
             if (type == "ptl")
             {
                 Console.WriteLine("hello");
@@ -301,11 +392,28 @@ namespace PatientTrackingList.DataServices
                 }
 
                 //I can't pass it a date, for some reason, so it has to be a string!
-                DateTime dfrom = DateTime.Parse(dateFrom);
-                DateTime dTo = DateTime.Parse(dateTo);
+               
                 capToExport = capToExport.Where(p => p.SlotDate >= dfrom && p.SlotDate <= dTo).ToList();
 
                 ExportCap(capToExport, username);
+            }
+
+            else if (type == "triage")
+            {
+                List<TriageTotal> triagesToExport = new List<TriageTotal>();
+
+                triagesToExport = _triageData.GetAllTriages(clinicianFilter, dfrom, dTo);
+
+                ExportTriages(triagesToExport, username);
+            }
+
+            else if (type == "clinic")
+            {
+                List<Appointment> apptsToExport = new List<Appointment>();
+
+                apptsToExport = _appointmentData.GetAppointments(dfrom, dTo, clinicianFilter, null);
+
+                ExportAppts(apptsToExport, username);
             }
 
             if (System.IO.File.Exists(dlFilePath))
