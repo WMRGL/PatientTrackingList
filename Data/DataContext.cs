@@ -24,6 +24,7 @@ namespace PatientTrackingList.Data
         public DbSet<ClinicalOutcome> ClinicalOutcomes { get; set; }
         public DbSet<Appointment> Appointments { get; set; }
         public DbSet<ListStatusAdmin> ListStatusAdmins { get; set; }
+        public DbSet<WLHistory> WaitingListHistory { get; set; }
         public bool isDesc { get; set; }
     }
 }

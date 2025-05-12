@@ -1,0 +1,97 @@
+﻿@page
+@model PatientTrackingList.Pages.WaitingListHistoryModel
+@{
+    ViewData["Title"] = "Waiting List";
+}
+
+<div class="">
+    <div class="row mb-2 mb-xl-3">
+        <div class="col-auto d-none d-sm-block">
+            <h3>Clinicians Waiting List - Recent Changes</h3>
+        </div>
+
+        <div class="col-auto ms-auto text-end mt-n1">
+            <a class="btn btn-primary" asp-area="" asp-page="/Download"
+               asp-route-dateFrom=@Model.dFrom asp-route-dateTo=@Model.dTo
+               asp-route-username=@Model.User.Identity.Name asp-route-type="wlhistory">Export Data</a>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-xl-12 col-xxl-12">
+            <div class="card flex-fill w-100">
+                <div class="card-body pt-2 pb-3">
+                    <form id="frmWLSearch" method="post">
+                        <div class="row pt-3">
+                            <div class="mb-3 col-md-1">                            
+                                <label class="form-label">Date From:</label>
+                            </div>
+                            <div class="mb-3 col-md-2">
+                                <input type="date" name="startDate" asp-for=@Model.dFrom />                                    
+                            </div>
+                            <div class="mb-3 col-md-1">
+                                <label class="form-label">Date To:</label>
+                            </div>
+                            <div class="mb-3 col-md-2">
+                                <input type="date" name="endDate" asp-for=@Model.dTo />
+                            </div>
+                        </div>
+
+                        <button type="submit" class="btn btn-primary">Submit</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="card-body">
+            <table class="table table-bordered  table-hover" id="defaultTable">
+                <thead>
+                    <tr>
+                        <th>CGU Number</th>
+                        <th>Patient</th>                        
+                        <th>Date Modified</th>                        
+                        <th>Type</th>
+                        <th>Change</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var wl in Model.WaitingList)
+                    {
+                        <tr>
+                            <td>@wl.CGU_No</td>
+                            <td>@wl.FIRSTNAME @wl.LASTNAME</td>                            
+                            @if (@wl.ModifiedDate != null)
+                            {
+                                <td>@wl.ModifiedDate.ToString("dd/MM/yyyy")</td>
+                            }
+                            else
+                            {
+                                <td></td>
+                            }
+                            <td>@wl.Type</td>
+                            <td>
+                                @if(wl.Type != "Deleted")
+                                {
+                                    @if (@wl.OldClinicianID != wl.ClinicianID)
+                                    {
+                                        <span>Clinician change from @wl.OldClinician to @wl.Clinician</span>
+                                    }
+                                    @if (@wl.OldClinicID != wl.ClinicID)
+                                    {
+                                        <span>Clinic change from @wl.OldClinic to @wl.Clinic</span>
+                                    }
+                                }
+                                else
+                                {
+                                    <span>Removed from WL</span>
+                                }
+                            </td>
+                        </tr>                        
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

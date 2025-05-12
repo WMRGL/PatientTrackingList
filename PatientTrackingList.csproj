@@ -6,6 +6,10 @@
     <ImplicitUsings>enable</ImplicitUsings>	  
   </PropertyGroup>
 
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <Optimize>False</Optimize>
+  </PropertyGroup>
+
   <ItemGroup>
     <Compile Remove="Pages\PTLToExport.cshtml.cs" />
   </ItemGroup>

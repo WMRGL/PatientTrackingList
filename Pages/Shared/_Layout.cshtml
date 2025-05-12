@@ -33,17 +33,24 @@
                         </li>
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-page="/TrueWaitingList">Active Referrals</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-page="/Triages">Recent Triages</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-page="/Clinics">Recent Appointments</a>
+                        </li>                        
+                        <li class="nav-item dropdown">
+                            <span class="nav-link text-dark dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">Data Quality Reports</span>                            
+                            <ul class="dropdown-menu">
+                                <li class="dropdown-item">
+                                    <a class="nav-link text-dark" asp-area="" asp-page="/Triages">Recent Triages</a>
+                                </li>
+                                <li class="dropdown-item">
+                                    <a class="nav-link text-dark" asp-area="" asp-page="/Clinics">Recent Appointments</a>
+                                </li>
+                                <li class="dropdown-item">
+                                    <a class="nav-link text-dark" asp-area="" asp-page="/WaitingListHistory">Waiting List History</a>
+                                </li>                            
+                            </ul>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-page="/Logout">Sign out</a>
                         </li>
-
                     </ul>
                     <ul class="nav justify-content-end">
                         <li class="nav-item">

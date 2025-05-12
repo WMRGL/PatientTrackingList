@@ -238,7 +238,7 @@ namespace PatientTrackingList.Pages
                 pageOfPTL = PTL.OrderBy(p => p.ClockStart).ToList();
                 listStatusAdmin = _statusAdminData.GetStatusAdminList();
                 //listAdminDistricts = _areaNamesData.GetAreaNames();
-
+                                
                 Response.Redirect($"Index?sNameSearch={sNameSearch}&sCGUSearch={sCGUSearch}" +
                     $"&priorityFilter={priorityFilter}&isChecked={isChecked}&pathwayFilter={pathwayFilter}&consultantFilter={consultantFilter}&gcFilter={gcFilter}" +
                     $"&commentsearch={commentsearch}&triagePathwayFilter={triagePathwayFilter}&statusAdmin={statusAdmin}&clinicVenue={clinicVenue}");

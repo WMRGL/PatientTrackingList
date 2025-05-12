@@ -21,6 +21,7 @@ namespace PatientTrackingList.DataServices
         private readonly IClinicSlotData _clinicSlotData;
         private readonly ITotalTriageData _triageData;
         private readonly IAppointmentData _appointmentData;
+        private readonly IWaitingListHistoryData _waitingListHistoryData;
 
         public Exporter(DataContext context, ClinicalContext clinContext)
         {
@@ -31,6 +32,7 @@ namespace PatientTrackingList.DataServices
             _clinicSlotData = new ClinicSlotData(_context);
             _triageData = new TotalTriageData(_clinContext);
             _appointmentData = new AppointmentData(_clinContext);
+            _waitingListHistoryData = new WaitingListHistoryData(_context);
         }
         public void ExportPTL(List<PTL> ptlToExport, string username)
         {
@@ -254,6 +256,45 @@ namespace PatientTrackingList.DataServices
         }
 
 
+        public void ExportWLHistory(List<WLHistory> wlhToExport, string username)
+        {
+            DataTable table = new DataTable();
+
+            table.Columns.Add("CGU Number", typeof(string));
+            table.Columns.Add("Name", typeof(string));
+            table.Columns.Add("Type", typeof(string));            
+            table.Columns.Add("Changes", typeof(string));
+            
+            foreach (var cs in wlhToExport)
+            {
+                string changes = "";
+
+                if (cs.Type == "Update")
+                {
+                    if (cs.ClinicianID != cs.OldClinicianID)
+                    {
+                        changes = $"clinician changed from {cs.OldClinician} to {cs.Clinician}";
+                    }
+
+                    if (cs.ClinicID != cs.OldClinicID)
+                    {
+                        if(changes != "") { changes = changes + ", "; }
+
+                        changes = changes + $"clinic changed from {cs.OldClinic} to {cs.Clinic}";
+                    }
+                }
+
+                table.Rows.Add(cs.CGU_No,
+                    $"{cs.FIRSTNAME} {cs.LASTNAME}",
+                    cs.Type,
+                    changes
+                    );
+            }
+
+            //return table;
+            ToCSV(table, username, "waitinglisthistory");
+        }
+
         public void ToCSV(DataTable table, string username, string type)
         {
             //string filePath = $"C:\\CGU_DB\\ptl-{username}.csv";
@@ -414,6 +455,15 @@ namespace PatientTrackingList.DataServices
                 apptsToExport = _appointmentData.GetAppointments(dfrom, dTo, clinicianFilter, null);
 
                 ExportAppts(apptsToExport, username);
+            }
+
+            else if (type == "wlhistory")
+            {
+                List<WLHistory> wlhToExport = new List<WLHistory>();
+
+                wlhToExport = _waitingListHistoryData.GetWaitingListHistory(dfrom, dTo).ToList();
+
+                ExportWLHistory(wlhToExport, username);
             }
 
             if (System.IO.File.Exists(dlFilePath))

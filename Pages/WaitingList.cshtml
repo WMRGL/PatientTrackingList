@@ -12,7 +12,7 @@
 
         <div class="col-auto ms-auto text-end mt-n1">
             <a class="btn btn-primary" asp-area="" asp-page="/Download"
-               asp-route-clinicianFilter=@Model.clincianSelected asp-route-clinicFilter=@Model.clinicSelected
+               asp-route-clinicianFilter=@Model.clinicianSelected asp-route-clinicFilter=@Model.clinicSelected
                asp-route-username=@Model.User.Identity.Name asp-route-type="waitinglist">Export Data</a>
         </div>
     </div>
@@ -24,8 +24,8 @@
                     <form id="frmWLSearch" method="post">
                         <div class="row pt-3">
                             <div class="mb-3 col-md-6">
-                                <label class="form-label">Clinicians</label>
-                                <select class="form-select" name="clinician" asp-for=@Model.clincianSelected>
+                                <label class="form-label">Clinicians @Model.clinicianSelected</label>
+                                <select class="form-select" name="clinician" asp-for=@Model.clinicianSelected>
                                     <option value="" selected></option>
                                     @foreach (var c in Model.Clinicians)
                                     {
