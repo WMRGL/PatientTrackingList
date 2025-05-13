@@ -177,7 +177,8 @@ namespace PatientTrackingList.DataServices
             DataTable table = new DataTable();
 
             table.Columns.Add("CGU Number", typeof(string));
-            table.Columns.Add("Name", typeof(string));
+            table.Columns.Add("Patient", typeof(string));
+            table.Columns.Add("NHS No", typeof(string));
             table.Columns.Add("Triage Complete", typeof(string));
             table.Columns.Add("Triaged Date", typeof(string));
             table.Columns.Add("Triaged By", typeof(string));
@@ -191,6 +192,7 @@ namespace PatientTrackingList.DataServices
                 string triagedDate = "";
                 string triagedBy = "";
                 string waitingList = "";
+                string nhsNo = "";
 
                 if(cs.Triaged == true)
                 {
@@ -202,9 +204,11 @@ namespace PatientTrackingList.DataServices
                 if(cs.TriagedBy != null) { triagedBy = cs.TriagedBy; }
 
                 if(cs.WaitingListClinic != null) { waitingList = $"{cs.WaitingListClinicianName} ({cs.WaitingListClinicName})"; }
+                if(cs.NHSNo != null) { nhsNo = cs.NHSNo; } //because obviously we have nulls
 
                 table.Rows.Add(cs.CGU_No,
                     $"{cs.FIRSTNAME} {cs.LASTNAME}",
+                    nhsNo,
                     triageComplete,
                     triagedDate,
                     triagedBy,
@@ -221,7 +225,8 @@ namespace PatientTrackingList.DataServices
             DataTable table = new DataTable();
 
             table.Columns.Add("CGU Number", typeof(string));
-            table.Columns.Add("Name", typeof(string));
+            table.Columns.Add("Patient", typeof(string));
+            table.Columns.Add("NHS No", typeof(string));
             table.Columns.Add("Type", typeof(string));
             table.Columns.Add("Seen By", typeof(string));
             table.Columns.Add("Location", typeof(string));
@@ -235,14 +240,16 @@ namespace PatientTrackingList.DataServices
                 string seenBy = "";
                 string outcome = "";
                 string outcomeEnteredDate = "";
+                string nhsNo = "";
                 
                 if(cs.SeenByClinician != null) { seenBy = cs.SeenByClinician; }
                 if (cs.Attendance != "NOT RECORDED") { outcome = cs.Attendance; }
                 if (cs.OUTCOME_ENTERED != null) { outcomeEnteredDate = cs.OUTCOME_ENTERED.Value.ToString("dd/MM/yyyy"); }
-
+                if (cs.NHSNo != null) { nhsNo = cs.NHSNo; }
 
                 table.Rows.Add(cs.CGU_No,
                     $"{cs.FIRSTNAME} {cs.LASTNAME}",
+                    nhsNo,
                     cs.AppType,
                     seenBy,
                     cs.Clinic,
@@ -261,9 +268,12 @@ namespace PatientTrackingList.DataServices
             DataTable table = new DataTable();
 
             table.Columns.Add("CGU Number", typeof(string));
-            table.Columns.Add("Name", typeof(string));
+            table.Columns.Add("Patient", typeof(string));
+            table.Columns.Add("NHS No", typeof(string));
             table.Columns.Add("Type", typeof(string));            
             table.Columns.Add("Changes", typeof(string));
+
+            string nhsNo = "";
             
             foreach (var cs in wlhToExport)
             {
@@ -284,8 +294,11 @@ namespace PatientTrackingList.DataServices
                     }
                 }
 
+                if (cs.NHSNo != null) { nhsNo = cs.NHSNo; }
+
                 table.Rows.Add(cs.CGU_No,
                     $"{cs.FIRSTNAME} {cs.LASTNAME}",
+                    nhsNo,
                     cs.Type,
                     changes
                     );

@@ -11,6 +11,7 @@ namespace PatientTrackingList.Models
         public string CGU_No { get; set; }
         public string FIRSTNAME { get; set; }
         public string LASTNAME { get; set; }
+        public string NHSNo { get; set; }
         public string Clinician { get; set; }
         public string ClinicianID { get; set; }
         public string Clinic { get; set; }

@@ -89,7 +89,7 @@
             <thead>
                 <tr>
                     <th>CGU Number</th>
-                    <th>Name</th>
+                    <th>Patient</th>
                     <th>Triage Complete</th>
                     <th>Triaged Date</th>
                     <th>Triaged By</th>    
@@ -101,7 +101,7 @@
                 {
                     <tr>
                         <td>@a.CGU_No</td>
-                        <td>@a.FIRSTNAME @a.LASTNAME</td>
+                        <td>@a.FIRSTNAME @a.LASTNAME - NHS No: @a.NHSNo</td>
                         <td>
                             @if(a.Triaged)
                             {

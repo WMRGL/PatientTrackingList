@@ -14,7 +14,6 @@ namespace PatientTrackingList.Pages
         private readonly ClinicalContext _context;
         private readonly ITotalTriageData _triageData;
         private readonly IStaffUserData _staffData;
-        private readonly IDiseaseData _diseaseData;        
         private readonly ISqlServices _sql;
 
         public TriagesModel(ClinicalContext context, IConfiguration config)
@@ -23,7 +22,6 @@ namespace PatientTrackingList.Pages
             _context = context;
             _triageData = new TotalTriageData(_context);
             _staffData = new StaffUserData(_context);
-            _diseaseData = new DiseaseData(_context);
             _sql = new SqlServices(_config);
         }
 
