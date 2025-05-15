@@ -183,6 +183,7 @@ namespace PatientTrackingList.DataServices
             table.Columns.Add("Triaged Date", typeof(string));
             table.Columns.Add("Triaged By", typeof(string));
             table.Columns.Add("Waiting List", typeof(string));
+            table.Columns.Add("Indication Notes", typeof(string));
 
 
 
@@ -212,7 +213,8 @@ namespace PatientTrackingList.DataServices
                     triageComplete,
                     triagedDate,
                     triagedBy,
-                    waitingList
+                    waitingList,
+                    cs.IndicationNotes
                     );
             }
 
