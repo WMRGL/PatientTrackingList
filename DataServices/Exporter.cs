@@ -364,8 +364,17 @@ namespace PatientTrackingList.DataServices
             string statusAdmin, string clinicVenue
             )
         {
-            DateTime dfrom = DateTime.Parse(dateFrom);
-            DateTime dTo = DateTime.Parse(dateTo);
+            if (dateFrom == null)
+            {
+                dateFrom = DateTime.Now.AddDays(-30).ToString("yyyy-MM-dd");
+            }
+            if (dateTo == null)
+            {
+                dateTo = DateTime.Now.ToString("yyyy-MM-dd");
+            }
+
+            DateTime dfrom = DateTime.Parse(dateFrom); //don't ask me why we're turning the date into a string and then parsing it as a date again!!
+            DateTime dTo = DateTime.Parse(dateTo);      //there probably was a reason but I've long forgotten it.
 
             if (type == "ptl")
             {

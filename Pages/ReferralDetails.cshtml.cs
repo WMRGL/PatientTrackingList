@@ -50,7 +50,6 @@ namespace PatientTrackingList.Pages
         public string triPathway;
         public string priorFilter;
 
-        [Authorize]
         public void OnGet(int id, string? message = "", bool? success = false, string? sNameSearch = null,
             string? sCGUSearch = null, string? priorityFilter = null, bool? isChecked = false, string? pathwayFilter = null,
             string? consultantFilter = null, string? gcFilter = null, string? commentsearch = null, string? triagePathwayFilter = null)

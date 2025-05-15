@@ -1,9 +1,7 @@
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using ClinicalXPDataConnections.Meta;
 using ClinicalXPDataConnections.Models;
 using ClinicalXPDataConnections.Data;
-using System.Xml.Xsl;
 using PatientTrackingList.DataServices;
 
 namespace PatientTrackingList.Pages
@@ -41,8 +39,6 @@ namespace PatientTrackingList.Pages
         public bool isSuccess;
         public string Message;
 
-
-        [Authorize]
         public void OnGet(string? clinicianCode, string? diseaseCode, DateTime? startDate, DateTime? endDate)
         {
             try

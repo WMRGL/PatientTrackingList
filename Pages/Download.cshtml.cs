@@ -19,7 +19,7 @@ namespace PatientTrackingList.Pages
         }
 
 
-        [HttpGet("download")]
+        //[HttpGet("download")]
         public IActionResult Download()
         {
             var filepath = Path.Combine(environment.WebRootPath, "images", "Image1.png");

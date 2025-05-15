@@ -1,5 +1,4 @@
-﻿using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc.RazorPages;
+﻿using Microsoft.AspNetCore.Mvc.RazorPages;
 using PatientTrackingList.Data;
 using PatientTrackingList.Models;
 using PatientTrackingList.DataServices;
@@ -73,8 +72,6 @@ namespace PatientTrackingList.Pages
         public List<string> UniqueTriagePathways { get; set; }
 
 
-
-        [Authorize]
         public void OnGet(string? sNameSearch = null, 
             string? sCGUSearch = null, string? priorityFilter = null, bool? isChecked=false, string? pathwayFilter=null, 
             string? consultantFilter = null, string? gcFilter = null, string? commentsearch = null, string? triagePathwayFilter = null, string? statusAdmin=null, 
