@@ -25,6 +25,7 @@ namespace PatientTrackingList.Pages
         public IcpModel(DataContext context, ClinicalContext clinicalContext, IConfiguration config)
         {
             _context = context;
+            _clinicalContext = clinicalContext;
             _config = config;
             _sql = new SqlServices(_config);
             _staffData = new StaffUserData(_clinicalContext);
@@ -68,7 +69,7 @@ namespace PatientTrackingList.Pages
             if (User.Identity.Name is null)
             {
                 Response.Redirect("Login");
-            }
+            }            
             else
             {
                 notificationMessage = _notificationData.GetMessage("PTLXOutage");
