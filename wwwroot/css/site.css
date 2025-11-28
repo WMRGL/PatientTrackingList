@@ -14,7 +14,10 @@ html {
 }
 
 body {
-  margin-bottom: 60px;
+    margin-bottom: 60px;
+    background-image: url('../Images/1915682704merry-christmas-gif-christmas-tree-snow-animation-greetings.gif');
+    background-repeat: no-repeat;
+    background-size: cover;
 }
 
 .redtext{
